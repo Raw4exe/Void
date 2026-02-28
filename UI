@@ -2267,6 +2267,8 @@ function Library:create_ui()
                 UIListLayout.Parent = Box
 
                 function DropdownManager:update(option: string)
+                    if not option then return end
+                    
                     if settings.multi_dropdown then
                         Library._config._flags[settings.flag] = Library._config._flags[settings.flag] or {}
                         
@@ -2299,8 +2301,13 @@ function Library:create_ui()
                     end
                     
                     pcall(function()
+                        if settings.callback then
+                            settings.callback(option)
+                        end
+                    end)
+                    
+                    pcall(function()
                         Config:save(game.GameId, Library._config)
-                        settings.callback(option)
                     end)
                 end
                 
