@@ -2267,59 +2267,25 @@ function Library:create_ui()
                 UIListLayout.Parent = Box
 
                 function DropdownManager:update(option: string)
-                    -- If multi-dropdown is enabled
                     if settings.multi_dropdown then
-                        -- Split the CurrentOption.Text by commas into a table
-
                         if not Library._config._flags[settings.flag] then
-                            Library._config._flags[settings.flag] = {};
-                        end;
-
-                        local CurrentTargetValue = nil;
-                        
-                        if #Library._config._flags[settings.flag] > 0 then
-
-                            CurrentTargetValue = convertTableToString(Library._config._flags[settings.flag]);
-
-                        end;
-
-                        local selected = {}
-
-                        if CurrentTargetValue then
-                            for value in string.gmatch(CurrentTargetValue, "([^,]+)") do
-                                local trimmedValue = value:match("^%s*(.-)%s*$")
-                                table.insert(selected, trimmedValue)
-                            end
-                        else
-                            for value in string.gmatch(CurrentOption.Text, "([^,]+)") do
-                                local trimmedValue = value:match("^%s*(.-)%s*$")
-                                table.insert(selected, trimmedValue)
-                            end
-                        end;
-                
-                        local CurrentTextGet = convertStringToTable(CurrentOption.Text);
-
-                        optionSkibidi = "nil";
-                        if typeof(option) ~= 'string' then
-                            optionSkibidi = option.Name;
-                        else
-                            optionSkibidi = option;
-                        end;
-
-                        local found = false
-                        for i, v in pairs(CurrentTextGet) do
-                            if v == optionSkibidi then
-                                table.remove(CurrentTextGet, i);
-                                break;
-                            end
+                            Library._config._flags[settings.flag] = {}
                         end
-
-                        CurrentOption.Text = table.concat(selected, ", ")
-                        local OptionsChild = {}
-                        -- Update the transparent effect of each option
+                        
+                        local optionName = (typeof(option) == "string" and option) or option.Name
+                        local selected = Library._config._flags[settings.flag]
+                        
+                        local index = table.find(selected, optionName)
+                        if index then
+                            table.remove(selected, index)
+                        else
+                            table.insert(selected, optionName)
+                        end
+                        
+                        CurrentOption.Text = #selected > 0 and table.concat(selected, ", ") or ""
+                        
                         for _, object in Options:GetChildren() do
                             if object.Name == "Option" then
-                                table.insert(OptionsChild, object.Text)
                                 if table.find(selected, object.Text) then
                                     object.TextTransparency = 0.2
                                 else
@@ -2327,24 +2293,12 @@ function Library:create_ui()
                                 end
                             end
                         end
-
-                        CurrentTargetValue = convertStringToTable(CurrentOption.Text);
-
-                        for _, v in CurrentTargetValue do
-                            if not table.find(OptionsChild, v) and table.find(selected, v) then
-                                table.remove(selected, _)
-                            end;
-                        end;
-
-                        CurrentOption.Text = table.concat(selected, ", ");
-                
-                        Library._config._flags[settings.flag] = convertStringToTable(CurrentOption.Text);
+                        
+                        Library._config._flags[settings.flag] = selected
                     else
-                        -- For single dropdown, just set the CurrentOption.Text to the selected option
                         CurrentOption.Text = (typeof(option) == "string" and option) or option.Name
                         for _, object in Options:GetChildren() do
                             if object.Name == "Option" then
-                                -- Only update transparency for actual option text buttons
                                 if object.Text == CurrentOption.Text then
                                     object.TextTransparency = 0.2
                                 else
@@ -2354,11 +2308,8 @@ function Library:create_ui()
                         end
                         Library._config._flags[settings.flag] = option
                     end
-                
-                    -- Save the configuration state
+                    
                     Config:save(game.GameId, Library._config)
-                
-                    -- Callback with the updated option(s)
                     settings.callback(option)
                 end
                 
