@@ -2434,10 +2434,18 @@ function Library:create_ui()
                     return ModuleManager:create_dropdown(value)
                 end;
 
-                if Library:flag_type(settings.flag, 'string') then
-                    DropdownManager:update(Library._config._flags[settings.flag])
+                if settings.multi_dropdown then
+                    if Library:flag_type(settings.flag, 'table') and Library._config._flags[settings.flag] then
+                        for _, item in Library._config._flags[settings.flag] do
+                            DropdownManager:update(item)
+                        end
+                    end
                 else
-                    DropdownManager:update(settings.options[1])
+                    if Library:flag_type(settings.flag, 'string') then
+                        DropdownManager:update(Library._config._flags[settings.flag])
+                    else
+                        DropdownManager:update(settings.options[1])
+                    end
                 end
     
                 Dropdown.MouseButton1Click:Connect(function()
