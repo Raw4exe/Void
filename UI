@@ -587,7 +587,7 @@ function Library:create_ui()
     ClientName.Name = 'ClientName'
     ClientName.Size = UDim2.new(0, 50, 0, 20)
     ClientName.AnchorPoint = Vector2.new(0, 0.5)
-    ClientName.Position = UDim2.new(0.0860000017285347, 0, 0.044999999701976776, 0)
+    ClientName.Position = UDim2.new(0.0760000017285347, 0, 0.044999999701976776, 0)
     ClientName.BackgroundTransparency = 1
     ClientName.TextXAlignment = Enum.TextXAlignment.Left
     ClientName.BorderSizePixel = 0
@@ -1292,16 +1292,8 @@ function Library:create_ui()
                 ModuleManager:scale_keybind()
             end
 
-            Connections[settings.flag..'_input_began'] = Header.InputBegan:Connect(function(input: InputObject)
+            Keybind.MouseButton1Down:Connect(function()
                 if Library._choosing_keybind then
-                    return
-                end
-
-                if input.UserInputType ~= Enum.UserInputType.MouseButton1 then
-                    return
-                end
-                
-                if not UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
                     return
                 end
                 
@@ -1363,6 +1355,15 @@ function Library:create_ui()
             end)
 
             Header.MouseButton1Click:Connect(function()
+                local mousePos = UserInputService:GetMouseLocation()
+                local keybindPos = Keybind.AbsolutePosition
+                local keybindSize = Keybind.AbsoluteSize
+                
+                if mousePos.X >= keybindPos.X and mousePos.X <= keybindPos.X + keybindSize.X and
+                   mousePos.Y >= keybindPos.Y and mousePos.Y <= keybindPos.Y + keybindSize.Y then
+                    return
+                end
+                
                 ModuleManager:change_state(not ModuleManager._state)
             end)
 
@@ -1730,13 +1731,21 @@ function Library:create_ui()
                 end
             
                 Checkbox.MouseButton1Click:Connect(function()
+                    local mousePos = UserInputService:GetMouseLocation()
+                    local keybindPos = KeybindBox.AbsolutePosition
+                    local keybindSize = KeybindBox.AbsoluteSize
+                    
+                    if mousePos.X >= keybindPos.X and mousePos.X <= keybindPos.X + keybindSize.X and
+                       mousePos.Y >= keybindPos.Y and mousePos.Y <= keybindPos.Y + keybindSize.Y then
+                        return
+                    end
+                    
                     CheckboxManager:change_state(not CheckboxManager._state)
                 end)
             
-                Checkbox.InputBegan:Connect(function(input, gameProcessed)
+                KeybindBox.InputBegan:Connect(function(input, gameProcessed)
                     if gameProcessed then return end
                     if input.UserInputType ~= Enum.UserInputType.MouseButton1 then return end
-                    if not UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then return end
                     if Library._choosing_keybind then return end
             
                     Library._choosing_keybind = true
@@ -2646,7 +2655,7 @@ function Library:create_ui()
                             end;
                             Config:save(game.GameId, Library._config) -- Save new keybind
                             inputConnection:Disconnect()
-                        elseif input.UserInputType == Enum.UserInputType.MouseButton1 and UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
+                        elseif input.UserInputType == Enum.UserInputType.MouseButton1 then
                             Library._config._flags[settings.flag].BIND = "Unknown"
                             KeybindBox.Text = "..."
                             Config:save(game.GameId, Library._config)
