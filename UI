@@ -281,33 +281,24 @@ end
 
 local Config = setmetatable({
     save = function(self: any, file_name: any, config: any)
-        local success_save, result = pcall(function()
-            local flags = HttpService:JSONEncode(config)
-            writefile('March/'..file_name..'.json', flags)
-        end)
-    
-        if not success_save then
-            warn('failed to save config', result)
-        end
+        local flags = HttpService:JSONEncode(config)
+        writefile('March/'..file_name..'.json', flags)
     end,
     load = function(self: any, file_name: any, config: any)
-        local success_load, result = pcall(function()
-            if not isfile('March/'..file_name..'.json') then
-                self:save(file_name, config)
+        if not isfile('March/'..file_name..'.json') then
+            self:save(file_name, config)
+            return
+        end
         
-                return
-            end
+        local flags = readfile('March/'..file_name..'.json')
         
-            local flags = readfile('March/'..file_name..'.json')
-        
-            if not flags then
-                self:save(file_name, config)
-        
-                return
-            end
+        if not flags then
+            self:save(file_name, config)
+            return
+        end
 
-            return HttpService:JSONDecode(flags)
-        end)
+        return HttpService:JSONDecode(flags)
+    end
     
         if not success_load then
             warn('failed to load config', result)
@@ -717,15 +708,13 @@ function Library:create_ui()
     end;
 
     function self:UIVisiblity()
-        March.Enabled = not March.Enabled;
-    end;
-
-    function self:change_visiblity(state: boolean)
-        if state then
-            TweenService:Create(Container, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                Size = UDim2.fromOffset(698, 479)
-            }):Play()
+    function self:Update1Run(a)
+        if a == "nil" then
+            Container.BackgroundTransparency = 0.05000000074505806;
         else
+            Container.BackgroundTransparency = tonumber(a);
+        end;
+    end;else
             TweenService:Create(Container, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
                 Size = UDim2.fromOffset(104.5, 52)
             }):Play()
