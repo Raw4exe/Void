@@ -583,7 +583,7 @@ function Library:create_ui()
     ClientName.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
     ClientName.TextColor3 = Color3.fromRGB(152, 181, 255)
     ClientName.TextTransparency = 0.20000000298023224
-    ClientName.Text = 'March'
+    ClientName.Text = 'VOID'
     ClientName.Name = 'ClientName'
     ClientName.Size = UDim2.new(0, 31, 0, 13)
     ClientName.AnchorPoint = Vector2.new(0, 0.5)
@@ -598,7 +598,7 @@ function Library:create_ui()
     
     local UIGradient = Instance.new('UIGradient')
     UIGradient.Color = ColorSequence.new{
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(155, 155, 155)),
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(200, 200, 200)),
         ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255))
     }
     UIGradient.Parent = ClientName
@@ -889,8 +889,8 @@ function Library:create_ui()
         local UIGradient = Instance.new('UIGradient')
         UIGradient.Color = ColorSequence.new{
             ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-            ColorSequenceKeypoint.new(0.7, Color3.fromRGB(155, 155, 155)),
-            ColorSequenceKeypoint.new(1, Color3.fromRGB(58, 58, 58))
+            ColorSequenceKeypoint.new(0.7, Color3.fromRGB(200, 200, 200)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(120, 120, 120))
         }
         UIGradient.Parent = TextLabel
         
@@ -1069,9 +1069,9 @@ function Library:create_ui()
             
             local ModuleNameGradient = Instance.new('UIGradient')
             ModuleNameGradient.Color = ColorSequence.new({
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(180, 200, 255)),
-                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(200, 180, 255)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(180, 200, 255))
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(200, 220, 255)),
+                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(220, 200, 255)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(200, 220, 255))
             })
             ModuleNameGradient.Parent = ModuleName
             
@@ -1149,7 +1149,7 @@ function Library:create_ui()
             TextLabel.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
             TextLabel.TextColor3 = Color3.fromRGB(209, 222, 255)
             TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
-            TextLabel.Text = 'None'
+            TextLabel.Text = ''
             TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
             TextLabel.Size = UDim2.new(0, 25, 0, 13)
             TextLabel.BackgroundTransparency = 1
