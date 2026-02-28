@@ -1009,6 +1009,15 @@ function Library:create_ui()
             UICorner.CornerRadius = UDim.new(0, 5)
             UICorner.Parent = Module
             
+            local ModuleGradient = Instance.new('UIGradient')
+            ModuleGradient.Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(30, 35, 50)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(15, 20, 30))
+            })
+            ModuleGradient.Rotation = 45
+            ModuleGradient.Parent = Module
+
+            
             local UIStroke = Instance.new('UIStroke')
             UIStroke.Color = Color3.fromRGB(52, 66, 89)
             UIStroke.Transparency = 0.5
@@ -1112,7 +1121,15 @@ function Library:create_ui()
             UICorner.CornerRadius = UDim.new(1, 0)
             UICorner.Parent = Circle
             
-            local Keybind = Instance.new('Frame')
+            local CircleGradient = Instance.new('UIGradient')
+            CircleGradient.Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(80, 100, 140)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(50, 70, 100))
+            })
+            CircleGradient.Rotation = 135
+            CircleGradient.Parent = Circle
+            
+            local Keybind = Instance.new('TextButton')
             Keybind.Name = 'Keybind'
             Keybind.BackgroundTransparency = 0.699999988079071
             Keybind.Position = UDim2.new(0.15000000596046448, 0, 0.7350000143051147, 0)
@@ -1125,6 +1142,14 @@ function Library:create_ui()
             local UICorner = Instance.new('UICorner')
             UICorner.CornerRadius = UDim.new(0, 3)
             UICorner.Parent = Keybind
+            
+            local KeybindGradient = Instance.new('UIGradient')
+            KeybindGradient.Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(170, 200, 255)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(130, 160, 230))
+            })
+            KeybindGradient.Rotation = 45
+            KeybindGradient.Parent = Keybind
             
             local TextLabel = Instance.new('TextLabel')
             TextLabel.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
@@ -1681,6 +1706,14 @@ function Library:create_ui()
                 local FillCorner = Instance.new("UICorner")
                 FillCorner.CornerRadius = UDim.new(0, 3)
                 FillCorner.Parent = Fill
+                
+                local FillGradient = Instance.new('UIGradient')
+                FillGradient.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(180, 210, 255)),
+                    ColorSequenceKeypoint.new(1, Color3.fromRGB(140, 170, 240))
+                })
+                FillGradient.Rotation = 90
+                FillGradient.Parent = Fill
             
                 function CheckboxManager:change_state(state: boolean)
                     self._state = state
@@ -1880,6 +1913,14 @@ function Library:create_ui()
                 local UICorner = Instance.new('UICorner')
                 UICorner.CornerRadius = UDim.new(0, 4)
                 UICorner.Parent = Button
+                
+                local ButtonGradient = Instance.new('UIGradient')
+                ButtonGradient.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(180, 200, 255)),
+                    ColorSequenceKeypoint.new(1, Color3.fromRGB(120, 150, 255))
+                })
+                ButtonGradient.Rotation = 90
+                ButtonGradient.Parent = Button
 
                 Button.MouseButton1Click:Connect(function()
                     if settings.callback then
