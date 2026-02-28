@@ -1849,6 +1849,59 @@ function Library:create_ui()
                 return true;
             end
             
+            function ModuleManager:create_button(settings: any)
+                LayoutOrderModule = LayoutOrderModule + 1
+
+                if self._size == 0 then
+                    self._size = 11
+                end
+                self._size += 34
+
+                if ModuleManager._state then
+                    Module.Size = UDim2.fromOffset(241, 93 + self._size)
+                end
+                Options.Size = UDim2.fromOffset(241, self._size)
+
+                local Button = Instance.new('TextButton')
+                Button.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+                Button.TextColor3 = Color3.fromRGB(209, 222, 255)
+                Button.BorderColor3 = Color3.fromRGB(0, 0, 0)
+                Button.Text = settings.title or "Button"
+                Button.AutoButtonColor = false
+                Button.BackgroundTransparency = 0.699999988079071
+                Button.Name = 'Button'
+                Button.Size = UDim2.new(0, 207, 0, 29)
+                Button.BorderSizePixel = 0
+                Button.TextSize = 11
+                Button.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                Button.LayoutOrder = LayoutOrderModule
+                Button.Parent = Options
+
+                local UICorner = Instance.new('UICorner')
+                UICorner.CornerRadius = UDim.new(0, 4)
+                UICorner.Parent = Button
+
+                Button.MouseButton1Click:Connect(function()
+                    if settings.callback then
+                        settings.callback()
+                    end
+                end)
+
+                Button.MouseEnter:Connect(function()
+                    TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
+                        BackgroundTransparency = 0.5
+                    }):Play()
+                end)
+
+                Button.MouseLeave:Connect(function()
+                    TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
+                        BackgroundTransparency = 0.699999988079071
+                    }):Play()
+                end)
+
+                return true
+            end
+            
             function ModuleManager:create_slider(settings: any)
 
                 LayoutOrderModule = LayoutOrderModule + 1
