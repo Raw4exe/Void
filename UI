@@ -2551,10 +2551,10 @@ function Library:create_ui()
             
                 local KeybindBox = Instance.new("TextLabel")
                 KeybindBox.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
-                KeybindBox.Size = UDim2.new(0, 15, 0, 15)
+                KeybindBox.Size = UDim2.new(0, 20, 0, 15)
                 KeybindBox.BackgroundColor3 = Color3.fromRGB(140, 100, 255)
-                KeybindBox.TextColor3 = Color3.fromRGB(20, 15, 30)
-                KeybindBox.TextSize = 11
+                KeybindBox.TextColor3 = Color3.fromRGB(160, 140, 200)
+                KeybindBox.TextSize = 9
                 KeybindBox.BackgroundTransparency = 1
                 KeybindBox.LayoutOrder = 2;
                 KeybindBox.Parent = RightContainer
@@ -2563,6 +2563,7 @@ function Library:create_ui()
                 KeybindButton.Size = UDim2.new(1, 0, 1, 0)
                 KeybindButton.BackgroundTransparency = 1
                 KeybindButton.TextTransparency = 1
+                KeybindButton.Text = ""
                 KeybindButton.Parent = KeybindBox
 
                 local CheckboxCorner = Instance.new("UICorner", KeybindBox)
@@ -2588,7 +2589,7 @@ function Library:create_ui()
                 KeybindBox.Text = Library._config._flags[settings.flag].BIND
 
                 if KeybindBox.Text == "Unknown" then
-                    KeybindBox.Text = "...";
+                    KeybindBox.Text = "N/A";
                 end;
 
                 local UseF_Var = nil;
@@ -2633,7 +2634,7 @@ function Library:create_ui()
                 end;
             
                 KeybindButton.MouseButton1Click:Connect(function()
-                    KeybindBox.Text = "..."
+                    KeybindBox.Text = "N/A"
                     local inputConnection
                     inputConnection = game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
                         if gameProcessed then return end
@@ -2647,7 +2648,7 @@ function Library:create_ui()
                             inputConnection:Disconnect()
                         elseif input.UserInputType == Enum.UserInputType.MouseButton1 then
                             Library._config._flags[settings.flag].BIND = "Unknown"
-                            KeybindBox.Text = "..."
+                            KeybindBox.Text = "N/A"
                             Config:save(game.GameId, Library._config)
                             inputConnection:Disconnect()
                         end
