@@ -583,11 +583,11 @@ function Library:create_ui()
     ClientName.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
     ClientName.TextColor3 = Color3.fromRGB(180, 150, 255)
     ClientName.TextTransparency = 0.10000000298023224
-    ClientName.Text = 'VOID'
+    ClientName.Text = 'VOID [BETA]'
     ClientName.Name = 'ClientName'
-    ClientName.Size = UDim2.new(0, 50, 0, 20)
+    ClientName.Size = UDim2.new(0, 100, 0, 20)
     ClientName.AnchorPoint = Vector2.new(0, 0.5)
-    ClientName.Position = UDim2.new(0.0760000017285347, 0, 0.044999999701976776, 0)
+    ClientName.Position = UDim2.new(0.0660000017285347, 0, 0.044999999701976776, 0)
     ClientName.BackgroundTransparency = 1
     ClientName.TextXAlignment = Enum.TextXAlignment.Left
     ClientName.BorderSizePixel = 0
@@ -1151,7 +1151,7 @@ function Library:create_ui()
             TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
             TextLabel.Size = UDim2.new(0, 25, 0, 13)
             TextLabel.BackgroundTransparency = 1
-            TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+            TextLabel.TextXAlignment = Enum.TextXAlignment.Center
             TextLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
             TextLabel.BorderSizePixel = 0
             TextLabel.TextSize = 10
