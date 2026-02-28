@@ -2268,9 +2268,7 @@ function Library:create_ui()
 
                 function DropdownManager:update(option: string)
                     if settings.multi_dropdown then
-                        if not Library._config._flags[settings.flag] then
-                            Library._config._flags[settings.flag] = {}
-                        end
+                        Library._config._flags[settings.flag] = Library._config._flags[settings.flag] or {}
                         
                         local optionName = (typeof(option) == "string" and option) or option.Name
                         local selected = Library._config._flags[settings.flag]
@@ -2286,31 +2284,24 @@ function Library:create_ui()
                         
                         for _, object in Options:GetChildren() do
                             if object.Name == "Option" then
-                                if table.find(selected, object.Text) then
-                                    object.TextTransparency = 0.2
-                                else
-                                    object.TextTransparency = 0.6
-                                end
+                                object.TextTransparency = table.find(selected, object.Text) and 0.2 or 0.6
                             end
                         end
-                        
-                        Library._config._flags[settings.flag] = selected
                     else
                         CurrentOption.Text = (typeof(option) == "string" and option) or option.Name
+                        Library._config._flags[settings.flag] = option
+                        
                         for _, object in Options:GetChildren() do
                             if object.Name == "Option" then
-                                if object.Text == CurrentOption.Text then
-                                    object.TextTransparency = 0.2
-                                else
-                                    object.TextTransparency = 0.6
-                                end
+                                object.TextTransparency = (object.Text == CurrentOption.Text) and 0.2 or 0.6
                             end
                         end
-                        Library._config._flags[settings.flag] = option
                     end
                     
-                    Config:save(game.GameId, Library._config)
-                    settings.callback(option)
+                    pcall(function()
+                        Config:save(game.GameId, Library._config)
+                        settings.callback(option)
+                    end)
                 end
                 
                 local CurrentDropSizeState = 0;
@@ -2435,17 +2426,11 @@ function Library:create_ui()
                 end;
 
                 if settings.multi_dropdown then
-                    if Library:flag_type(settings.flag, 'table') and Library._config._flags[settings.flag] then
-                        for _, item in Library._config._flags[settings.flag] do
-                            DropdownManager:update(item)
-                        end
-                    end
-                else
-                    if Library:flag_type(settings.flag, 'string') then
-                        DropdownManager:update(Library._config._flags[settings.flag])
-                    else
+                    Library._config._flags[settings.flag] = Library._config._flags[settings.flag] or {}
+                elseif #settings.options > 0 then
+                    pcall(function()
                         DropdownManager:update(settings.options[1])
-                    end
+                    end)
                 end
     
                 Dropdown.MouseButton1Click:Connect(function()
