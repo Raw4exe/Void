@@ -587,7 +587,7 @@ function Library:create_ui()
     ClientName.Name = 'ClientName'
     ClientName.Size = UDim2.new(0, 50, 0, 20)
     ClientName.AnchorPoint = Vector2.new(0, 0.5)
-    ClientName.Position = UDim2.new(0.0560000017285347, 0, 0.054999999701976776, 0)
+    ClientName.Position = UDim2.new(0.0860000017285347, 0, 0.044999999701976776, 0)
     ClientName.BackgroundTransparency = 1
     ClientName.TextXAlignment = Enum.TextXAlignment.Left
     ClientName.BorderSizePixel = 0
@@ -623,7 +623,7 @@ function Library:create_ui()
     Icon.AnchorPoint = Vector2.new(0, 0.5)
     Icon.Image = 'rbxassetid://107819132007001'
     Icon.BackgroundTransparency = 1
-    Icon.Position = UDim2.new(0.02500000037252903, 0, 0.054999999701976776, 0)
+    Icon.Position = UDim2.new(0.02500000037252903, 0, 0.044999999701976776, 0)
     Icon.Name = 'Icon'
     Icon.Size = UDim2.new(0, 22, 0, 22)
     Icon.BorderSizePixel = 0
@@ -1297,7 +1297,11 @@ function Library:create_ui()
                     return
                 end
 
-                if input.UserInputType ~= Enum.UserInputType.MouseButton3 then
+                if input.UserInputType ~= Enum.UserInputType.MouseButton1 then
+                    return
+                end
+                
+                if not UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
                     return
                 end
                 
@@ -1731,7 +1735,8 @@ function Library:create_ui()
             
                 Checkbox.InputBegan:Connect(function(input, gameProcessed)
                     if gameProcessed then return end
-                    if input.UserInputType ~= Enum.UserInputType.MouseButton3 then return end
+                    if input.UserInputType ~= Enum.UserInputType.MouseButton1 then return end
+                    if not UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then return end
                     if Library._choosing_keybind then return end
             
                     Library._choosing_keybind = true
@@ -2641,7 +2646,7 @@ function Library:create_ui()
                             end;
                             Config:save(game.GameId, Library._config) -- Save new keybind
                             inputConnection:Disconnect()
-                        elseif input.UserInputType == Enum.UserInputType.MouseButton3 then
+                        elseif input.UserInputType == Enum.UserInputType.MouseButton1 and UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
                             Library._config._flags[settings.flag].BIND = "Unknown"
                             KeybindBox.Text = "..."
                             Config:save(game.GameId, Library._config)
