@@ -2267,48 +2267,88 @@ function Library:create_ui()
                 UIListLayout.Parent = Box
 
                 function DropdownManager:update(option: string)
-                    if not option then return end
-                    
                     if settings.multi_dropdown then
-                        Library._config._flags[settings.flag] = Library._config._flags[settings.flag] or {}
+                        if not Library._config._flags[settings.flag] then
+                            Library._config._flags[settings.flag] = {};
+                        end;
+
+                        local CurrentTargetValue = nil;
                         
-                        local optionName = (typeof(option) == "string" and option) or option.Name
-                        local selected = Library._config._flags[settings.flag]
-                        
-                        local index = table.find(selected, optionName)
-                        if index then
-                            table.remove(selected, index)
+                        if #Library._config._flags[settings.flag] > 0 then
+                            CurrentTargetValue = convertTableToString(Library._config._flags[settings.flag]);
+                        end;
+
+                        local selected = {}
+
+                        if CurrentTargetValue then
+                            for value in string.gmatch(CurrentTargetValue, "([^,]+)") do
+                                local trimmedValue = value:match("^%s*(.-)%s*$")
+                                table.insert(selected, trimmedValue)
+                            end
                         else
-                            table.insert(selected, optionName)
-                        end
-                        
-                        CurrentOption.Text = #selected > 0 and table.concat(selected, ", ") or ""
-                        
-                        for _, object in Options:GetChildren() do
-                            if object.Name == "Option" then
-                                object.TextTransparency = table.find(selected, object.Text) and 0.2 or 0.6
+                            for value in string.gmatch(CurrentOption.Text, "([^,]+)") do
+                                local trimmedValue = value:match("^%s*(.-)%s*$")
+                                table.insert(selected, trimmedValue)
+                            end
+                        end;
+                
+                        local CurrentTextGet = convertStringToTable(CurrentOption.Text);
+
+                        optionSkibidi = "nil";
+                        if typeof(option) ~= 'string' then
+                            optionSkibidi = option.Name;
+                        else
+                            optionSkibidi = option;
+                        end;
+
+                        local found = false
+                        for i, v in pairs(CurrentTextGet) do
+                            if v == optionSkibidi then
+                                table.remove(CurrentTextGet, i);
+                                break;
                             end
                         end
+
+                        CurrentOption.Text = table.concat(selected, ", ")
+                        local OptionsChild = {}
+                        for _, object in Options:GetChildren() do
+                            if object.Name == "Option" then
+                                table.insert(OptionsChild, object.Text)
+                                if table.find(selected, object.Text) then
+                                    object.TextTransparency = 0.2
+                                else
+                                    object.TextTransparency = 0.6
+                                end
+                            end
+                        end
+
+                        CurrentTargetValue = convertStringToTable(CurrentOption.Text);
+
+                        for _, v in CurrentTargetValue do
+                            if not table.find(OptionsChild, v) and table.find(selected, v) then
+                                table.remove(selected, _)
+                            end;
+                        end;
+
+                        CurrentOption.Text = table.concat(selected, ", ");
+                
+                        Library._config._flags[settings.flag] = convertStringToTable(CurrentOption.Text);
                     else
                         CurrentOption.Text = (typeof(option) == "string" and option) or option.Name
-                        Library._config._flags[settings.flag] = option
-                        
                         for _, object in Options:GetChildren() do
                             if object.Name == "Option" then
-                                object.TextTransparency = (object.Text == CurrentOption.Text) and 0.2 or 0.6
+                                if object.Text == CurrentOption.Text then
+                                    object.TextTransparency = 0.2
+                                else
+                                    object.TextTransparency = 0.6
+                                end
                             end
                         end
+                        Library._config._flags[settings.flag] = option
                     end
-                    
-                    pcall(function()
-                        if settings.callback then
-                            settings.callback(option)
-                        end
-                    end)
-                    
-                    pcall(function()
-                        Config:save(game.GameId, Library._config)
-                    end)
+                
+                    Config:save(game.GameId, Library._config)
+                    settings.callback(option)
                 end
                 
                 local CurrentDropSizeState = 0;
@@ -2432,12 +2472,10 @@ function Library:create_ui()
                     return ModuleManager:create_dropdown(value)
                 end;
 
-                if settings.multi_dropdown then
-                    Library._config._flags[settings.flag] = Library._config._flags[settings.flag] or {}
-                elseif #settings.options > 0 then
-                    pcall(function()
-                        DropdownManager:update(settings.options[1])
-                    end)
+                if Library:flag_type(settings.flag, 'string') then
+                    DropdownManager:update(Library._config._flags[settings.flag])
+                else
+                    DropdownManager:update(settings.options[1])
                 end
     
                 Dropdown.MouseButton1Click:Connect(function()
