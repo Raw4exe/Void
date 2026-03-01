@@ -341,7 +341,7 @@ local Library = {
     _drag_start = nil,
     _container_position = nil,
     
-    _search_placeholder = 'Search module or element',
+    _search_placeholder = 'Search Bar',
     _control_settings_enabled = true,
     _control_palette_enabled = true,
     _control_config_enabled = true
