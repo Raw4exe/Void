@@ -533,59 +533,6 @@ function Library:create_ui()
     March.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     March.Parent = CoreGui
     
-    local TopBarGui = Instance.new('ScreenGui')
-    TopBarGui.ResetOnSpawn = false
-    TopBarGui.Name = 'MarchTopBar'
-    TopBarGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    TopBarGui.Parent = CoreGui
-    
-    local TopBar = Instance.new('Frame')
-    TopBar.Name = 'TopBar'
-    TopBar.AnchorPoint = Vector2.new(0.5, 0.5)
-    TopBar.Position = UDim2.new(0.5, 0, 0.5, 0)
-    TopBar.Size = UDim2.new(0, 0, 0, 60)
-    TopBar.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
-    TopBar.BackgroundTransparency = 0.1
-    TopBar.BorderSizePixel = 0
-    TopBar.Parent = TopBarGui
-    
-    local TopBarBlur = Instance.new('ImageLabel')
-    TopBarBlur.Name = 'Blur'
-    TopBarBlur.Size = UDim2.new(1, 0, 1, 0)
-    TopBarBlur.BackgroundTransparency = 1
-    TopBarBlur.Image = 'rbxasset://textures/ui/GuiImagePlaceholder.png'
-    TopBarBlur.ImageTransparency = 0.5
-    TopBarBlur.ScaleType = Enum.ScaleType.Tile
-    TopBarBlur.TileSize = UDim2.new(0, 128, 0, 128)
-    TopBarBlur.ZIndex = 0
-    TopBarBlur.Parent = TopBar
-    
-    local TopBarCorner = Instance.new('UICorner')
-    TopBarCorner.CornerRadius = UDim.new(0, 10)
-    TopBarCorner.Parent = TopBar
-    
-    local TopBarStroke = Instance.new('UIStroke')
-    TopBarStroke.Color = Color3.fromRGB(52, 66, 89)
-    TopBarStroke.Transparency = 0.2
-    TopBarStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    TopBarStroke.Parent = TopBar
-    
-    local TopBarText = Instance.new('TextLabel')
-    TopBarText.Name = 'TopBarText'
-    TopBarText.Size = UDim2.new(1, -40, 1, -20)
-    TopBarText.Position = UDim2.new(0, 20, 0, 10)
-    TopBarText.BackgroundTransparency = 1
-    TopBarText.Text = ''
-    TopBarText.TextColor3 = Color3.fromRGB(255, 255, 255)
-    TopBarText.TextTransparency = 0
-    TopBarText.TextSize = 15
-    TopBarText.TextWrapped = true
-    TopBarText.TextXAlignment = Enum.TextXAlignment.Center
-    TopBarText.TextYAlignment = Enum.TextYAlignment.Center
-    TopBarText.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    TopBarText.ZIndex = 2
-    TopBarText.Parent = TopBar
-    
     local Container = Instance.new('Frame')
     Container.ClipsDescendants = true
     Container.BorderColor3 = Color3.fromRGB(0, 0, 0)
@@ -925,86 +872,28 @@ function Library:create_ui()
         end
     end)
     
-    local SearchLeftSection = Instance.new('ScrollingFrame')
-    SearchLeftSection.Name = 'SearchLeftSection'
-    SearchLeftSection.AutomaticCanvasSize = Enum.AutomaticSize.XY
-    SearchLeftSection.ScrollBarThickness = 0
-    SearchLeftSection.Size = UDim2.new(0, 243, 0, 445)
-    SearchLeftSection.Selectable = false
-    SearchLeftSection.Active = false
-    SearchLeftSection.AnchorPoint = Vector2.new(0, 0.5)
-    SearchLeftSection.ScrollBarImageTransparency = 1
-    SearchLeftSection.BackgroundTransparency = 1
-    SearchLeftSection.Position = UDim2.new(0.2594326436519623, 0, 0.5, 0)
-    SearchLeftSection.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    SearchLeftSection.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    SearchLeftSection.BorderSizePixel = 0
-    SearchLeftSection.CanvasSize = UDim2.new(0, 0, 0.5, 0)
-    SearchLeftSection.Visible = false
-    SearchLeftSection.Parent = Sections
-    
-    local UIListLayout = Instance.new('UIListLayout')
-    UIListLayout.Padding = UDim.new(0, 11)
-    UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    UIListLayout.Parent = SearchLeftSection
-    
-    local UIPadding = Instance.new('UIPadding')
-    UIPadding.PaddingTop = UDim.new(0, 1)
-    UIPadding.Parent = SearchLeftSection
-
-    local SearchRightSection = Instance.new('ScrollingFrame')
-    SearchRightSection.Name = 'SearchRightSection'
-    SearchRightSection.AutomaticCanvasSize = Enum.AutomaticSize.XY
-    SearchRightSection.ScrollBarThickness = 0
-    SearchRightSection.Size = UDim2.new(0, 243, 0, 445)
-    SearchRightSection.Selectable = false
-    SearchRightSection.Active = false
-    SearchRightSection.AnchorPoint = Vector2.new(0, 0.5)
-    SearchRightSection.ScrollBarImageTransparency = 1
-    SearchRightSection.BackgroundTransparency = 1
-    SearchRightSection.Position = UDim2.new(0.6290000081062317, 0, 0.5, 0)
-    SearchRightSection.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    SearchRightSection.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    SearchRightSection.BorderSizePixel = 0
-    SearchRightSection.CanvasSize = UDim2.new(0, 0, 0.5, 0)
-    SearchRightSection.Visible = false
-    SearchRightSection.Parent = Sections
-    
-    local UIListLayout = Instance.new('UIListLayout')
-    UIListLayout.Padding = UDim.new(0, 11)
-    UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    UIListLayout.Parent = SearchRightSection
-    
-    local UIPadding = Instance.new('UIPadding')
-    UIPadding.PaddingTop = UDim.new(0, 1)
-    UIPadding.Parent = SearchRightSection
-    
     local originalModuleData = {}
     
     local function clearSearchResults()
-        for _, clone in pairs(SearchLeftSection:GetChildren()) do
-            if clone:IsA('Frame') and clone.Name == 'Module' then
-                clone:Destroy()
-            end
-        end
-        for _, clone in pairs(SearchRightSection:GetChildren()) do
-            if clone:IsA('Frame') and clone.Name == 'Module' then
-                clone:Destroy()
-            end
-        end
-        
         isSearchActive = false
         
-        SearchLeftSection.Visible = false
-        SearchRightSection.Visible = false
-        
-        if currentLeftSection then
-            currentLeftSection.Visible = true
-        end
-        if currentRightSection then
-            currentRightSection.Visible = true
+        for _, section in pairs(Sections:GetChildren()) do
+            if section:IsA('ScrollingFrame') and section.Name ~= 'SearchLeftSection' and section.Name ~= 'SearchRightSection' then
+                for _, module in pairs(section:GetChildren()) do
+                    if module:IsA('Frame') and module.Name == 'Module' then
+                        module.Visible = true
+                        
+                        local options = module:FindFirstChild('Options')
+                        if options then
+                            for _, element in pairs(options:GetChildren()) do
+                                if element:IsA('GuiObject') and element.Name ~= 'UIPadding' and element.Name ~= 'UIListLayout' then
+                                    element.Visible = true
+                                end
+                            end
+                        end
+                    end
+                end
+            end
         end
     end
     
@@ -1036,39 +925,7 @@ function Library:create_ui()
             return
         end
         
-        for _, section in pairs(Sections:GetChildren()) do
-            if section:IsA('ScrollingFrame') and section.Visible and section.Name ~= 'SearchLeftSection' and section.Name ~= 'SearchRightSection' then
-                if section.Position.X.Scale < 0.5 then
-                    currentLeftSection = section
-                else
-                    currentRightSection = section
-                end
-            end
-        end
-        
         isSearchActive = true
-        
-        for _, section in pairs(Sections:GetChildren()) do
-            if section:IsA('ScrollingFrame') and section.Name ~= 'SearchLeftSection' and section.Name ~= 'SearchRightSection' then
-                section.Visible = false
-            end
-        end
-        
-        SearchLeftSection.Visible = true
-        SearchRightSection.Visible = true
-        
-        for _, clone in pairs(SearchLeftSection:GetChildren()) do
-            if clone:IsA('Frame') and clone.Name == 'Module' then
-                clone:Destroy()
-            end
-        end
-        for _, clone in pairs(SearchRightSection:GetChildren()) do
-            if clone:IsA('Frame') and clone.Name == 'Module' then
-                clone:Destroy()
-            end
-        end
-        
-        local matchedModules = {}
         
         for _, section in pairs(Sections:GetChildren()) do
             if section:IsA('ScrollingFrame') and section.Name ~= 'SearchLeftSection' and section.Name ~= 'SearchRightSection' then
@@ -1081,7 +938,6 @@ function Library:create_ui()
                         local moduleMatches, moduleScore = wordStartMatch(moduleText, query)
                         
                         local options = module:FindFirstChild('Options')
-                        local matchedElements = {}
                         local hasElementMatch = false
                         
                         if options then
@@ -1101,79 +957,22 @@ function Library:create_ui()
                                     
                                     if elementMatches then
                                         hasElementMatch = true
-                                        table.insert(matchedElements, {element = element, score = elementScore})
+                                        element.Visible = true
+                                    else
+                                        if not moduleMatches then
+                                            element.Visible = false
+                                        end
                                     end
                                 end
                             end
                         end
                         
                         if moduleMatches or hasElementMatch then
-                            table.insert(matchedModules, {
-                                module = module,
-                                matchedElements = matchedElements,
-                                showFullModule = moduleMatches,
-                                score = moduleScore
-                            })
+                            module.Visible = true
+                        else
+                            module.Visible = false
                         end
                     end
-                end
-            end
-        end
-        
-        table.sort(matchedModules, function(a, b)
-            return a.score > b.score
-        end)
-        
-        for i, data in ipairs(matchedModules) do
-            local module = data.module
-            local matchedElements = data.matchedElements
-            local showFullModule = data.showFullModule
-            
-            local moduleClone = module:Clone()
-            
-            local targetSection = (i % 2 == 1) and SearchLeftSection or SearchRightSection
-            moduleClone.Parent = targetSection
-            
-            local options = moduleClone:FindFirstChild('Options')
-            if options then
-                if showFullModule then
-                    for _, element in pairs(options:GetChildren()) do
-                        if element:IsA('GuiObject') and element.Name ~= 'UIPadding' and element.Name ~= 'UIListLayout' then
-                            element.Visible = true
-                        end
-                    end
-                    
-                    local header = module:FindFirstChild('Header')
-                    if header then
-                        local originalSize = module.Size
-                        moduleClone.Size = originalSize
-                    end
-                else
-                    local totalHeight = 0
-                    for _, element in pairs(options:GetChildren()) do
-                        if element:IsA('GuiObject') and element.Name ~= 'UIPadding' and element.Name ~= 'UIListLayout' then
-                            local isMatched = false
-                            for _, matched in pairs(matchedElements) do
-                                if element.Name == matched.element.Name then
-                                    isMatched = true
-                                    break
-                                end
-                            end
-                            
-                            if isMatched then
-                                element.Visible = true
-                                totalHeight = totalHeight + element.Size.Y.Offset + 5
-                            else
-                                element.Visible = false
-                            end
-                        end
-                    end
-                    
-                    if totalHeight > 0 then
-                        totalHeight = totalHeight + 8
-                    end
-                    
-                    moduleClone.Size = UDim2.fromOffset(241, 70 + totalHeight)
                 end
             end
         end
@@ -1318,21 +1117,6 @@ function Library:create_ui()
 
     Connections['container_input_began'] = Container.InputBegan:Connect(on_drag)
     Connections['input_changed'] = UserInputService.InputChanged:Connect(drag)
-    
-    local function updateTopBarPosition()
-        local containerPos = Container.AbsolutePosition
-        local containerSize = Container.AbsoluteSize
-        
-        local topBarX = containerPos.X + containerSize.X / 2
-        local topBarY = containerPos.Y - 70
-        
-        TopBar.Position = UDim2.new(0, topBarX, 0, topBarY)
-    end
-    
-    Container:GetPropertyChangedSignal('AbsolutePosition'):Connect(updateTopBarPosition)
-    Container:GetPropertyChangedSignal('AbsoluteSize'):Connect(updateTopBarPosition)
-    
-    updateTopBarPosition()
 
     self:removed(function()
         self._ui = nil
@@ -1344,15 +1128,9 @@ function Library:create_ui()
             TweenService:Create(Container, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
                 Size = UDim2.fromOffset(698, 479)
             }):Play()
-            TweenService:Create(TopBar, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                Size = UDim2.new(0, 800, 0, 60)
-            }):Play()
         else
             TweenService:Create(Container, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
                 Size = UDim2.fromOffset(104.5, 52)
-            }):Play()
-            TweenService:Create(TopBar, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                Size = UDim2.new(0, 0, 0, 60)
             }):Play()
         end
     end
@@ -1937,14 +1715,6 @@ function Library:create_ui()
                     local keybind_string = string.gsub(tostring(Library._config._keybinds[settings.flag]), 'Enum.KeyCode.', '')
                     TextLabel.Text = keybind_string
                 end)
-            end)
-
-            Header.MouseEnter:Connect(function()
-                TopBarText.Text = settings.description or "No description"
-            end)
-            
-            Header.MouseLeave:Connect(function()
-                TopBarText.Text = ""
             end)
 
             Header.MouseButton1Click:Connect(function()
