@@ -822,12 +822,30 @@ function Library:create_ui()
     local function performSearch(query)
         query = query:lower()
         
+        local allModules = {}
+        
+        for _, section in pairs(Sections:GetChildren()) do
+            if section:IsA('ScrollingFrame') then
+                for _, module in pairs(section:GetChildren()) do
+                    if module:IsA('Frame') and module.Name == 'Module' then
+                        table.insert(allModules, {module = module, section = section})
+                    end
+                end
+            end
+        end
+        
         if query == '' then
-            for _, section in pairs(Sections:GetChildren()) do
-                if section:IsA('ScrollingFrame') then
-                    for _, module in pairs(section:GetChildren()) do
-                        if module:IsA('Frame') and module.Name == 'Module' then
-                            module.Visible = true
+            for _, data in pairs(allModules) do
+                local module = data.module
+                module.Visible = true
+                module.Parent = data.section
+                
+                local header = module:FindFirstChild('Header')
+                if header then
+                    local moduleManager = module:FindFirstChild('ModuleManager')
+                    if moduleManager and moduleManager.Value then
+                        local manager = moduleManager.Value
+                        if manager._state then
                             local options = module:FindFirstChild('Options')
                             if options then
                                 for _, element in pairs(options:GetChildren()) do
@@ -836,6 +854,9 @@ function Library:create_ui()
                                     end
                                 end
                             end
+                            module.Size = UDim2.fromOffset(241, 93 + manager._size + manager._multiplier)
+                        else
+                            module.Size = UDim2.fromOffset(241, 93)
                         end
                     end
                 end
@@ -846,43 +867,90 @@ function Library:create_ui()
         
         startDotsAnimation()
         
+        local matchedModules = {}
+        
+        for _, data in pairs(allModules) do
+            local module = data.module
+            local header = module:FindFirstChild('Header')
+            local moduleName = header and header:FindFirstChild('ModuleName')
+            local moduleMatches = moduleName and moduleName.Text:lower():find(query)
+            
+            local options = module:FindFirstChild('Options')
+            local visibleElements = {}
+            local hasVisibleElements = false
+            
+            if options then
+                for _, element in pairs(options:GetChildren()) do
+                    if element:IsA('GuiObject') and element.Name ~= 'UIPadding' and element.Name ~= 'UIListLayout' then
+                        local elementName = ''
+                        
+                        if element:FindFirstChild('TitleLabel') then
+                            elementName = element.TitleLabel.Text
+                        elseif element:FindFirstChild('TextLabel') then
+                            elementName = element.TextLabel.Text
+                        elseif element.Name == 'Paragraph' and element:FindFirstChild('Title') then
+                            elementName = element.Title.Text
+                        end
+                        
+                        local elementMatches = elementName:lower():find(query)
+                        
+                        if moduleMatches or elementMatches then
+                            element.Visible = true
+                            table.insert(visibleElements, element)
+                            hasVisibleElements = true
+                        else
+                            element.Visible = false
+                        end
+                    end
+                end
+            end
+            
+            if moduleMatches or hasVisibleElements then
+                module.Visible = true
+                table.insert(matchedModules, {module = module, visibleCount = #visibleElements})
+            else
+                module.Visible = false
+            end
+        end
+        
+        local leftSection, rightSection
         for _, section in pairs(Sections:GetChildren()) do
             if section:IsA('ScrollingFrame') then
-                for _, module in pairs(section:GetChildren()) do
-                    if module:IsA('Frame') and module.Name == 'Module' then
-                        local header = module:FindFirstChild('Header')
-                        local moduleName = header and header:FindFirstChild('ModuleName')
-                        local moduleMatches = moduleName and moduleName.Text:lower():find(query)
-                        
-                        local options = module:FindFirstChild('Options')
-                        local hasVisibleElements = false
-                        
-                        if options then
-                            for _, element in pairs(options:GetChildren()) do
-                                if element:IsA('GuiObject') and element.Name ~= 'UIPadding' and element.Name ~= 'UIListLayout' then
-                                    local elementName = ''
-                                    
-                                    if element:FindFirstChild('TitleLabel') then
-                                        elementName = element.TitleLabel.Text
-                                    elseif element:FindFirstChild('TextLabel') then
-                                        elementName = element.TextLabel.Text
-                                    elseif element.Name == 'Paragraph' and element:FindFirstChild('Title') then
-                                        elementName = element.Title.Text
-                                    end
-                                    
-                                    local elementMatches = elementName:lower():find(query)
-                                    
-                                    if moduleMatches or elementMatches then
-                                        element.Visible = true
-                                        hasVisibleElements = true
-                                    else
-                                        element.Visible = false
-                                    end
-                                end
+                if section.Name == 'LeftSection' then
+                    leftSection = section
+                elseif section.Name == 'RightSection' then
+                    rightSection = section
+                end
+            end
+        end
+        
+        if leftSection and rightSection then
+            for i, data in ipairs(matchedModules) do
+                local module = data.module
+                local visibleCount = data.visibleCount
+                
+                if i % 2 == 1 then
+                    module.Parent = leftSection
+                else
+                    module.Parent = rightSection
+                end
+                
+                local header = module:FindFirstChild('Header')
+                if header then
+                    local options = module:FindFirstChild('Options')
+                    if options then
+                        local totalHeight = 0
+                        for _, element in pairs(options:GetChildren()) do
+                            if element:IsA('GuiObject') and element.Visible and element.Name ~= 'UIPadding' and element.Name ~= 'UIListLayout' then
+                                totalHeight = totalHeight + element.Size.Y.Offset + 5
                             end
                         end
                         
-                        module.Visible = moduleMatches or hasVisibleElements
+                        if totalHeight > 0 then
+                            totalHeight = totalHeight + 8
+                        end
+                        
+                        module.Size = UDim2.fromOffset(241, 93 + totalHeight)
                     end
                 end
             end
