@@ -1735,7 +1735,7 @@ function Library:create_ui()
             TextLabel.Size = UDim2.new(0, 25, 0, 13)
             TextLabel.BackgroundTransparency = 1
             TextLabel.TextXAlignment = Enum.TextXAlignment.Left
-            TextLabel.Position = UDim2.new(0, -4, 0.5, 0)
+            TextLabel.Position = UDim2.new(0, -16, 0.5, 0)
             TextLabel.BorderSizePixel = 0
             TextLabel.TextSize = 10
             TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
