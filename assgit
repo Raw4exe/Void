@@ -2834,6 +2834,7 @@ function Library:create_ui()
                 CurrentOption.TextSize = 10
                 CurrentOption.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
                 CurrentOption.Parent = Header
+                CurrentOption.Text = ""
                 local UIGradient = Instance.new('UIGradient')
                 UIGradient.Transparency = NumberSequence.new{
                     NumberSequenceKeypoint.new(0, 0),
@@ -2914,18 +2915,15 @@ function Library:create_ui()
                                 end
                             end
                         else
-                            for value in string.gmatch(CurrentOption.Text, "([^,]+)") do
-                                -- Trim spaces around the option using string.match
-                                local trimmedValue = value:match("^%s*(.-)%s*$")  -- Trim leading and trailing spaces
-                                
-                                -- Exclude any unwanted labels (e.g. "Label")
+                            for value in string.gmatch(CurrentOption.Text or "", "([^,]+)") do
+                                local trimmedValue = value:match("^%s*(.-)%s*$")
                                 if trimmedValue ~= "Label" then
                                     table.insert(selected, trimmedValue)
                                 end
                             end
                         end;
                 
-                        local CurrentTextGet = convertStringToTable(CurrentOption.Text);
+                        local CurrentTextGet = convertStringToTable(CurrentOption.Text or "");
 
                         optionSkibidi = "nil";
                         if typeof(option) ~= 'string' then
@@ -2956,7 +2954,7 @@ function Library:create_ui()
                             end
                         end
 
-                        CurrentTargetValue = convertStringToTable(CurrentOption.Text);
+                        CurrentTargetValue = convertStringToTable(CurrentOption.Text or "");
 
                         for _, v in CurrentTargetValue do
                             if not table.find(OptionsChild, v) and table.find(selected, v) then
@@ -2966,7 +2964,7 @@ function Library:create_ui()
 
                         CurrentOption.Text = table.concat(selected, ", ");
                 
-                        Library._config._flags[settings.flag] = convertStringToTable(CurrentOption.Text);
+                        Library._config._flags[settings.flag] = convertStringToTable(CurrentOption.Text or "");
                     else
                         -- For single dropdown, just set the CurrentOption.Text to the selected option
                         CurrentOption.Text = (typeof(option) == "string" and option) or option.Name
