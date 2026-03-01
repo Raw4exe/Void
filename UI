@@ -1724,8 +1724,8 @@ function Library:create_ui()
                     font_params.Size = 10
                     font_params.Width = 10000
                     local font_size = TextService:GetTextBoundsAsync(font_params)
-                    KeybindBox.Size = UDim2.fromOffset(font_size.X + 8, 15)
-                    KeybindBox.Position = UDim2.new(1, -(font_size.X + 8) - 25, 0.5, 0)
+                    local newWidth = font_size.X + 8
+                    KeybindBox.Size = UDim2.fromOffset(newWidth, 15)
                 end
             
                 Checkbox.MouseButton1Click:Connect(function()
@@ -1753,7 +1753,6 @@ function Library:create_ui()
                             KeybindLabel.Text = "N/A"
                             
                             KeybindBox.Size = UDim2.fromOffset(23, 15)
-                            KeybindBox.Position = UDim2.new(1, -48, 0.5, 0)
                             
                             if Connections[settings.flag .. "_keybind"] then
                                 Connections[settings.flag .. "_keybind"]:Disconnect()
@@ -1779,8 +1778,8 @@ function Library:create_ui()
                         font_params.Size = 10
                         font_params.Width = 10000
                         local font_size = TextService:GetTextBoundsAsync(font_params)
-                        KeybindBox.Size = UDim2.fromOffset(font_size.X + 8, 15)
-                        KeybindBox.Position = UDim2.new(1, -(font_size.X + 8) - 25, 0.5, 0)
+                        local newWidth = font_size.X + 8
+                        KeybindBox.Size = UDim2.fromOffset(newWidth, 15)
                         
                         Library._choosing_keybind = false
                         KeybindLabel.Text = keybind_string
