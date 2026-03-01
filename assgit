@@ -2533,6 +2533,10 @@ function Library:create_ui()
                 LayoutOrderModule = LayoutOrderModule + 1
 
                 local SliderManager = {}
+                
+                settings.minimum_value = settings.minimum or settings.minimum_value or 0
+                settings.maximum_value = settings.maximum or settings.maximum_value or 100
+                settings.value = settings.default or settings.value or settings.minimum_value
 
                 if self._size == 0 then
                     self._size = 11
