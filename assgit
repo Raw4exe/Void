@@ -555,6 +555,39 @@ function Library:create_ui()
     UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     UIStroke.Parent = Container
     
+    local TopBar = Instance.new('Frame')
+    TopBar.Name = 'TopBar'
+    TopBar.AnchorPoint = Vector2.new(0.5, 1)
+    TopBar.Position = UDim2.new(0.5, 0, 0, -10)
+    TopBar.Size = UDim2.new(0, 0, 0, 35)
+    TopBar.BackgroundColor3 = Color3.fromRGB(12, 13, 15)
+    TopBar.BackgroundTransparency = 0.05
+    TopBar.BorderSizePixel = 0
+    TopBar.Parent = Container
+    
+    local TopBarCorner = Instance.new('UICorner')
+    TopBarCorner.CornerRadius = UDim.new(0, 8)
+    TopBarCorner.Parent = TopBar
+    
+    local TopBarStroke = Instance.new('UIStroke')
+    TopBarStroke.Color = Color3.fromRGB(52, 66, 89)
+    TopBarStroke.Transparency = 0.5
+    TopBarStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    TopBarStroke.Parent = TopBar
+    
+    local TopBarText = Instance.new('TextLabel')
+    TopBarText.Name = 'TopBarText'
+    TopBarText.Size = UDim2.new(1, -20, 1, 0)
+    TopBarText.Position = UDim2.new(0, 10, 0, 0)
+    TopBarText.BackgroundTransparency = 1
+    TopBarText.Text = 'Test Top Bar'
+    TopBarText.TextColor3 = Color3.fromRGB(152, 181, 255)
+    TopBarText.TextTransparency = 0.2
+    TopBarText.TextSize = 12
+    TopBarText.TextXAlignment = Enum.TextXAlignment.Left
+    TopBarText.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    TopBarText.Parent = TopBar
+    
     local Handler = Instance.new('Frame')
     Handler.BackgroundTransparency = 1
     Handler.Name = 'Handler'
@@ -1287,9 +1320,15 @@ function Library:create_ui()
             TweenService:Create(Container, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
                 Size = UDim2.fromOffset(698, 479)
             }):Play()
+            TweenService:Create(TopBar, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                Size = UDim2.new(0, 698, 0, 35)
+            }):Play()
         else
             TweenService:Create(Container, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
                 Size = UDim2.fromOffset(104.5, 52)
+            }):Play()
+            TweenService:Create(TopBar, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                Size = UDim2.new(0, 0, 0, 35)
             }):Play()
         end
     end
