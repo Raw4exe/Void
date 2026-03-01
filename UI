@@ -794,34 +794,6 @@ function Library:create_ui()
         }):Play()
     end)
     
-    local dotsAnimation = nil
-    local function startDotsAnimation()
-        if dotsAnimation then
-            dotsAnimation:Disconnect()
-        end
-        DotsLabel.Visible = true
-        local dots = 0
-        dotsAnimation = RunService.Heartbeat:Connect(function()
-            dots = (dots + 0.02) % 3
-            if dots < 1 then
-                DotsLabel.Text = '.'
-            elseif dots < 2 then
-                DotsLabel.Text = '..'
-            else
-                DotsLabel.Text = '...'
-            end
-        end)
-    end
-    
-    local function stopDotsAnimation()
-        if dotsAnimation then
-            dotsAnimation:Disconnect()
-            dotsAnimation = nil
-        end
-        DotsLabel.Visible = false
-        DotsLabel.Text = ''
-    end
-    
     SearchBox:GetPropertyChangedSignal('Text'):Connect(function()
         if SearchBox.Text ~= '' then
             TweenService:Create(ClearButton, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
@@ -844,9 +816,6 @@ function Library:create_ui()
         TweenService:Create(SearchIcon, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
             ImageTransparency = 0
         }):Play()
-        if SearchBox.Text == '' then
-            startDotsAnimation()
-        end
     end)
     
     SearchBox.FocusLost:Connect(function()
@@ -859,7 +828,6 @@ function Library:create_ui()
         TweenService:Create(SearchIcon, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
             ImageTransparency = 0.3
         }):Play()
-        stopDotsAnimation()
     end)
     
     local SearchLeftSection = Instance.new('ScrollingFrame')
@@ -940,33 +908,28 @@ function Library:create_ui()
         end
         
         isSearchActive = false
-        stopDotsAnimation()
     end
     
-    local function fuzzyMatch(text, query)
+    local function wordStartMatch(text, query)
         text = text:lower()
         query = query:lower()
         
-        if text:find(query, 1, true) then
-            return true, 100
+        local words = {}
+        for word in text:gmatch("%S+") do
+            table.insert(words, word)
         end
         
-        local score = 0
-        local textIndex = 1
-        
-        for i = 1, #query do
-            local char = query:sub(i, i)
-            local found = text:find(char, textIndex, true)
-            
-            if found then
-                score = score + (100 - (found - textIndex))
-                textIndex = found + 1
-            else
-                return false, 0
+        for _, word in ipairs(words) do
+            if word:sub(1, #query) == query then
+                return true, 100
             end
         end
         
-        return true, score
+        if text:sub(1, #query) == query then
+            return true, 100
+        end
+        
+        return false, 0
     end
     
     local function performSearch(query)
@@ -976,7 +939,6 @@ function Library:create_ui()
         end
         
         isSearchActive = true
-        startDotsAnimation()
         
         for _, section in pairs(Sections:GetChildren()) do
             if section:IsA('ScrollingFrame') and section.Name ~= 'SearchLeftSection' and section.Name ~= 'SearchRightSection' then
@@ -1008,11 +970,11 @@ function Library:create_ui()
                         local moduleName = header and header:FindFirstChild('ModuleName')
                         local moduleText = moduleName and moduleName.Text or ''
                         
-                        local moduleMatches, moduleScore = fuzzyMatch(moduleText, query)
+                        local moduleMatches, moduleScore = wordStartMatch(moduleText, query)
                         
                         local options = module:FindFirstChild('Options')
                         local matchedElements = {}
-                        local maxElementScore = 0
+                        local hasElementMatch = false
                         
                         if options then
                             for _, element in pairs(options:GetChildren()) do
@@ -1027,22 +989,22 @@ function Library:create_ui()
                                         elementName = element.Title.Text
                                     end
                                     
-                                    local elementMatches, elementScore = fuzzyMatch(elementName, query)
+                                    local elementMatches, elementScore = wordStartMatch(elementName, query)
                                     
                                     if elementMatches then
+                                        hasElementMatch = true
                                         table.insert(matchedElements, {element = element, score = elementScore})
-                                        maxElementScore = math.max(maxElementScore, elementScore)
                                     end
                                 end
                             end
                         end
                         
-                        if moduleMatches or #matchedElements > 0 then
-                            local finalScore = math.max(moduleScore, maxElementScore)
+                        if moduleMatches or hasElementMatch then
                             table.insert(matchedModules, {
                                 module = module,
                                 matchedElements = matchedElements,
-                                score = finalScore
+                                showFullModule = moduleMatches,
+                                score = moduleScore
                             })
                         end
                     end
@@ -1057,6 +1019,7 @@ function Library:create_ui()
         for i, data in ipairs(matchedModules) do
             local module = data.module
             local matchedElements = data.matchedElements
+            local showFullModule = data.showFullModule
             
             local moduleClone = module:Clone()
             
@@ -1065,31 +1028,45 @@ function Library:create_ui()
             
             local options = moduleClone:FindFirstChild('Options')
             if options then
-                local totalHeight = 0
-                for _, element in pairs(options:GetChildren()) do
-                    if element:IsA('GuiObject') and element.Name ~= 'UIPadding' and element.Name ~= 'UIListLayout' then
-                        local isMatched = false
-                        for _, matched in pairs(matchedElements) do
-                            if element.Name == matched.element.Name then
-                                isMatched = true
-                                break
-                            end
-                        end
-                        
-                        if isMatched then
+                if showFullModule then
+                    for _, element in pairs(options:GetChildren()) do
+                        if element:IsA('GuiObject') and element.Name ~= 'UIPadding' and element.Name ~= 'UIListLayout' then
                             element.Visible = true
-                            totalHeight = totalHeight + element.Size.Y.Offset + 5
-                        else
-                            element.Visible = false
                         end
                     end
+                    
+                    local header = module:FindFirstChild('Header')
+                    if header then
+                        local originalSize = module.Size
+                        moduleClone.Size = originalSize
+                    end
+                else
+                    local totalHeight = 0
+                    for _, element in pairs(options:GetChildren()) do
+                        if element:IsA('GuiObject') and element.Name ~= 'UIPadding' and element.Name ~= 'UIListLayout' then
+                            local isMatched = false
+                            for _, matched in pairs(matchedElements) do
+                                if element.Name == matched.element.Name then
+                                    isMatched = true
+                                    break
+                                end
+                            end
+                            
+                            if isMatched then
+                                element.Visible = true
+                                totalHeight = totalHeight + element.Size.Y.Offset + 5
+                            else
+                                element.Visible = false
+                            end
+                        end
+                    end
+                    
+                    if totalHeight > 0 then
+                        totalHeight = totalHeight + 8
+                    end
+                    
+                    moduleClone.Size = UDim2.fromOffset(241, 93 + totalHeight)
                 end
-                
-                if totalHeight > 0 then
-                    totalHeight = totalHeight + 8
-                end
-                
-                moduleClone.Size = UDim2.fromOffset(241, 93 + totalHeight)
             end
         end
     end
