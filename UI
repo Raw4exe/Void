@@ -1367,63 +1367,80 @@ function Library:create_ui()
                 local Paragraph = Instance.new('Frame')
                 Paragraph.BackgroundColor3 = Color3.fromRGB(32, 38, 51)
                 Paragraph.BackgroundTransparency = 0.1
-                Paragraph.Size = UDim2.new(0, 207, 0, 30) -- Initial size, auto-resized later
+                Paragraph.Size = UDim2.new(0, 207, 0, 30)
                 Paragraph.BorderSizePixel = 0
                 Paragraph.Name = "Paragraph"
-                Paragraph.AutomaticSize = Enum.AutomaticSize.Y -- Support auto-resizing height
+                Paragraph.AutomaticSize = Enum.AutomaticSize.Y
                 Paragraph.Parent = Options
-                Paragraph.LayoutOrder = LayoutOrderModule;
+                Paragraph.LayoutOrder = LayoutOrderModule
             
                 local UICorner = Instance.new('UICorner')
-                UICorner.CornerRadius = UDim.new(0, 4)
+                UICorner.CornerRadius = UDim.new(0, 6)
                 UICorner.Parent = Paragraph
+                
+                local UIStroke = Instance.new('UIStroke')
+                UIStroke.Color = Color3.fromRGB(52, 66, 89)
+                UIStroke.Transparency = 0.5
+                UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+                UIStroke.Parent = Paragraph
+                
+                local UIPadding = Instance.new('UIPadding')
+                UIPadding.PaddingLeft = UDim.new(0, 10)
+                UIPadding.PaddingRight = UDim.new(0, 10)
+                UIPadding.PaddingTop = UDim.new(0, 8)
+                UIPadding.PaddingBottom = UDim.new(0, 8)
+                UIPadding.Parent = Paragraph
             
-                -- Title Label
                 local Title = Instance.new('TextLabel')
                 Title.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
-                Title.TextColor3 = Color3.fromRGB(210, 210, 210)
+                Title.TextColor3 = Color3.fromRGB(152, 181, 255)
+                Title.TextTransparency = 0.2
                 Title.Text = settings.title or "Title"
-                Title.Size = UDim2.new(1, -10, 0, 20)
-                Title.Position = UDim2.new(0, 5, 0, 5)
+                Title.Size = UDim2.new(1, 0, 0, 15)
+                Title.Position = UDim2.new(0, 0, 0, 0)
                 Title.BackgroundTransparency = 1
                 Title.TextXAlignment = Enum.TextXAlignment.Left
-                Title.TextYAlignment = Enum.TextYAlignment.Center
+                Title.TextYAlignment = Enum.TextYAlignment.Top
                 Title.TextSize = 12
-                Title.AutomaticSize = Enum.AutomaticSize.XY
                 Title.Parent = Paragraph
             
-                -- Body Text
                 local Body = Instance.new('TextLabel')
                 Body.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-                Body.TextColor3 = Color3.fromRGB(180, 180, 180)
+                Body.TextColor3 = Color3.fromRGB(200, 200, 200)
+                Body.TextTransparency = 0.3
                 
                 if not settings.rich then
-                    Body.Text = settings.text or "Skibidi"
+                    Body.Text = settings.text or "Description text"
                 else
                     Body.RichText = true
                     Body.Text = settings.richtext or "<font color='rgb(255,0,0)'>March</font> user"
                 end
                 
-                Body.Size = UDim2.new(1, -10, 0, 20)
-                Body.Position = UDim2.new(0, 5, 0, 30)
+                Body.Size = UDim2.new(1, 0, 0, 0)
+                Body.Position = UDim2.new(0, 0, 0, 20)
                 Body.BackgroundTransparency = 1
                 Body.TextXAlignment = Enum.TextXAlignment.Left
                 Body.TextYAlignment = Enum.TextYAlignment.Top
-                Body.TextSize = 11
+                Body.TextSize = 10
                 Body.TextWrapped = true
-                Body.AutomaticSize = Enum.AutomaticSize.XY
+                Body.AutomaticSize = Enum.AutomaticSize.Y
                 Body.Parent = Paragraph
             
-                -- Hover effect for Paragraph (optional)
                 Paragraph.MouseEnter:Connect(function()
                     TweenService:Create(Paragraph, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        BackgroundColor3 = Color3.fromRGB(42, 50, 66)
+                        BackgroundTransparency = 0.05
+                    }):Play()
+                    TweenService:Create(UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        Transparency = 0.3
                     }):Play()
                 end)
             
                 Paragraph.MouseLeave:Connect(function()
                     TweenService:Create(Paragraph, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        BackgroundColor3 = Color3.fromRGB(32, 38, 51)
+                        BackgroundTransparency = 0.1
+                    }):Play()
+                    TweenService:Create(UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        Transparency = 0.5
                     }):Play()
                 end)
 
@@ -1631,7 +1648,7 @@ function Library:create_ui()
                 local KeybindBox = Instance.new("Frame")
                 KeybindBox.Name = "KeybindBox"
                 KeybindBox.BackgroundTransparency = 0.699999988079071
-                KeybindBox.Position = UDim2.new(1, -48, 0.5, 0)
+                KeybindBox.Position = UDim2.new(1, -55, 0.5, 0)
                 KeybindBox.AnchorPoint = Vector2.new(1, 0.5)
                 KeybindBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 KeybindBox.Size = UDim2.new(0, 23, 0, 15)
@@ -1642,6 +1659,12 @@ function Library:create_ui()
                 local KeybindCorner = Instance.new("UICorner")
                 KeybindCorner.CornerRadius = UDim.new(0, 3)
                 KeybindCorner.Parent = KeybindBox
+                
+                local KeybindStroke = Instance.new("UIStroke")
+                KeybindStroke.Color = Color3.fromRGB(52, 66, 89)
+                KeybindStroke.Transparency = 0.3
+                KeybindStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+                KeybindStroke.Parent = KeybindBox
             
                 local KeybindLabel = Instance.new("TextLabel")
                 KeybindLabel.Name = "KeybindLabel"
