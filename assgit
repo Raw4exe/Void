@@ -2099,7 +2099,7 @@ function Library:create_ui()
                     self._size = 11
                 end
             
-                self._size += 38
+                self._size += 33
             
                 if ModuleManager._state then
                     Module.Size = UDim2.fromOffset(241, 93 + self._size)
@@ -2127,51 +2127,27 @@ function Library:create_ui()
                 Textbox.TextColor3 = Color3.fromRGB(255, 255, 255)
                 Textbox.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Textbox.PlaceholderText = settings.placeholder or "Enter text..."
-                Textbox.PlaceholderColor3 = Color3.fromRGB(180, 180, 180)
+                Textbox.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
                 Textbox.Text = Library._config._flags[settings.flag] or ""
                 Textbox.Name = 'Textbox'
-                Textbox.Size = UDim2.new(0, 207, 0, 20)
+                Textbox.Size = UDim2.new(0, 207, 0, 18)
                 Textbox.BorderSizePixel = 0
-                Textbox.TextSize = 11
-                Textbox.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
-                Textbox.BackgroundTransparency = 0.85
+                Textbox.TextSize = 10
+                Textbox.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
+                Textbox.BackgroundTransparency = 0
                 Textbox.ClearTextOnFocus = false
                 Textbox.TextXAlignment = Enum.TextXAlignment.Left
                 Textbox.Parent = Options
                 Textbox.LayoutOrder = LayoutOrderModule
             
                 local UICorner = Instance.new('UICorner')
-                UICorner.CornerRadius = UDim.new(0, 5)
+                UICorner.CornerRadius = UDim.new(0, 4)
                 UICorner.Parent = Textbox
                 
                 local UIPadding = Instance.new('UIPadding')
-                UIPadding.PaddingLeft = UDim.new(0, 8)
-                UIPadding.PaddingRight = UDim.new(0, 8)
+                UIPadding.PaddingLeft = UDim.new(0, 6)
+                UIPadding.PaddingRight = UDim.new(0, 6)
                 UIPadding.Parent = Textbox
-                
-                local UIStroke = Instance.new('UIStroke')
-                UIStroke.Color = Color3.fromRGB(152, 181, 255)
-                UIStroke.Transparency = 0.7
-                UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-                UIStroke.Parent = Textbox
-                
-                Textbox.Focused:Connect(function()
-                    TweenService:Create(Textbox, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        BackgroundTransparency = 0.7
-                    }):Play()
-                    TweenService:Create(UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        Transparency = 0.3
-                    }):Play()
-                end)
-                
-                Textbox.FocusLost:Connect(function()
-                    TweenService:Create(Textbox, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        BackgroundTransparency = 0.85
-                    }):Play()
-                    TweenService:Create(UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        Transparency = 0.7
-                    }):Play()
-                end)
             
                 function TextboxManager:update_text(text: string)
                     self._text = text
@@ -2476,6 +2452,74 @@ function Library:create_ui()
                 end)
             
                 return ButtonManager
+            end
+
+            function ModuleManager:create_status(settings: any)
+                LayoutOrderModule = LayoutOrderModule + 1
+                local StatusManager = {
+                    _value = settings.default or "Ready"
+                }
+            
+                if self._size == 0 then
+                    self._size = 11
+                end
+                self._size += 20
+            
+                if ModuleManager._state then
+                    Module.Size = UDim2.fromOffset(241, 93 + self._size)
+                end
+                Options.Size = UDim2.fromOffset(241, self._size)
+            
+                local StatusContainer = Instance.new("Frame")
+                StatusContainer.Size = UDim2.new(0, 207, 0, 15)
+                StatusContainer.BackgroundTransparency = 1
+                StatusContainer.Name = "StatusContainer"
+                StatusContainer.Parent = Options
+                StatusContainer.LayoutOrder = LayoutOrderModule
+            
+                local TitleLabel = Instance.new("TextLabel")
+                TitleLabel.Name = "TitleLabel"
+                TitleLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+                TitleLabel.TextSize = 11
+                TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+                TitleLabel.TextTransparency = 0.2
+                TitleLabel.Text = settings.title or "Status"
+                TitleLabel.Size = UDim2.new(0, 100, 0, 13)
+                TitleLabel.AnchorPoint = Vector2.new(0, 0.5)
+                TitleLabel.Position = UDim2.new(0, 0, 0.5, 0)
+                TitleLabel.BackgroundTransparency = 1
+                TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+                TitleLabel.Parent = StatusContainer
+            
+                local ValueLabel = Instance.new("TextLabel")
+                ValueLabel.Name = "ValueLabel"
+                ValueLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+                ValueLabel.TextSize = 10
+                ValueLabel.TextColor3 = Color3.fromRGB(152, 181, 255)
+                ValueLabel.TextTransparency = 0.3
+                ValueLabel.Text = StatusManager._value
+                ValueLabel.Size = UDim2.new(0, 100, 0, 13)
+                ValueLabel.AnchorPoint = Vector2.new(1, 0.5)
+                ValueLabel.Position = UDim2.new(1, 0, 0.5, 0)
+                ValueLabel.BackgroundTransparency = 1
+                ValueLabel.TextXAlignment = Enum.TextXAlignment.Right
+                ValueLabel.Parent = StatusContainer
+            
+                function StatusManager:update(value: string)
+                    self._value = value
+                    ValueLabel.Text = value
+                    Library._config._flags[settings.flag] = value
+                    Config:save(game.GameId, Library._config)
+                    if settings.callback then
+                        settings.callback(value)
+                    end
+                end
+            
+                if Library:flag_type(settings.flag, 'string') then
+                    StatusManager:update(Library._config._flags[settings.flag])
+                end
+            
+                return StatusManager
             end
 
             function ModuleManager:create_divider(settings: any)
