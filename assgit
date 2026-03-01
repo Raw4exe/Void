@@ -2889,7 +2889,7 @@ function Library:create_ui()
                 
                 local Options = Instance.new('ScrollingFrame')
                 Options.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
-                Options.Active = true
+                Options.Active = false
                 Options.ScrollBarImageTransparency = 1
                 Options.AutomaticCanvasSize = Enum.AutomaticSize.XY
                 Options.ScrollBarThickness = 0
@@ -3052,6 +3052,7 @@ function Library:create_ui()
                         Option.Position = UDim2.new(0, 0, 0, 0)
                         Option.BorderSizePixel = 0
                         Option.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                        Option.ZIndex = 10
                         Option.Parent = Options
                         
                         local UIGradient = Instance.new('UIGradient')
@@ -3062,6 +3063,24 @@ function Library:create_ui()
                             NumberSequenceKeypoint.new(1, 1)
                         }
                         UIGradient.Parent = Option
+                        
+                        Option.MouseEnter:Connect(function()
+                            TweenService:Create(Option, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                                TextTransparency = 0.3
+                            }):Play()
+                        end)
+                        
+                        Option.MouseLeave:Connect(function()
+                            local isSelected = false
+                            if settings.multi_dropdown then
+                                isSelected = table.find(Library._config._flags[settings.flag] or {}, value) ~= nil
+                            else
+                                isSelected = Library._config._flags[settings.flag] == value
+                            end
+                            TweenService:Create(Option, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                                TextTransparency = isSelected and 0.2 or 0.6
+                            }):Play()
+                        end)
 
                         Option.MouseButton1Click:Connect(function()
                             if not Library._config._flags[settings.flag] then
