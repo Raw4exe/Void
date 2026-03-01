@@ -1648,7 +1648,7 @@ function Library:create_ui()
                 local KeybindBox = Instance.new("Frame")
                 KeybindBox.Name = "KeybindBox"
                 KeybindBox.BackgroundTransparency = 0.699999988079071
-                KeybindBox.Position = UDim2.new(1, -55, 0.5, 0)
+                KeybindBox.Position = UDim2.new(1, -60, 0.5, 0)
                 KeybindBox.AnchorPoint = Vector2.new(1, 0.5)
                 KeybindBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 KeybindBox.Size = UDim2.new(0, 23, 0, 15)
@@ -1758,7 +1758,7 @@ function Library:create_ui()
                     CheckboxManager:change_state(not CheckboxManager._state)
                 end)
             
-                Checkbox.InputBegan:Connect(function(input, gameProcessed)
+                KeybindBox.InputBegan:Connect(function(input, gameProcessed)
                     if gameProcessed then return end
                     if input.UserInputType ~= Enum.UserInputType.MouseButton1 then return end
                     if Library._choosing_keybind then return end
@@ -1814,17 +1814,6 @@ function Library:create_ui()
                         end)
                     end)
                 end)
-            
-                local keyPressConnection = UserInputService.InputBegan:Connect(function(input, gameProcessed)
-                    if gameProcessed then return end
-                    if input.UserInputType == Enum.UserInputType.Keyboard then
-                        local storedKey = Library._config._keybinds[settings.flag]
-                        if storedKey and tostring(input.KeyCode) == storedKey then
-                            CheckboxManager:change_state(not CheckboxManager._state)
-                        end
-                    end
-                end)
-                Connections[settings.flag .. "_keypress"] = keyPressConnection
             
                 return CheckboxManager
             end
