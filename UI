@@ -53,9 +53,11 @@ if old_March then
     Debris:AddItem(old_March, 0)
 end
 
-if not isfolder("March") then
-    makefolder("March")
-end
+pcall(function()
+    if not isfolder("March") then
+        makefolder("March")
+    end
+end)
 
 
 local Connections = setmetatable({
@@ -282,6 +284,9 @@ end
 local Config = setmetatable({
     save = function(self: any, file_name: any, config: any)
         local success_save, result = pcall(function()
+            if not isfolder("March") then
+                makefolder("March")
+            end
             local flags = HttpService:JSONEncode(config)
             writefile('March/'..file_name..'.json', flags)
         end)
