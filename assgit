@@ -1159,7 +1159,7 @@ function Library:create_ui()
         return Button
     end
     
-    local SettingsButton, PaletteButton, ConfigButton
+    local SettingsButton, PaletteButton, ConfigButton, ListButton
     
     if self._control_settings_enabled then
         SettingsButton = createControlButton('SettingsButton', 'rbxassetid://10734950309', 1)
@@ -1173,74 +1173,7 @@ function Library:create_ui()
         ConfigButton = createControlButton('ConfigButton', 'rbxassetid://10734952273', 3)
     end
     
-    local currentOpenPanel = nil
-    
-    local function toggleSidePanel(panelType)
-        if currentOpenPanel == panelType then
-            currentOpenPanel = nil
-            TweenService:Create(SidePanel, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                Size = UDim2.new(0, 0, 0, 479)
-            }):Play()
-        else
-            currentOpenPanel = panelType
-            TweenService:Create(SidePanel, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                Size = UDim2.new(0, 200, 0, 479)
-            }):Play()
-            
-            SidePanelContent:ClearAllChildren()
-            
-            local Title = Instance.new('TextLabel')
-            Title.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
-            Title.TextColor3 = Color3.fromRGB(152, 181, 255)
-            Title.TextTransparency = 0.2
-            Title.Text = panelType
-            Title.Size = UDim2.new(1, -20, 0, 30)
-            Title.Position = UDim2.new(0, 10, 0, 10)
-            Title.BackgroundTransparency = 1
-            Title.TextXAlignment = Enum.TextXAlignment.Left
-            Title.TextSize = 14
-            Title.Parent = SidePanelContent
-        end
-    end
-    
-    if SettingsButton then
-        SettingsButton.MouseButton1Click:Connect(function()
-            TweenService:Create(SettingsButton, TweenInfo.new(0.1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                BackgroundTransparency = 0
-            }):Play()
-            task.wait(0.1)
-            TweenService:Create(SettingsButton, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                BackgroundTransparency = 0.3
-            }):Play()
-            toggleSidePanel('Settings')
-        end)
-    end
-    
-    if PaletteButton then
-        PaletteButton.MouseButton1Click:Connect(function()
-            TweenService:Create(PaletteButton, TweenInfo.new(0.1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                BackgroundTransparency = 0
-            }):Play()
-            task.wait(0.1)
-            TweenService:Create(PaletteButton, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                BackgroundTransparency = 0.3
-            }):Play()
-            toggleSidePanel('Palette')
-        end)
-    end
-    
-    if ConfigButton then
-        ConfigButton.MouseButton1Click:Connect(function()
-            TweenService:Create(ConfigButton, TweenInfo.new(0.1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                BackgroundTransparency = 0
-            }):Play()
-            task.wait(0.1)
-            TweenService:Create(ConfigButton, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                BackgroundTransparency = 0.3
-            }):Play()
-            toggleSidePanel('Config')
-        end)
-    end
+    ListButton = createControlButton('ListButton', 'rbxassetid://10723433811', 4)
     
     local UIScale = Instance.new('UIScale')
     UIScale.Parent = Container    
