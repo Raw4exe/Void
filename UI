@@ -696,7 +696,7 @@ function Library:create_ui()
     local ControlPanel = Instance.new('Frame')
     ControlPanel.Name = 'ControlPanel'
     ControlPanel.BackgroundTransparency = 1
-    ControlPanel.Position = UDim2.new(0.015, 0, 0.82, 0)
+    ControlPanel.Position = UDim2.new(0.015, 0, 0.88, 0)
     ControlPanel.AnchorPoint = Vector2.new(0, 0)
     ControlPanel.Size = UDim2.new(0, 80, 0, 22)
     ControlPanel.BorderSizePixel = 0
@@ -706,7 +706,7 @@ function Library:create_ui()
     SearchBar.Name = 'SearchBar'
     SearchBar.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
     SearchBar.BackgroundTransparency = 0.5
-    SearchBar.Position = UDim2.new(0.015, 0, 0.88, 0)
+    SearchBar.Position = UDim2.new(0.015, 0, 0.93, 0)
     SearchBar.Size = UDim2.new(0, 129, 0, 28)
     SearchBar.BorderSizePixel = 0
     SearchBar.Parent = Handler
@@ -819,140 +819,217 @@ function Library:create_ui()
         stopDotsAnimation()
     end)
     
+    local SearchLeftSection = Instance.new('ScrollingFrame')
+    SearchLeftSection.Name = 'SearchLeftSection'
+    SearchLeftSection.AutomaticCanvasSize = Enum.AutomaticSize.XY
+    SearchLeftSection.ScrollBarThickness = 0
+    SearchLeftSection.Size = UDim2.new(0, 243, 0, 445)
+    SearchLeftSection.Selectable = false
+    SearchLeftSection.AnchorPoint = Vector2.new(0, 0.5)
+    SearchLeftSection.ScrollBarImageTransparency = 1
+    SearchLeftSection.BackgroundTransparency = 1
+    SearchLeftSection.Position = UDim2.new(0.2594326436519623, 0, 0.5, 0)
+    SearchLeftSection.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    SearchLeftSection.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    SearchLeftSection.BorderSizePixel = 0
+    SearchLeftSection.CanvasSize = UDim2.new(0, 0, 0.5, 0)
+    SearchLeftSection.Visible = false
+    SearchLeftSection.Parent = Sections
+    
+    local UIListLayout = Instance.new('UIListLayout')
+    UIListLayout.Padding = UDim.new(0, 11)
+    UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    UIListLayout.Parent = SearchLeftSection
+    
+    local UIPadding = Instance.new('UIPadding')
+    UIPadding.PaddingTop = UDim.new(0, 1)
+    UIPadding.Parent = SearchLeftSection
+
+    local SearchRightSection = Instance.new('ScrollingFrame')
+    SearchRightSection.Name = 'SearchRightSection'
+    SearchRightSection.AutomaticCanvasSize = Enum.AutomaticSize.XY
+    SearchRightSection.ScrollBarThickness = 0
+    SearchRightSection.Size = UDim2.new(0, 243, 0, 445)
+    SearchRightSection.Selectable = false
+    SearchRightSection.AnchorPoint = Vector2.new(0, 0.5)
+    SearchRightSection.ScrollBarImageTransparency = 1
+    SearchRightSection.BackgroundTransparency = 1
+    SearchRightSection.Position = UDim2.new(0.6290000081062317, 0, 0.5, 0)
+    SearchRightSection.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    SearchRightSection.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    SearchRightSection.BorderSizePixel = 0
+    SearchRightSection.CanvasSize = UDim2.new(0, 0, 0.5, 0)
+    SearchRightSection.Visible = false
+    SearchRightSection.Parent = Sections
+    
+    local UIListLayout = Instance.new('UIListLayout')
+    UIListLayout.Padding = UDim.new(0, 11)
+    UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    UIListLayout.Parent = SearchRightSection
+    
+    local UIPadding = Instance.new('UIPadding')
+    UIPadding.PaddingTop = UDim.new(0, 1)
+    UIPadding.Parent = SearchRightSection
+    
+    local originalModuleData = {}
+    
     local function performSearch(query)
         query = query:lower()
         
-        local allModules = {}
-        
-        for _, section in pairs(Sections:GetChildren()) do
-            if section:IsA('ScrollingFrame') then
-                for _, module in pairs(section:GetChildren()) do
-                    if module:IsA('Frame') and module.Name == 'Module' then
-                        table.insert(allModules, {module = module, section = section})
-                    end
+        if query == '' then
+            SearchLeftSection.Visible = false
+            SearchRightSection.Visible = false
+            
+            for _, clone in pairs(SearchLeftSection:GetChildren()) do
+                if clone:IsA('Frame') and clone.Name == 'Module' then
+                    clone:Destroy()
                 end
             end
-        end
-        
-        if query == '' then
-            for _, data in pairs(allModules) do
+            for _, clone in pairs(SearchRightSection:GetChildren()) do
+                if clone:IsA('Frame') and clone.Name == 'Module' then
+                    clone:Destroy()
+                end
+            end
+            
+            for _, data in pairs(originalModuleData) do
                 local module = data.module
+                local originalParent = data.originalParent
+                module.Parent = originalParent
                 module.Visible = true
-                module.Parent = data.section
                 
-                local header = module:FindFirstChild('Header')
-                if header then
-                    local moduleManager = module:FindFirstChild('ModuleManager')
-                    if moduleManager and moduleManager.Value then
-                        local manager = moduleManager.Value
-                        if manager._state then
-                            local options = module:FindFirstChild('Options')
-                            if options then
-                                for _, element in pairs(options:GetChildren()) do
-                                    if element:IsA('GuiObject') and element.Name ~= 'UIPadding' and element.Name ~= 'UIListLayout' then
-                                        element.Visible = true
-                                    end
-                                end
-                            end
-                            module.Size = UDim2.fromOffset(241, 93 + manager._size + manager._multiplier)
-                        else
-                            module.Size = UDim2.fromOffset(241, 93)
+                local options = module:FindFirstChild('Options')
+                if options then
+                    for _, element in pairs(options:GetChildren()) do
+                        if element:IsA('GuiObject') and element.Name ~= 'UIPadding' and element.Name ~= 'UIListLayout' then
+                            element.Visible = data.elementStates[element] or true
                         end
                     end
                 end
+                
+                if data.originalSize then
+                    module.Size = data.originalSize
+                end
             end
+            
+            originalModuleData = {}
+            
+            for _, section in pairs(Sections:GetChildren()) do
+                if section:IsA('ScrollingFrame') and section.Name ~= 'SearchLeftSection' and section.Name ~= 'SearchRightSection' then
+                    section.Visible = true
+                end
+            end
+            
             stopDotsAnimation()
             return
         end
         
         startDotsAnimation()
         
+        for _, section in pairs(Sections:GetChildren()) do
+            if section:IsA('ScrollingFrame') and section.Name ~= 'SearchLeftSection' and section.Name ~= 'SearchRightSection' then
+                section.Visible = false
+            end
+        end
+        
+        SearchLeftSection.Visible = true
+        SearchRightSection.Visible = true
+        
+        for _, clone in pairs(SearchLeftSection:GetChildren()) do
+            if clone:IsA('Frame') and clone.Name == 'Module' then
+                clone:Destroy()
+            end
+        end
+        for _, clone in pairs(SearchRightSection:GetChildren()) do
+            if clone:IsA('Frame') and clone.Name == 'Module' then
+                clone:Destroy()
+            end
+        end
+        
         local matchedModules = {}
         
-        for _, data in pairs(allModules) do
-            local module = data.module
-            local header = module:FindFirstChild('Header')
-            local moduleName = header and header:FindFirstChild('ModuleName')
-            local moduleMatches = moduleName and moduleName.Text:lower():find(query)
-            
-            local options = module:FindFirstChild('Options')
-            local visibleElements = {}
-            local hasVisibleElements = false
-            
-            if options then
-                for _, element in pairs(options:GetChildren()) do
-                    if element:IsA('GuiObject') and element.Name ~= 'UIPadding' and element.Name ~= 'UIListLayout' then
-                        local elementName = ''
+        for _, section in pairs(Sections:GetChildren()) do
+            if section:IsA('ScrollingFrame') and section.Name ~= 'SearchLeftSection' and section.Name ~= 'SearchRightSection' then
+                for _, module in pairs(section:GetChildren()) do
+                    if module:IsA('Frame') and module.Name == 'Module' then
+                        local header = module:FindFirstChild('Header')
+                        local moduleName = header and header:FindFirstChild('ModuleName')
+                        local moduleMatches = moduleName and moduleName.Text:lower():find(query)
                         
-                        if element:FindFirstChild('TitleLabel') then
-                            elementName = element.TitleLabel.Text
-                        elseif element:FindFirstChild('TextLabel') then
-                            elementName = element.TextLabel.Text
-                        elseif element.Name == 'Paragraph' and element:FindFirstChild('Title') then
-                            elementName = element.Title.Text
+                        local options = module:FindFirstChild('Options')
+                        local matchedElements = {}
+                        
+                        if options then
+                            for _, element in pairs(options:GetChildren()) do
+                                if element:IsA('GuiObject') and element.Name ~= 'UIPadding' and element.Name ~= 'UIListLayout' then
+                                    local elementName = ''
+                                    
+                                    if element:FindFirstChild('TitleLabel') then
+                                        elementName = element.TitleLabel.Text
+                                    elseif element:FindFirstChild('TextLabel') then
+                                        elementName = element.TextLabel.Text
+                                    elseif element.Name == 'Paragraph' and element:FindFirstChild('Title') then
+                                        elementName = element.Title.Text
+                                    end
+                                    
+                                    local elementMatches = elementName:lower():find(query)
+                                    
+                                    if moduleMatches or elementMatches then
+                                        table.insert(matchedElements, element)
+                                    end
+                                end
+                            end
                         end
                         
-                        local elementMatches = elementName:lower():find(query)
+                        if moduleMatches or #matchedElements > 0 then
+                            table.insert(matchedModules, {
+                                module = module,
+                                matchedElements = matchedElements,
+                                originalParent = section
+                            })
+                        end
+                    end
+                end
+            end
+        end
+        
+        for i, data in ipairs(matchedModules) do
+            local module = data.module
+            local matchedElements = data.matchedElements
+            
+            local moduleClone = module:Clone()
+            
+            local targetSection = (i % 2 == 1) and SearchLeftSection or SearchRightSection
+            moduleClone.Parent = targetSection
+            
+            local options = moduleClone:FindFirstChild('Options')
+            if options then
+                local totalHeight = 0
+                for _, element in pairs(options:GetChildren()) do
+                    if element:IsA('GuiObject') and element.Name ~= 'UIPadding' and element.Name ~= 'UIListLayout' then
+                        local isMatched = false
+                        for _, matched in pairs(matchedElements) do
+                            if element.Name == matched.Name then
+                                isMatched = true
+                                break
+                            end
+                        end
                         
-                        if moduleMatches or elementMatches then
+                        if isMatched then
                             element.Visible = true
-                            table.insert(visibleElements, element)
-                            hasVisibleElements = true
+                            totalHeight = totalHeight + element.Size.Y.Offset + 5
                         else
                             element.Visible = false
                         end
                     end
                 end
-            end
-            
-            if moduleMatches or hasVisibleElements then
-                module.Visible = true
-                table.insert(matchedModules, {module = module, visibleCount = #visibleElements})
-            else
-                module.Visible = false
-            end
-        end
-        
-        local leftSection, rightSection
-        for _, section in pairs(Sections:GetChildren()) do
-            if section:IsA('ScrollingFrame') then
-                if section.Name == 'LeftSection' then
-                    leftSection = section
-                elseif section.Name == 'RightSection' then
-                    rightSection = section
-                end
-            end
-        end
-        
-        if leftSection and rightSection then
-            for i, data in ipairs(matchedModules) do
-                local module = data.module
-                local visibleCount = data.visibleCount
                 
-                if i % 2 == 1 then
-                    module.Parent = leftSection
-                else
-                    module.Parent = rightSection
+                if totalHeight > 0 then
+                    totalHeight = totalHeight + 8
                 end
                 
-                local header = module:FindFirstChild('Header')
-                if header then
-                    local options = module:FindFirstChild('Options')
-                    if options then
-                        local totalHeight = 0
-                        for _, element in pairs(options:GetChildren()) do
-                            if element:IsA('GuiObject') and element.Visible and element.Name ~= 'UIPadding' and element.Name ~= 'UIListLayout' then
-                                totalHeight = totalHeight + element.Size.Y.Offset + 5
-                            end
-                        end
-                        
-                        if totalHeight > 0 then
-                            totalHeight = totalHeight + 8
-                        end
-                        
-                        module.Size = UDim2.fromOffset(241, 93 + totalHeight)
-                    end
-                end
+                moduleClone.Size = UDim2.fromOffset(241, 93 + totalHeight)
             end
         end
     end
