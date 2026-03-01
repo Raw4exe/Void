@@ -585,14 +585,14 @@ function Library:create_ui()
     ClientName.TextTransparency = 0.20000000298023224
     ClientName.Text = 'VOID [BETA]'
     ClientName.Name = 'ClientName'
-    ClientName.Size = UDim2.new(0, 80, 0, 15)
+    ClientName.Size = UDim2.new(0, 90, 0, 18)
     ClientName.AnchorPoint = Vector2.new(0, 0.5)
     ClientName.Position = UDim2.new(0.0560000017285347, 0, 0.054999999701976776, 0)
     ClientName.BackgroundTransparency = 1
     ClientName.TextXAlignment = Enum.TextXAlignment.Left
     ClientName.BorderSizePixel = 0
     ClientName.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    ClientName.TextSize = 14
+    ClientName.TextSize = 16
     ClientName.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     ClientName.Parent = Handler
     
@@ -1130,7 +1130,7 @@ function Library:create_ui()
             TextLabel.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
             TextLabel.TextColor3 = Color3.fromRGB(209, 222, 255)
             TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
-            TextLabel.Text = 'None'
+            TextLabel.Text = 'N/A'
             TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
             TextLabel.Size = UDim2.new(0, 25, 0, 13)
             TextLabel.BackgroundTransparency = 1
@@ -1280,13 +1280,7 @@ function Library:create_ui()
                     return
                 end
 
-                -- Change from MouseButton3 to MouseButton1 with Shift held
                 if input.UserInputType ~= Enum.UserInputType.MouseButton1 then
-                    return
-                end
-                
-                -- Check if Shift is held down
-                if not UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) and not UserInputService:IsKeyDown(Enum.KeyCode.RightShift) then
                     return
                 end
                 
@@ -1306,12 +1300,10 @@ function Library:create_ui()
                     end
 
                     if input.KeyCode == Enum.KeyCode.Backspace then
-                        ModuleManager:scale_keybind(true)
-
                         Library._config._keybinds[settings.flag] = nil
                         Config:save(game.GameId, Library._config)
 
-                        TextLabel.Text = 'None'
+                        TextLabel.Text = 'N/A'
                         
                         if Connections[settings.flag..'_keybind'] then
                             Connections[settings.flag..'_keybind']:Disconnect()
@@ -1348,6 +1340,9 @@ function Library:create_ui()
             end)
 
             Header.MouseButton1Click:Connect(function()
+                if Library._choosing_keybind then
+                    return
+                end
                 ModuleManager:change_state(not ModuleManager._state)
             end)
 
@@ -1655,7 +1650,7 @@ function Library:create_ui()
                 KeybindLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 KeybindLabel.Text = Library._config._keybinds[settings.flag] 
                     and string.gsub(tostring(Library._config._keybinds[settings.flag]), "Enum.KeyCode.", "") 
-                    or "None"
+                    or "N/A"
                 KeybindLabel.AnchorPoint = Vector2.new(0.5, 0.5)
                 KeybindLabel.Size = UDim2.new(0, 25, 0, 13)
                 KeybindLabel.BackgroundTransparency = 1
@@ -1721,7 +1716,6 @@ function Library:create_ui()
                     CheckboxManager:change_state(Library._config._flags[settings.flag])
                 end
                 
-                -- Scale keybind box if keybind exists
                 if Library._config._keybinds[settings.flag] then
                     local keybind_string = string.gsub(tostring(Library._config._keybinds[settings.flag]), "Enum.KeyCode.", "")
                     local font_params = Instance.new('GetTextBoundsParams')
@@ -1735,8 +1729,7 @@ function Library:create_ui()
                 end
             
                 Checkbox.MouseButton1Click:Connect(function()
-                    -- Only toggle if Shift is NOT held (to avoid conflict with keybind setting)
-                    if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) or UserInputService:IsKeyDown(Enum.KeyCode.RightShift) then
+                    if Library._choosing_keybind then
                         return
                     end
                     CheckboxManager:change_state(not CheckboxManager._state)
@@ -1744,14 +1737,7 @@ function Library:create_ui()
             
                 Checkbox.InputBegan:Connect(function(input, gameProcessed)
                     if gameProcessed then return end
-                    -- Change from MouseButton3 to MouseButton1 with Shift held
                     if input.UserInputType ~= Enum.UserInputType.MouseButton1 then return end
-                    
-                    -- Check if Shift is held down
-                    if not UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) and not UserInputService:IsKeyDown(Enum.KeyCode.RightShift) then
-                        return
-                    end
-                    
                     if Library._choosing_keybind then return end
             
                     Library._choosing_keybind = true
@@ -1764,7 +1750,7 @@ function Library:create_ui()
                         if keyInput.KeyCode == Enum.KeyCode.Backspace then
                             Library._config._keybinds[settings.flag] = nil
                             Config:save(game.GameId, Library._config)
-                            KeybindLabel.Text = "None"
+                            KeybindLabel.Text = "N/A"
                             
                             -- Scale keybind box
                             KeybindBox.Size = UDim2.fromOffset(33, 15)
