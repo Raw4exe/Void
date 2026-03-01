@@ -53,11 +53,9 @@ if old_March then
     Debris:AddItem(old_March, 0)
 end
 
-pcall(function()
-    if not isfolder("March") then
-        makefolder("March")
-    end
-end)
+if not isfolder("March") then
+    makefolder("March")
+end
 
 
 local Connections = setmetatable({
@@ -284,9 +282,6 @@ end
 local Config = setmetatable({
     save = function(self: any, file_name: any, config: any)
         local success_save, result = pcall(function()
-            if not isfolder("March") then
-                makefolder("March")
-            end
             local flags = HttpService:JSONEncode(config)
             writefile('March/'..file_name..'.json', flags)
         end)
@@ -585,19 +580,19 @@ function Library:create_ui()
     UIListLayout.Parent = Tabs
     
     local ClientName = Instance.new('TextLabel')
-    ClientName.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    ClientName.FontFace = Font.new('rbxasset://fonts/families/FredokaOne.json', Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     ClientName.TextColor3 = Color3.fromRGB(152, 181, 255)
     ClientName.TextTransparency = 0.20000000298023224
-    ClientName.Text = 'March'
+    ClientName.Text = 'VOID [BETA]'
     ClientName.Name = 'ClientName'
-    ClientName.Size = UDim2.new(0, 31, 0, 13)
+    ClientName.Size = UDim2.new(0, 80, 0, 15)
     ClientName.AnchorPoint = Vector2.new(0, 0.5)
     ClientName.Position = UDim2.new(0.0560000017285347, 0, 0.054999999701976776, 0)
     ClientName.BackgroundTransparency = 1
     ClientName.TextXAlignment = Enum.TextXAlignment.Left
     ClientName.BorderSizePixel = 0
     ClientName.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    ClientName.TextSize = 13
+    ClientName.TextSize = 14
     ClientName.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     ClientName.Parent = Handler
     
@@ -1285,7 +1280,13 @@ function Library:create_ui()
                     return
                 end
 
-                if input.UserInputType ~= Enum.UserInputType.MouseButton3 then
+                -- Change from MouseButton3 to MouseButton1 with Shift held
+                if input.UserInputType ~= Enum.UserInputType.MouseButton1 then
+                    return
+                end
+                
+                -- Check if Shift is held down
+                if not UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) and not UserInputService:IsKeyDown(Enum.KeyCode.RightShift) then
                     return
                 end
                 
@@ -1632,36 +1633,38 @@ function Library:create_ui()
                 TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
                 TitleLabel.Parent = Checkbox
 
-                local KeybindBox = Instance.new("TextLabel")
+                local KeybindBox = Instance.new("Frame")
                 KeybindBox.Name = "KeybindBox"
-                KeybindBox.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
-                KeybindBox.Size = UDim2.fromOffset(20, 14)
-                KeybindBox.Position = UDim2.new(1, -35, 0.5, 0)
+                KeybindBox.BackgroundTransparency = 0.699999988079071
+                KeybindBox.Position = UDim2.new(1, -50, 0.5, 0)
                 KeybindBox.AnchorPoint = Vector2.new(0, 0.5)
-                KeybindBox.BackgroundColor3 = Color3.fromRGB(140, 100, 255)
-                KeybindBox.TextColor3 = Color3.fromRGB(160, 140, 200)
-                KeybindBox.TextSize = 9
-                KeybindBox.BackgroundTransparency = 1
-                KeybindBox.Text = Library._config._keybinds[settings.flag] 
-                    and string.gsub(tostring(Library._config._keybinds[settings.flag]), "Enum.KeyCode.", "") 
-                    or "N/A"
+                KeybindBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
+                KeybindBox.Size = UDim2.new(0, 33, 0, 15)
+                KeybindBox.BorderSizePixel = 0
+                KeybindBox.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
                 KeybindBox.Parent = Checkbox
             
                 local KeybindCorner = Instance.new("UICorner")
                 KeybindCorner.CornerRadius = UDim.new(0, 3)
                 KeybindCorner.Parent = KeybindBox
             
-                local KeybindStroke = Instance.new("UIStroke")
-                KeybindStroke.Color = Color3.fromRGB(140, 100, 255)
-                KeybindStroke.Thickness = 1
-                KeybindStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-                KeybindStroke.Parent = KeybindBox
-                
-                local KeybindButton = Instance.new("TextButton")
-                KeybindButton.Size = UDim2.new(1, 0, 1, 0)
-                KeybindButton.BackgroundTransparency = 1
-                KeybindButton.TextTransparency = 1
-                KeybindButton.Parent = KeybindBox
+                local KeybindLabel = Instance.new("TextLabel")
+                KeybindLabel.Name = "KeybindLabel"
+                KeybindLabel.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+                KeybindLabel.TextColor3 = Color3.fromRGB(209, 222, 255)
+                KeybindLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+                KeybindLabel.Text = Library._config._keybinds[settings.flag] 
+                    and string.gsub(tostring(Library._config._keybinds[settings.flag]), "Enum.KeyCode.", "") 
+                    or "None"
+                KeybindLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+                KeybindLabel.Size = UDim2.new(0, 25, 0, 13)
+                KeybindLabel.BackgroundTransparency = 1
+                KeybindLabel.TextXAlignment = Enum.TextXAlignment.Left
+                KeybindLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
+                KeybindLabel.BorderSizePixel = 0
+                KeybindLabel.TextSize = 10
+                KeybindLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                KeybindLabel.Parent = KeybindBox
             
                 local Box = Instance.new("Frame")
                 Box.BorderColor3 = Color3.fromRGB(0, 0, 0)
@@ -1671,7 +1674,7 @@ function Library:create_ui()
                 Box.Name = "Box"
                 Box.Size = UDim2.new(0, 15, 0, 15)
                 Box.BorderSizePixel = 0
-                Box.BackgroundColor3 = Color3.fromRGB(140, 100, 255)
+                Box.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
                 Box.Parent = Checkbox
             
                 local BoxCorner = Instance.new("UICorner")
@@ -1685,7 +1688,7 @@ function Library:create_ui()
                 Fill.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Fill.Name = "Fill"
                 Fill.BorderSizePixel = 0
-                Fill.BackgroundColor3 = Color3.fromRGB(140, 100, 255)
+                Fill.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
                 Fill.Parent = Box
             
                 local FillCorner = Instance.new("UICorner")
@@ -1717,18 +1720,41 @@ function Library:create_ui()
                 if Library:flag_type(settings.flag, "boolean") then
                     CheckboxManager:change_state(Library._config._flags[settings.flag])
                 end
+                
+                -- Scale keybind box if keybind exists
+                if Library._config._keybinds[settings.flag] then
+                    local keybind_string = string.gsub(tostring(Library._config._keybinds[settings.flag]), "Enum.KeyCode.", "")
+                    local font_params = Instance.new('GetTextBoundsParams')
+                    font_params.Text = keybind_string
+                    font_params.Font = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+                    font_params.Size = 10
+                    font_params.Width = 10000
+                    local font_size = TextService:GetTextBoundsAsync(font_params)
+                    KeybindBox.Size = UDim2.fromOffset(font_size.X + 8, 15)
+                    KeybindLabel.Size = UDim2.fromOffset(font_size.X, 13)
+                end
             
                 Checkbox.MouseButton1Click:Connect(function()
+                    -- Only toggle if Shift is NOT held (to avoid conflict with keybind setting)
+                    if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) or UserInputService:IsKeyDown(Enum.KeyCode.RightShift) then
+                        return
+                    end
                     CheckboxManager:change_state(not CheckboxManager._state)
                 end)
             
-                KeybindButton.InputBegan:Connect(function(input, gameProcessed)
+                Checkbox.InputBegan:Connect(function(input, gameProcessed)
                     if gameProcessed then return end
+                    -- Change from MouseButton3 to MouseButton1 with Shift held
                     if input.UserInputType ~= Enum.UserInputType.MouseButton1 then return end
+                    
+                    -- Check if Shift is held down
+                    if not UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) and not UserInputService:IsKeyDown(Enum.KeyCode.RightShift) then
+                        return
+                    end
+                    
                     if Library._choosing_keybind then return end
             
                     Library._choosing_keybind = true
-                    KeybindBox.Text = "..."
                     local chooseConnection
                     chooseConnection = UserInputService.InputBegan:Connect(function(keyInput, processed)
                         if processed then return end
@@ -1738,7 +1764,12 @@ function Library:create_ui()
                         if keyInput.KeyCode == Enum.KeyCode.Backspace then
                             Library._config._keybinds[settings.flag] = nil
                             Config:save(game.GameId, Library._config)
-                            KeybindBox.Text = "N/A"
+                            KeybindLabel.Text = "None"
+                            
+                            -- Scale keybind box
+                            KeybindBox.Size = UDim2.fromOffset(33, 15)
+                            KeybindLabel.Size = UDim2.fromOffset(25, 13)
+                            
                             if Connections[settings.flag .. "_keybind"] then
                                 Connections[settings.flag .. "_keybind"]:Disconnect()
                                 Connections[settings.flag .. "_keybind"] = nil
@@ -1755,29 +1786,47 @@ function Library:create_ui()
                             Connections[settings.flag .. "_keybind"]:Disconnect()
                             Connections[settings.flag .. "_keybind"] = nil
                         end
-                        Library._choosing_keybind = false
-            
-                        local keybind_string = string.gsub(tostring(Library._config._keybinds[settings.flag]), "Enum.KeyCode.", "")
-                        KeybindBox.Text = keybind_string
                         
-                        local keyPressConnection = UserInputService.InputBegan:Connect(function(input, gameProcessed)
-                            if gameProcessed then return end
-                            if input.UserInputType == Enum.UserInputType.Keyboard then
-                                local storedKey = Library._config._keybinds[settings.flag]
-                                if storedKey and tostring(input.KeyCode) == storedKey then
-                                    CheckboxManager:change_state(not CheckboxManager._state)
-                                end
-                            end
+                        -- Scale keybind box based on text
+                        local keybind_string = string.gsub(tostring(Library._config._keybinds[settings.flag]), "Enum.KeyCode.", "")
+                        local font_params = Instance.new('GetTextBoundsParams')
+                        font_params.Text = keybind_string
+                        font_params.Font = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+                        font_params.Size = 10
+                        font_params.Width = 10000
+                        local font_size = TextService:GetTextBoundsAsync(font_params)
+                        KeybindBox.Size = UDim2.fromOffset(font_size.X + 8, 15)
+                        KeybindLabel.Size = UDim2.fromOffset(font_size.X, 13)
+                        
+                        Library._choosing_keybind = false
+                        KeybindLabel.Text = keybind_string
+                        
+                        -- Connect keybind
+                        Connections[settings.flag .. "_keybind"] = UserInputService.InputBegan:Connect(function(input: InputObject, process: boolean)
+                            if process then return end
+                            if tostring(input.KeyCode) ~= Library._config._keybinds[settings.flag] then return end
+                            CheckboxManager:change_state(not CheckboxManager._state)
                         end)
-                        Connections[settings.flag .. "_keypress"] = keyPressConnection
                     end)
                 end)
+            
+                local keyPressConnection = UserInputService.InputBegan:Connect(function(input, gameProcessed)
+                    if gameProcessed then return end
+                    if input.UserInputType == Enum.UserInputType.Keyboard then
+                        local storedKey = Library._config._keybinds[settings.flag]
+                        if storedKey and tostring(input.KeyCode) == storedKey then
+                            CheckboxManager:change_state(not CheckboxManager._state)
+                        end
+                    end
+                end)
+                Connections[settings.flag .. "_keypress"] = keyPressConnection
             
                 return CheckboxManager
             end
 
             function ModuleManager:create_button(settings: any)
                 LayoutOrderModule = LayoutOrderModule + 1
+                local ButtonManager = {}
             
                 if self._size == 0 then
                     self._size = 11
@@ -1791,36 +1840,54 @@ function Library:create_ui()
             
                 local Button = Instance.new("TextButton")
                 Button.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
-                Button.TextColor3 = Color3.fromRGB(200, 180, 255)
+                Button.TextColor3 = Color3.fromRGB(209, 222, 255)
                 Button.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Button.Text = settings.title or "Button"
                 Button.AutoButtonColor = false
-                Button.BackgroundTransparency = 0.5
+                Button.BackgroundTransparency = 0.7
                 Button.Name = "Button"
-                Button.Size = UDim2.new(0, 207, 0, 18)
+                Button.Size = UDim2.new(0, 207, 0, 20)
                 Button.BorderSizePixel = 0
                 Button.TextSize = 11
-                Button.BackgroundColor3 = Color3.fromRGB(25, 20, 40)
+                Button.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
                 Button.Parent = Options
                 Button.LayoutOrder = LayoutOrderModule
             
-                local ButtonCorner = Instance.new("UICorner")
-                ButtonCorner.CornerRadius = UDim.new(0, 4)
-                ButtonCorner.Parent = Button
+                local UICorner = Instance.new("UICorner")
+                UICorner.CornerRadius = UDim.new(0, 4)
+                UICorner.Parent = Button
             
-                local ButtonStroke = Instance.new("UIStroke")
-                ButtonStroke.Color = Color3.fromRGB(140, 100, 255)
-                ButtonStroke.Transparency = 0.5
-                ButtonStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-                ButtonStroke.Parent = Button
+                -- Hover effect
+                Button.MouseEnter:Connect(function()
+                    TweenService:Create(Button, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        BackgroundTransparency = 0.5
+                    }):Play()
+                end)
+            
+                Button.MouseLeave:Connect(function()
+                    TweenService:Create(Button, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        BackgroundTransparency = 0.7
+                    }):Play()
+                end)
             
                 Button.MouseButton1Click:Connect(function()
+                    -- Click animation
+                    TweenService:Create(Button, TweenInfo.new(0.1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        BackgroundTransparency = 0.3
+                    }):Play()
+                    
+                    task.wait(0.1)
+                    
+                    TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        BackgroundTransparency = 0.7
+                    }):Play()
+                    
                     if settings.callback then
                         settings.callback()
                     end
                 end)
             
-                return Button
+                return ButtonManager
             end
 
             function ModuleManager:create_divider(settings: any)
@@ -2466,6 +2533,10 @@ function Library:create_ui()
 
                             DropdownManager:update(value)
                         end)
+    
+                        if index > settings.maximum_options then
+                            continue
+                        end
     
                         DropdownManager._size += 16
                         Options.Size = UDim2.fromOffset(207, DropdownManager._size)
