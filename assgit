@@ -1318,6 +1318,21 @@ function Library:create_ui()
 
     Connections['container_input_began'] = Container.InputBegan:Connect(on_drag)
     Connections['input_changed'] = UserInputService.InputChanged:Connect(drag)
+    
+    local function updateTopBarPosition()
+        local containerPos = Container.AbsolutePosition
+        local containerSize = Container.AbsoluteSize
+        
+        local topBarX = containerPos.X + containerSize.X / 2
+        local topBarY = containerPos.Y - 70
+        
+        TopBar.Position = UDim2.new(0, topBarX, 0, topBarY)
+    end
+    
+    Container:GetPropertyChangedSignal('AbsolutePosition'):Connect(updateTopBarPosition)
+    Container:GetPropertyChangedSignal('AbsoluteSize'):Connect(updateTopBarPosition)
+    
+    updateTopBarPosition()
 
     self:removed(function()
         self._ui = nil
