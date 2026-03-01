@@ -603,8 +603,8 @@ function Library:create_ui()
     
     local UIGradient = Instance.new('UIGradient')
     UIGradient.Color = ColorSequence.new{
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(152, 181, 255)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 150, 255))
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(120, 150, 220)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(80, 110, 180))
     }
     UIGradient.Parent = ClientName
     
@@ -623,8 +623,8 @@ function Library:create_ui()
     
     local PinGradient = Instance.new('UIGradient')
     PinGradient.Color = ColorSequence.new{
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(152, 181, 255)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 150, 255))
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(120, 150, 220)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(80, 110, 180))
     }
     PinGradient.Rotation = 90
     PinGradient.Parent = Pin
@@ -638,10 +638,17 @@ function Library:create_ui()
     Icon.BackgroundTransparency = 1
     Icon.Position = UDim2.new(0.02500000037252903, 0, 0.054999999701976776, 0)
     Icon.Name = 'Icon'
-    Icon.Size = UDim2.new(0, 18, 0, 18)
+    Icon.Size = UDim2.new(0, 22, 0, 22)
     Icon.BorderSizePixel = 0
     Icon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Icon.Parent = Handler
+    
+    local IconGradient = Instance.new('UIGradient')
+    IconGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(120, 150, 220)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(80, 110, 180))
+    }
+    IconGradient.Parent = Icon
     
     local Divider = Instance.new('Frame')
     Divider.Name = 'Divider'
@@ -1474,8 +1481,8 @@ function Library:create_ui()
         
         local TextGradient = Instance.new('UIGradient')
         TextGradient.Color = ColorSequence.new{
-            ColorSequenceKeypoint.new(0, Color3.fromRGB(152, 181, 255)),
-            ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 150, 255))
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(120, 150, 220)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(80, 110, 180))
         }
         TextGradient.Parent = TextLabel
         
@@ -1496,8 +1503,8 @@ function Library:create_ui()
         
         local IconGradient = Instance.new('UIGradient')
         IconGradient.Color = ColorSequence.new{
-            ColorSequenceKeypoint.new(0, Color3.fromRGB(152, 181, 255)),
-            ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 150, 255))
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(120, 150, 220)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(80, 110, 180))
         }
         IconGradient.Parent = Icon
 
@@ -1710,7 +1717,7 @@ function Library:create_ui()
             Keybind.BackgroundTransparency = 0.699999988079071
             Keybind.Position = UDim2.new(0.15000000596046448, 0, 0.7350000143051147, 0)
             Keybind.BorderColor3 = Color3.fromRGB(0, 0, 0)
-            Keybind.Size = UDim2.new(0, 28, 0, 13)
+            Keybind.Size = UDim2.new(0, 23, 0, 15)
             Keybind.BorderSizePixel = 0
             Keybind.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
             Keybind.Parent = Header
