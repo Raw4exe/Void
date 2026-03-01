@@ -2457,13 +2457,14 @@ function Library:create_ui()
             function ModuleManager:create_status(settings: any)
                 LayoutOrderModule = LayoutOrderModule + 1
                 local StatusManager = {
-                    _value = settings.default or "Ready"
+                    _value = settings.default or 0,
+                    _max = settings.max or 100
                 }
             
                 if self._size == 0 then
                     self._size = 11
                 end
-                self._size += 20
+                self._size += 35
             
                 if ModuleManager._state then
                     Module.Size = UDim2.fromOffset(241, 93 + self._size)
@@ -2471,7 +2472,7 @@ function Library:create_ui()
                 Options.Size = UDim2.fromOffset(241, self._size)
             
                 local StatusContainer = Instance.new("Frame")
-                StatusContainer.Size = UDim2.new(0, 207, 0, 15)
+                StatusContainer.Size = UDim2.new(0, 207, 0, 30)
                 StatusContainer.BackgroundTransparency = 1
                 StatusContainer.Name = "StatusContainer"
                 StatusContainer.Parent = Options
@@ -2483,40 +2484,78 @@ function Library:create_ui()
                 TitleLabel.TextSize = 11
                 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
                 TitleLabel.TextTransparency = 0.2
-                TitleLabel.Text = settings.title or "Status"
-                TitleLabel.Size = UDim2.new(0, 100, 0, 13)
-                TitleLabel.AnchorPoint = Vector2.new(0, 0.5)
-                TitleLabel.Position = UDim2.new(0, 0, 0.5, 0)
+                TitleLabel.Text = settings.title or "Progress"
+                TitleLabel.Size = UDim2.new(0, 207, 0, 13)
+                TitleLabel.Position = UDim2.new(0, 0, 0, 0)
                 TitleLabel.BackgroundTransparency = 1
                 TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
                 TitleLabel.Parent = StatusContainer
             
-                local ValueLabel = Instance.new("TextLabel")
-                ValueLabel.Name = "ValueLabel"
-                ValueLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-                ValueLabel.TextSize = 10
-                ValueLabel.TextColor3 = Color3.fromRGB(152, 181, 255)
-                ValueLabel.TextTransparency = 0.3
-                ValueLabel.Text = StatusManager._value
-                ValueLabel.Size = UDim2.new(0, 100, 0, 13)
-                ValueLabel.AnchorPoint = Vector2.new(1, 0.5)
-                ValueLabel.Position = UDim2.new(1, 0, 0.5, 0)
-                ValueLabel.BackgroundTransparency = 1
-                ValueLabel.TextXAlignment = Enum.TextXAlignment.Right
-                ValueLabel.Parent = StatusContainer
+                local BarBackground = Instance.new("Frame")
+                BarBackground.Name = "BarBackground"
+                BarBackground.Size = UDim2.new(0, 207, 0, 16)
+                BarBackground.Position = UDim2.new(0, 0, 0, 14)
+                BarBackground.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
+                BarBackground.BorderSizePixel = 0
+                BarBackground.Parent = StatusContainer
             
-                function StatusManager:update(value: string)
-                    self._value = value
-                    ValueLabel.Text = value
-                    Library._config._flags[settings.flag] = value
+                local BarCorner = Instance.new("UICorner")
+                BarCorner.CornerRadius = UDim.new(0, 4)
+                BarCorner.Parent = BarBackground
+            
+                local BarFill = Instance.new("Frame")
+                BarFill.Name = "BarFill"
+                BarFill.Size = UDim2.new(0, 0, 1, 0)
+                BarFill.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                BarFill.BorderSizePixel = 0
+                BarFill.Parent = BarBackground
+            
+                local FillCorner = Instance.new("UICorner")
+                FillCorner.CornerRadius = UDim.new(0, 4)
+                FillCorner.Parent = BarFill
+            
+                local PercentLabel = Instance.new("TextLabel")
+                PercentLabel.Name = "PercentLabel"
+                PercentLabel.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+                PercentLabel.TextSize = 10
+                PercentLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+                PercentLabel.Text = "0%"
+                PercentLabel.Size = UDim2.new(1, 0, 1, 0)
+                PercentLabel.BackgroundTransparency = 1
+                PercentLabel.TextXAlignment = Enum.TextXAlignment.Center
+                PercentLabel.ZIndex = 2
+                PercentLabel.Parent = BarBackground
+            
+                function StatusManager:update(value: number, max: number)
+                    if max then
+                        self._max = max
+                    end
+                    self._value = math.clamp(value, 0, self._max)
+                    
+                    local percentage = (self._value / self._max) * 100
+                    local barWidth = (self._value / self._max) * 207
+                    
+                    PercentLabel.Text = string.format("%.0f%%", percentage)
+                    
+                    TweenService:Create(BarFill, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        Size = UDim2.new(0, barWidth, 1, 0)
+                    }):Play()
+                    
+                    Library._config._flags[settings.flag] = {value = self._value, max = self._max}
                     Config:save(game.GameId, Library._config)
+                    
                     if settings.callback then
-                        settings.callback(value)
+                        settings.callback(self._value, self._max)
                     end
                 end
             
-                if Library:flag_type(settings.flag, 'string') then
-                    StatusManager:update(Library._config._flags[settings.flag])
+                if Library:flag_type(settings.flag, 'table') then
+                    local saved = Library._config._flags[settings.flag]
+                    if saved and saved.value then
+                        StatusManager:update(saved.value, saved.max)
+                    end
+                elseif StatusManager._value then
+                    StatusManager:update(StatusManager._value, StatusManager._max)
                 end
             
                 return StatusManager
