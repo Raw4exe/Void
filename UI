@@ -688,6 +688,197 @@ function Library:create_ui()
     SidePanelContent.Size = UDim2.new(1, 0, 1, 0)
     SidePanelContent.Parent = SidePanel
     
+    local SearchBar = Instance.new('Frame')
+    SearchBar.Name = 'SearchBar'
+    SearchBar.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
+    SearchBar.BackgroundTransparency = 0.5
+    SearchBar.Position = UDim2.new(0.026, 0, 0.87, 0)
+    SearchBar.Size = UDim2.new(0, 129, 0, 28)
+    SearchBar.BorderSizePixel = 0
+    SearchBar.Parent = Handler
+    
+    local SearchCorner = Instance.new('UICorner')
+    SearchCorner.CornerRadius = UDim.new(0, 5)
+    SearchCorner.Parent = SearchBar
+    
+    local SearchStroke = Instance.new('UIStroke')
+    SearchStroke.Color = Color3.fromRGB(52, 66, 89)
+    SearchStroke.Transparency = 0.5
+    SearchStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    SearchStroke.Parent = SearchBar
+    
+    local SearchIcon = Instance.new('ImageLabel')
+    SearchIcon.Name = 'SearchIcon'
+    SearchIcon.BackgroundTransparency = 1
+    SearchIcon.Position = UDim2.new(0, 8, 0.5, 0)
+    SearchIcon.AnchorPoint = Vector2.new(0, 0.5)
+    SearchIcon.Size = UDim2.new(0, 14, 0, 14)
+    SearchIcon.Image = 'rbxassetid://10734898355'
+    SearchIcon.ImageColor3 = Color3.fromRGB(152, 181, 255)
+    SearchIcon.ImageTransparency = 0.3
+    SearchIcon.Parent = SearchBar
+    
+    local SearchBox = Instance.new('TextBox')
+    SearchBox.Name = 'SearchBox'
+    SearchBox.BackgroundTransparency = 1
+    SearchBox.Position = UDim2.new(0, 28, 0, 0)
+    SearchBox.Size = UDim2.new(1, -28, 1, 0)
+    SearchBox.Font = Enum.Font.GothamSemibold
+    SearchBox.Text = ''
+    SearchBox.PlaceholderText = 'Search module or element'
+    SearchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    SearchBox.TextTransparency = 0.2
+    SearchBox.PlaceholderColor3 = Color3.fromRGB(255, 255, 255)
+    SearchBox.TextSize = 10
+    SearchBox.TextXAlignment = Enum.TextXAlignment.Left
+    SearchBox.ClearTextOnFocus = false
+    SearchBox.Parent = SearchBar
+    
+    local DotsLabel = Instance.new('TextLabel')
+    DotsLabel.Name = 'DotsLabel'
+    DotsLabel.BackgroundTransparency = 1
+    DotsLabel.Position = UDim2.new(1, -20, 0.5, 0)
+    DotsLabel.AnchorPoint = Vector2.new(0, 0.5)
+    DotsLabel.Size = UDim2.new(0, 20, 0, 14)
+    DotsLabel.Font = Enum.Font.GothamSemibold
+    DotsLabel.Text = ''
+    DotsLabel.TextColor3 = Color3.fromRGB(152, 181, 255)
+    DotsLabel.TextTransparency = 0.3
+    DotsLabel.TextSize = 10
+    DotsLabel.TextXAlignment = Enum.TextXAlignment.Left
+    DotsLabel.Visible = false
+    DotsLabel.Parent = SearchBar
+    
+    local dotsAnimation = nil
+    local function startDotsAnimation()
+        if dotsAnimation then
+            dotsAnimation:Disconnect()
+        end
+        DotsLabel.Visible = true
+        local dots = 0
+        dotsAnimation = RunService.Heartbeat:Connect(function()
+            dots = (dots + 0.02) % 3
+            if dots < 1 then
+                DotsLabel.Text = '.'
+            elseif dots < 2 then
+                DotsLabel.Text = '..'
+            else
+                DotsLabel.Text = '...'
+            end
+        end)
+    end
+    
+    local function stopDotsAnimation()
+        if dotsAnimation then
+            dotsAnimation:Disconnect()
+            dotsAnimation = nil
+        end
+        DotsLabel.Visible = false
+        DotsLabel.Text = ''
+    end
+    
+    SearchBox.Focused:Connect(function()
+        TweenService:Create(SearchBar, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.3
+        }):Play()
+        TweenService:Create(SearchStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            Transparency = 0.2
+        }):Play()
+        TweenService:Create(SearchIcon, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            ImageTransparency = 0
+        }):Play()
+        if SearchBox.Text == '' then
+            startDotsAnimation()
+        end
+    end)
+    
+    SearchBox.FocusLost:Connect(function()
+        TweenService:Create(SearchBar, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.5
+        }):Play()
+        TweenService:Create(SearchStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            Transparency = 0.5
+        }):Play()
+        TweenService:Create(SearchIcon, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            ImageTransparency = 0.3
+        }):Play()
+        stopDotsAnimation()
+    end)
+    
+    local function performSearch(query)
+        query = query:lower()
+        
+        if query == '' then
+            for _, section in pairs(Sections:GetChildren()) do
+                if section:IsA('ScrollingFrame') then
+                    for _, module in pairs(section:GetChildren()) do
+                        if module:IsA('Frame') and module.Name == 'Module' then
+                            module.Visible = true
+                            local options = module:FindFirstChild('Options')
+                            if options then
+                                for _, element in pairs(options:GetChildren()) do
+                                    if element:IsA('GuiObject') and element.Name ~= 'UIPadding' and element.Name ~= 'UIListLayout' then
+                                        element.Visible = true
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+            stopDotsAnimation()
+            return
+        end
+        
+        startDotsAnimation()
+        
+        for _, section in pairs(Sections:GetChildren()) do
+            if section:IsA('ScrollingFrame') then
+                for _, module in pairs(section:GetChildren()) do
+                    if module:IsA('Frame') and module.Name == 'Module' then
+                        local header = module:FindFirstChild('Header')
+                        local moduleName = header and header:FindFirstChild('ModuleName')
+                        local moduleMatches = moduleName and moduleName.Text:lower():find(query)
+                        
+                        local options = module:FindFirstChild('Options')
+                        local hasVisibleElements = false
+                        
+                        if options then
+                            for _, element in pairs(options:GetChildren()) do
+                                if element:IsA('GuiObject') and element.Name ~= 'UIPadding' and element.Name ~= 'UIListLayout' then
+                                    local elementName = ''
+                                    
+                                    if element:FindFirstChild('TitleLabel') then
+                                        elementName = element.TitleLabel.Text
+                                    elseif element:FindFirstChild('TextLabel') then
+                                        elementName = element.TextLabel.Text
+                                    elseif element.Name == 'Paragraph' and element:FindFirstChild('Title') then
+                                        elementName = element.Title.Text
+                                    end
+                                    
+                                    local elementMatches = elementName:lower():find(query)
+                                    
+                                    if moduleMatches or elementMatches then
+                                        element.Visible = true
+                                        hasVisibleElements = true
+                                    else
+                                        element.Visible = false
+                                    end
+                                end
+                            end
+                        end
+                        
+                        module.Visible = moduleMatches or hasVisibleElements
+                    end
+                end
+            end
+        end
+    end
+    
+    SearchBox:GetPropertyChangedSignal('Text'):Connect(function()
+        performSearch(SearchBox.Text)
+    end)
+    
     local ControlPanel = Instance.new('Frame')
     ControlPanel.Name = 'ControlPanel'
     ControlPanel.BackgroundTransparency = 1
