@@ -1941,6 +1941,14 @@ function Library:create_ui()
                 end)
             end)
 
+            Header.MouseEnter:Connect(function()
+                TopBarText.Text = settings.description or "No description"
+            end)
+            
+            Header.MouseLeave:Connect(function()
+                TopBarText.Text = "Test Top Bar"
+            end)
+
             Header.MouseButton1Click:Connect(function()
                 if Library._choosing_keybind then
                     return
