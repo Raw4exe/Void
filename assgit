@@ -887,11 +887,6 @@ function Library:create_ui()
     local originalModuleData = {}
     
     local function clearSearchResults()
-        SearchLeftSection.Visible = false
-        SearchRightSection.Visible = false
-        
-        task.wait()
-        
         for _, clone in pairs(SearchLeftSection:GetChildren()) do
             if clone:IsA('Frame') and clone.Name == 'Module' then
                 clone:Destroy()
@@ -903,13 +898,16 @@ function Library:create_ui()
             end
         end
         
+        isSearchActive = false
+        
+        SearchLeftSection.Visible = false
+        SearchRightSection.Visible = false
+        
         for _, section in pairs(Sections:GetChildren()) do
             if section:IsA('ScrollingFrame') and section.Name ~= 'SearchLeftSection' and section.Name ~= 'SearchRightSection' then
                 section.Visible = true
             end
         end
-        
-        isSearchActive = false
     end
     
     local function wordStartMatch(text, query)
