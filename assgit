@@ -15,7 +15,8 @@ getgenv().GG = {
         Loading = "Loading...",
         Error = "Error",
         Success = "Success"
-    }
+    },
+    ModuleNameYPosition = 0.25
 }
 
 -- Replace the SelectedLanguage with a reference to GG.Language
