@@ -1106,46 +1106,27 @@ function Library:create_ui()
     
     local Tooltip = Instance.new('TextLabel')
     Tooltip.Name = 'Tooltip'
-    Tooltip.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    Tooltip.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     Tooltip.TextColor3 = Color3.fromRGB(152, 181, 255)
     Tooltip.TextTransparency = 1
-    Tooltip.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
     Tooltip.BackgroundTransparency = 1
-    Tooltip.Size = UDim2.new(0, 100, 0, 20)
-    Tooltip.Position = UDim2.new(0.5, 0, -0.5, 0)
-    Tooltip.AnchorPoint = Vector2.new(0.5, 1)
-    Tooltip.TextSize = 10
+    Tooltip.Size = UDim2.new(0, 200, 0, 30)
+    Tooltip.Position = UDim2.new(0.5, 0, -0.08, 0)
+    Tooltip.AnchorPoint = Vector2.new(0.5, 0)
+    Tooltip.TextSize = 14
     Tooltip.BorderSizePixel = 0
-    Tooltip.Parent = ControlPanel
-    
-    local TooltipCorner = Instance.new('UICorner')
-    TooltipCorner.CornerRadius = UDim.new(0, 4)
-    TooltipCorner.Parent = Tooltip
-    
-    local TooltipStroke = Instance.new('UIStroke')
-    TooltipStroke.Color = Color3.fromRGB(52, 66, 89)
-    TooltipStroke.Transparency = 1
-    TooltipStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    TooltipStroke.Parent = Tooltip
+    Tooltip.Parent = Handler
     
     local function showTooltip(text)
         Tooltip.Text = text
         TweenService:Create(Tooltip, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-            TextTransparency = 0,
-            BackgroundTransparency = 0.3
-        }):Play()
-        TweenService:Create(TooltipStroke, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-            Transparency = 0.5
+            TextTransparency = 0
         }):Play()
     end
     
     local function hideTooltip()
         TweenService:Create(Tooltip, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-            TextTransparency = 1,
-            BackgroundTransparency = 1
-        }):Play()
-        TweenService:Create(TooltipStroke, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-            Transparency = 1
+            TextTransparency = 1
         }):Play()
     end
     
