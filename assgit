@@ -601,13 +601,6 @@ function Library:create_ui()
     ClientName.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     ClientName.Parent = Handler
     
-    local UIGradient = Instance.new('UIGradient')
-    UIGradient.Color = ColorSequence.new{
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(120, 150, 220)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(80, 110, 180))
-    }
-    UIGradient.Parent = ClientName
-    
     local Pin = Instance.new('Frame')
     Pin.Name = 'Pin'
     Pin.Position = UDim2.new(0.026000000536441803, 0, 0.13600000739097595, 0)
@@ -620,14 +613,6 @@ function Library:create_ui()
     local UICorner = Instance.new('UICorner')
     UICorner.CornerRadius = UDim.new(1, 0)
     UICorner.Parent = Pin
-    
-    local PinGradient = Instance.new('UIGradient')
-    PinGradient.Color = ColorSequence.new{
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(120, 150, 220)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(80, 110, 180))
-    }
-    PinGradient.Rotation = 90
-    PinGradient.Parent = Pin
     
     local Icon = Instance.new('ImageLabel')
     Icon.ImageColor3 = Color3.fromRGB(152, 181, 255)
@@ -642,13 +627,6 @@ function Library:create_ui()
     Icon.BorderSizePixel = 0
     Icon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Icon.Parent = Handler
-    
-    local IconGradient = Instance.new('UIGradient')
-    IconGradient.Color = ColorSequence.new{
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(120, 150, 220)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(80, 110, 180))
-    }
-    IconGradient.Parent = Icon
     
     local Divider = Instance.new('Frame')
     Divider.Name = 'Divider'
@@ -1372,10 +1350,6 @@ function Library:create_ui()
                         TextColor3 = Color3.fromRGB(152, 181, 255)
                     }):Play()
 
-                    TweenService:Create(object.TextLabel.UIGradient, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        Offset = Vector2.new(1, 0)
-                    }):Play()
-
                     TweenService:Create(object.Icon, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
                         ImageTransparency = 0.2,
                         ImageColor3 = Color3.fromRGB(152, 181, 255)
@@ -1393,10 +1367,6 @@ function Library:create_ui()
                 TweenService:Create(object.TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
                     TextTransparency = 0.7,
                     TextColor3 = Color3.fromRGB(255, 255, 255)
-                }):Play()
-
-                TweenService:Create(object.TextLabel.UIGradient, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                    Offset = Vector2.new(0, 0)
                 }):Play()
 
                 TweenService:Create(object.Icon, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
@@ -1479,13 +1449,6 @@ function Library:create_ui()
         TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         TextLabel.Parent = Tab
         
-        local TextGradient = Instance.new('UIGradient')
-        TextGradient.Color = ColorSequence.new{
-            ColorSequenceKeypoint.new(0, Color3.fromRGB(120, 150, 220)),
-            ColorSequenceKeypoint.new(1, Color3.fromRGB(80, 110, 180))
-        }
-        TextGradient.Parent = TextLabel
-        
         local Icon = Instance.new('ImageLabel')
         Icon.ScaleType = Enum.ScaleType.Fit
         Icon.ImageTransparency = 0.800000011920929
@@ -1500,13 +1463,6 @@ function Library:create_ui()
         Icon.BorderSizePixel = 0
         Icon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         Icon.Parent = Tab
-        
-        local IconGradient = Instance.new('UIGradient')
-        IconGradient.Color = ColorSequence.new{
-            ColorSequenceKeypoint.new(0, Color3.fromRGB(120, 150, 220)),
-            ColorSequenceKeypoint.new(1, Color3.fromRGB(80, 110, 180))
-        }
-        IconGradient.Parent = Icon
 
         local LeftSection = Instance.new('ScrollingFrame')
         LeftSection.Name = 'LeftSection'
@@ -2377,7 +2333,7 @@ function Library:create_ui()
                         if keyInput.UserInputType ~= Enum.UserInputType.Keyboard then return end
                         if keyInput.KeyCode == Enum.KeyCode.Unknown then return end
             
-                        if keyInput.KeyCode == Enum.KeyCode.Backspace then
+                        if keyInput.KeyCode == Enum.KeyCode.Delete then
                             Library._config._keybinds[settings.flag] = nil
                             Config:save(game.GameId, Library._config)
                             KeybindLabel.Text = "N/A"
