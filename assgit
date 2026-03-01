@@ -541,7 +541,7 @@ function Library:create_ui()
     local TopBar = Instance.new('Frame')
     TopBar.Name = 'TopBar'
     TopBar.AnchorPoint = Vector2.new(0.5, 0.5)
-    TopBar.Position = UDim2.new(0.5, 0, 0.5, -255)
+    TopBar.Position = UDim2.new(0, 0, 0, 0)
     TopBar.Size = UDim2.new(0, 0, 0, 35)
     TopBar.BackgroundColor3 = Color3.fromRGB(12, 13, 15)
     TopBar.BackgroundTransparency = 0.05
@@ -564,11 +564,11 @@ function Library:create_ui()
     TopBarText.Position = UDim2.new(0, 10, 0, 0)
     TopBarText.BackgroundTransparency = 1
     TopBarText.Text = ''
-    TopBarText.TextColor3 = Color3.fromRGB(152, 181, 255)
-    TopBarText.TextTransparency = 0.2
-    TopBarText.TextSize = 12
-    TopBarText.TextXAlignment = Enum.TextXAlignment.Left
-    TopBarText.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    TopBarText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TopBarText.TextTransparency = 0
+    TopBarText.TextSize = 13
+    TopBarText.TextXAlignment = Enum.TextXAlignment.Center
+    TopBarText.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     TopBarText.Parent = TopBar
     
     local Container = Instance.new('Frame')
@@ -1303,6 +1303,22 @@ function Library:create_ui()
 
     Connections['container_input_began'] = Container.InputBegan:Connect(on_drag)
     Connections['input_changed'] = UserInputService.InputChanged:Connect(drag)
+    
+    local function updateTopBarPosition()
+        local containerPos = Container.AbsolutePosition
+        local containerSize = Container.AbsoluteSize
+        local viewportSize = workspace.CurrentCamera.ViewportSize
+        
+        local topBarX = containerPos.X + containerSize.X / 2
+        local topBarY = containerPos.Y - 45
+        
+        TopBar.Position = UDim2.new(0, topBarX, 0, topBarY)
+    end
+    
+    Container:GetPropertyChangedSignal('AbsolutePosition'):Connect(updateTopBarPosition)
+    Container:GetPropertyChangedSignal('AbsoluteSize'):Connect(updateTopBarPosition)
+    
+    updateTopBarPosition()
 
     self:removed(function()
         self._ui = nil
