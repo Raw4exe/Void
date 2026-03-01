@@ -532,6 +532,45 @@ function Library:create_ui()
     March.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     March.Parent = CoreGui
     
+    local TopBarGui = Instance.new('ScreenGui')
+    TopBarGui.ResetOnSpawn = false
+    TopBarGui.Name = 'MarchTopBar'
+    TopBarGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    TopBarGui.Parent = CoreGui
+    
+    local TopBar = Instance.new('Frame')
+    TopBar.Name = 'TopBar'
+    TopBar.AnchorPoint = Vector2.new(0.5, 0.5)
+    TopBar.Position = UDim2.new(0.5, 0, 0.5, -255)
+    TopBar.Size = UDim2.new(0, 0, 0, 35)
+    TopBar.BackgroundColor3 = Color3.fromRGB(12, 13, 15)
+    TopBar.BackgroundTransparency = 0.05
+    TopBar.BorderSizePixel = 0
+    TopBar.Parent = TopBarGui
+    
+    local TopBarCorner = Instance.new('UICorner')
+    TopBarCorner.CornerRadius = UDim.new(0, 8)
+    TopBarCorner.Parent = TopBar
+    
+    local TopBarStroke = Instance.new('UIStroke')
+    TopBarStroke.Color = Color3.fromRGB(52, 66, 89)
+    TopBarStroke.Transparency = 0.5
+    TopBarStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    TopBarStroke.Parent = TopBar
+    
+    local TopBarText = Instance.new('TextLabel')
+    TopBarText.Name = 'TopBarText'
+    TopBarText.Size = UDim2.new(1, -20, 1, 0)
+    TopBarText.Position = UDim2.new(0, 10, 0, 0)
+    TopBarText.BackgroundTransparency = 1
+    TopBarText.Text = ''
+    TopBarText.TextColor3 = Color3.fromRGB(152, 181, 255)
+    TopBarText.TextTransparency = 0.2
+    TopBarText.TextSize = 12
+    TopBarText.TextXAlignment = Enum.TextXAlignment.Left
+    TopBarText.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    TopBarText.Parent = TopBar
+    
     local Container = Instance.new('Frame')
     Container.ClipsDescendants = true
     Container.BorderColor3 = Color3.fromRGB(0, 0, 0)
@@ -554,39 +593,6 @@ function Library:create_ui()
     UIStroke.Transparency = 0.5
     UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     UIStroke.Parent = Container
-    
-    local TopBar = Instance.new('Frame')
-    TopBar.Name = 'TopBar'
-    TopBar.AnchorPoint = Vector2.new(0.5, 1)
-    TopBar.Position = UDim2.new(0.5, 0, 0, -10)
-    TopBar.Size = UDim2.new(0, 0, 0, 35)
-    TopBar.BackgroundColor3 = Color3.fromRGB(12, 13, 15)
-    TopBar.BackgroundTransparency = 0.05
-    TopBar.BorderSizePixel = 0
-    TopBar.Parent = Container
-    
-    local TopBarCorner = Instance.new('UICorner')
-    TopBarCorner.CornerRadius = UDim.new(0, 8)
-    TopBarCorner.Parent = TopBar
-    
-    local TopBarStroke = Instance.new('UIStroke')
-    TopBarStroke.Color = Color3.fromRGB(52, 66, 89)
-    TopBarStroke.Transparency = 0.5
-    TopBarStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    TopBarStroke.Parent = TopBar
-    
-    local TopBarText = Instance.new('TextLabel')
-    TopBarText.Name = 'TopBarText'
-    TopBarText.Size = UDim2.new(1, -20, 1, 0)
-    TopBarText.Position = UDim2.new(0, 10, 0, 0)
-    TopBarText.BackgroundTransparency = 1
-    TopBarText.Text = 'Test Top Bar'
-    TopBarText.TextColor3 = Color3.fromRGB(152, 181, 255)
-    TopBarText.TextTransparency = 0.2
-    TopBarText.TextSize = 12
-    TopBarText.TextXAlignment = Enum.TextXAlignment.Left
-    TopBarText.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
-    TopBarText.Parent = TopBar
     
     local Handler = Instance.new('Frame')
     Handler.BackgroundTransparency = 1
@@ -1946,7 +1952,7 @@ function Library:create_ui()
             end)
             
             Header.MouseLeave:Connect(function()
-                TopBarText.Text = "Test Top Bar"
+                TopBarText.Text = ""
             end)
 
             Header.MouseButton1Click:Connect(function()
