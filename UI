@@ -1275,7 +1275,7 @@ function Library:create_ui()
                 ModuleManager:scale_keybind()
             end
 
-            Connections[settings.flag..'_input_began'] = Header.InputBegan:Connect(function(input: InputObject)
+            Connections[settings.flag..'_keybind_input'] = Keybind.InputBegan:Connect(function(input: InputObject)
                 if Library._choosing_keybind then
                     return
                 end
@@ -1631,7 +1631,7 @@ function Library:create_ui()
                 local KeybindBox = Instance.new("Frame")
                 KeybindBox.Name = "KeybindBox"
                 KeybindBox.BackgroundTransparency = 0.699999988079071
-                KeybindBox.Position = UDim2.new(1, -23, 0.5, 0)
+                KeybindBox.Position = UDim2.new(1, -48, 0.5, 0)
                 KeybindBox.AnchorPoint = Vector2.new(1, 0.5)
                 KeybindBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 KeybindBox.Size = UDim2.new(0, 23, 0, 15)
@@ -1665,7 +1665,7 @@ function Library:create_ui()
                 Box.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Box.AnchorPoint = Vector2.new(1, 0.5)
                 Box.BackgroundTransparency = 0.9
-                Box.Position = UDim2.new(1, -28, 0.5, 0)
+                Box.Position = UDim2.new(1, -20, 0.5, 0)
                 Box.Name = "Box"
                 Box.Size = UDim2.new(0, 15, 0, 15)
                 Box.BorderSizePixel = 0
@@ -1725,7 +1725,7 @@ function Library:create_ui()
                     font_params.Width = 10000
                     local font_size = TextService:GetTextBoundsAsync(font_params)
                     KeybindBox.Size = UDim2.fromOffset(font_size.X + 8, 15)
-                    KeybindBox.Position = UDim2.new(1, -(font_size.X + 8) - 5, 0.5, 0)
+                    KeybindBox.Position = UDim2.new(1, -(font_size.X + 8) - 25, 0.5, 0)
                 end
             
                 Checkbox.MouseButton1Click:Connect(function()
@@ -1753,7 +1753,7 @@ function Library:create_ui()
                             KeybindLabel.Text = "N/A"
                             
                             KeybindBox.Size = UDim2.fromOffset(23, 15)
-                            KeybindBox.Position = UDim2.new(1, -23, 0.5, 0)
+                            KeybindBox.Position = UDim2.new(1, -48, 0.5, 0)
                             
                             if Connections[settings.flag .. "_keybind"] then
                                 Connections[settings.flag .. "_keybind"]:Disconnect()
@@ -1780,7 +1780,7 @@ function Library:create_ui()
                         font_params.Width = 10000
                         local font_size = TextService:GetTextBoundsAsync(font_params)
                         KeybindBox.Size = UDim2.fromOffset(font_size.X + 8, 15)
-                        KeybindBox.Position = UDim2.new(1, -(font_size.X + 8) - 5, 0.5, 0)
+                        KeybindBox.Position = UDim2.new(1, -(font_size.X + 8) - 25, 0.5, 0)
                         
                         Library._choosing_keybind = false
                         KeybindLabel.Text = keybind_string
