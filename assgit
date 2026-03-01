@@ -1731,11 +1731,11 @@ function Library:create_ui()
             TextLabel.TextColor3 = Color3.fromRGB(209, 222, 255)
             TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
             TextLabel.Text = 'N/A'
-            TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+            TextLabel.AnchorPoint = Vector2.new(0, 0.5)
             TextLabel.Size = UDim2.new(0, 25, 0, 13)
             TextLabel.BackgroundTransparency = 1
             TextLabel.TextXAlignment = Enum.TextXAlignment.Left
-            TextLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
+            TextLabel.Position = UDim2.new(0, 3, 0.5, 0)
             TextLabel.BorderSizePixel = 0
             TextLabel.TextSize = 10
             TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
