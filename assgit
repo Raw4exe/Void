@@ -715,9 +715,6 @@ function Library:create_ui()
     Tooltip.BorderSizePixel = 0
     Tooltip.ZIndex = 10
     Tooltip.Parent = Container
-    ControlPanel.Size = UDim2.new(0, 80, 0, 22)
-    ControlPanel.BorderSizePixel = 0
-    ControlPanel.Parent = Handler
     
     local SearchBar = Instance.new('Frame')
     SearchBar.Name = 'SearchBar'
