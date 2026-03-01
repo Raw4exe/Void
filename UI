@@ -890,6 +890,8 @@ function Library:create_ui()
         SearchLeftSection.Visible = false
         SearchRightSection.Visible = false
         
+        task.wait()
+        
         for _, clone in pairs(SearchLeftSection:GetChildren()) do
             if clone:IsA('Frame') and clone.Name == 'Module' then
                 clone:Destroy()
@@ -914,6 +916,10 @@ function Library:create_ui()
         text = text:lower()
         query = query:lower()
         
+        if text:sub(1, #query) == query then
+            return true, 100
+        end
+        
         local words = {}
         for word in text:gmatch("%S+") do
             table.insert(words, word)
@@ -921,12 +927,8 @@ function Library:create_ui()
         
         for _, word in ipairs(words) do
             if word:sub(1, #query) == query then
-                return true, 100
+                return true, 90
             end
-        end
-        
-        if text:sub(1, #query) == query then
-            return true, 100
         end
         
         return false, 0
