@@ -776,6 +776,18 @@ function Library:create_ui()
     DotsLabel.Parent = SearchBar
     
     local isSearchActive = false
+    local currentLeftSection = nil
+    local currentRightSection = nil
+    
+    for _, section in pairs(Sections:GetChildren()) do
+        if section:IsA('ScrollingFrame') and section.Visible and section.Name ~= 'SearchLeftSection' and section.Name ~= 'SearchRightSection' then
+            if section.Position.X.Scale < 0.5 then
+                currentLeftSection = section
+            else
+                currentRightSection = section
+            end
+        end
+    end
     
     ClearButton.MouseButton1Click:Connect(function()
         SearchBox.Text = ''
@@ -903,10 +915,11 @@ function Library:create_ui()
         SearchLeftSection.Visible = false
         SearchRightSection.Visible = false
         
-        for _, section in pairs(Sections:GetChildren()) do
-            if section:IsA('ScrollingFrame') and section.Name ~= 'SearchLeftSection' and section.Name ~= 'SearchRightSection' then
-                section.Visible = true
-            end
+        if currentLeftSection then
+            currentLeftSection.Visible = true
+        end
+        if currentRightSection then
+            currentRightSection.Visible = true
         end
     end
     
@@ -936,6 +949,16 @@ function Library:create_ui()
         if query == '' or query == nil then
             clearSearchResults()
             return
+        end
+        
+        for _, section in pairs(Sections:GetChildren()) do
+            if section:IsA('ScrollingFrame') and section.Visible and section.Name ~= 'SearchLeftSection' and section.Name ~= 'SearchRightSection' then
+                if section.Position.X.Scale < 0.5 then
+                    currentLeftSection = section
+                else
+                    currentRightSection = section
+                end
+            end
         end
         
         isSearchActive = true
