@@ -542,10 +542,10 @@ function Library:create_ui()
     local TopBar = Instance.new('Frame')
     TopBar.Name = 'TopBar'
     TopBar.AnchorPoint = Vector2.new(0.5, 0.5)
-    TopBar.Position = UDim2.new(0, 0, 0, 0)
-    TopBar.Size = UDim2.new(0, 0, 0, 50)
-    TopBar.BackgroundColor3 = Color3.fromRGB(12, 13, 15)
-    TopBar.BackgroundTransparency = 0.3
+    TopBar.Position = UDim2.new(0.5, 0, 0.5, 0)
+    TopBar.Size = UDim2.new(0, 0, 0, 60)
+    TopBar.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
+    TopBar.BackgroundTransparency = 0.1
     TopBar.BorderSizePixel = 0
     TopBar.Parent = TopBarGui
     
@@ -566,19 +566,19 @@ function Library:create_ui()
     
     local TopBarStroke = Instance.new('UIStroke')
     TopBarStroke.Color = Color3.fromRGB(52, 66, 89)
-    TopBarStroke.Transparency = 0.3
+    TopBarStroke.Transparency = 0.2
     TopBarStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     TopBarStroke.Parent = TopBar
     
     local TopBarText = Instance.new('TextLabel')
     TopBarText.Name = 'TopBarText'
-    TopBarText.Size = UDim2.new(1, -30, 1, -10)
-    TopBarText.Position = UDim2.new(0, 15, 0, 5)
+    TopBarText.Size = UDim2.new(1, -40, 1, -20)
+    TopBarText.Position = UDim2.new(0, 20, 0, 10)
     TopBarText.BackgroundTransparency = 1
     TopBarText.Text = ''
     TopBarText.TextColor3 = Color3.fromRGB(255, 255, 255)
     TopBarText.TextTransparency = 0
-    TopBarText.TextSize = 14
+    TopBarText.TextSize = 15
     TopBarText.TextWrapped = true
     TopBarText.TextXAlignment = Enum.TextXAlignment.Center
     TopBarText.TextYAlignment = Enum.TextYAlignment.Center
@@ -1318,22 +1318,6 @@ function Library:create_ui()
 
     Connections['container_input_began'] = Container.InputBegan:Connect(on_drag)
     Connections['input_changed'] = UserInputService.InputChanged:Connect(drag)
-    
-    local function updateTopBarPosition()
-        local containerPos = Container.AbsolutePosition
-        local containerSize = Container.AbsoluteSize
-        local viewportSize = workspace.CurrentCamera.ViewportSize
-        
-        local topBarX = containerPos.X + containerSize.X / 2
-        local topBarY = containerPos.Y - 45
-        
-        TopBar.Position = UDim2.new(0, topBarX, 0, topBarY)
-    end
-    
-    Container:GetPropertyChangedSignal('AbsolutePosition'):Connect(updateTopBarPosition)
-    Container:GetPropertyChangedSignal('AbsoluteSize'):Connect(updateTopBarPosition)
-    
-    updateTopBarPosition()
 
     self:removed(function()
         self._ui = nil
@@ -1346,14 +1330,14 @@ function Library:create_ui()
                 Size = UDim2.fromOffset(698, 479)
             }):Play()
             TweenService:Create(TopBar, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                Size = UDim2.new(0, 698, 0, 50)
+                Size = UDim2.new(0, 800, 0, 60)
             }):Play()
         else
             TweenService:Create(Container, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
                 Size = UDim2.fromOffset(104.5, 52)
             }):Play()
             TweenService:Create(TopBar, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                Size = UDim2.new(0, 0, 0, 50)
+                Size = UDim2.new(0, 0, 0, 60)
             }):Play()
         end
     end
@@ -1677,7 +1661,7 @@ function Library:create_ui()
             ModuleName.Name = 'ModuleName'
             ModuleName.Size = UDim2.new(0, 205, 0, 13)
             ModuleName.AnchorPoint = Vector2.new(0, 0.5)
-            ModuleName.Position = UDim2.new(0.073, 0, 0.4, 0)
+            ModuleName.Position = UDim2.new(0.073, 0, 0.3, 0)
             ModuleName.BackgroundTransparency = 1
             ModuleName.TextXAlignment = Enum.TextXAlignment.Left
             ModuleName.BorderSizePixel = 0
