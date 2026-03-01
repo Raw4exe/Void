@@ -1656,7 +1656,7 @@ function Library:create_ui()
             Icon.AnchorPoint = Vector2.new(0, 0.5)
             Icon.Image = 'rbxassetid://79095934438045'
             Icon.BackgroundTransparency = 1
-            Icon.Position = UDim2.new(0.073, 0, 0.7, 0)
+            Icon.Position = UDim2.new(0.073, 0, 0.75, 0)
             Icon.Name = 'Icon'
             Icon.Size = UDim2.new(0, 15, 0, 15)
             Icon.BorderSizePixel = 0
@@ -1676,7 +1676,7 @@ function Library:create_ui()
             ModuleName.Name = 'ModuleName'
             ModuleName.Size = UDim2.new(0, 205, 0, 13)
             ModuleName.AnchorPoint = Vector2.new(0, 0.5)
-            ModuleName.Position = UDim2.new(0.073, 0, 0.35, 0)
+            ModuleName.Position = UDim2.new(0.073, 0, 0.3, 0)
             ModuleName.BackgroundTransparency = 1
             ModuleName.TextXAlignment = Enum.TextXAlignment.Left
             ModuleName.BorderSizePixel = 0
@@ -1688,7 +1688,7 @@ function Library:create_ui()
             local Toggle = Instance.new('Frame')
             Toggle.Name = 'Toggle'
             Toggle.BackgroundTransparency = 0.699999988079071
-            Toggle.Position = UDim2.new(0.82, 0, 0.67, 0)
+            Toggle.Position = UDim2.new(0.82, 0, 0.72, 0)
             Toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
             Toggle.Size = UDim2.new(0, 25, 0, 12)
             Toggle.BorderSizePixel = 0
@@ -1717,7 +1717,7 @@ function Library:create_ui()
             local Keybind = Instance.new('Frame')
             Keybind.Name = 'Keybind'
             Keybind.BackgroundTransparency = 0.699999988079071
-            Keybind.Position = UDim2.new(0.15, 0, 0.7, 0)
+            Keybind.Position = UDim2.new(0.15, 0, 0.75, 0)
             Keybind.AnchorPoint = Vector2.new(0, 0.5)
             Keybind.BorderColor3 = Color3.fromRGB(0, 0, 0)
             Keybind.Size = UDim2.new(0, 23, 0, 15)
