@@ -585,7 +585,7 @@ function Library:create_ui()
     UIListLayout.Parent = Tabs
     
     local ClientName = Instance.new('TextLabel')
-    ClientName.FontFace = Font.new('rbxasset://fonts/families/FredokaOne.json', Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+    ClientName.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.Bold, Enum.FontStyle.Normal)
     ClientName.TextColor3 = Color3.fromRGB(152, 181, 255)
     ClientName.TextTransparency = 0.20000000298023224
     ClientName.Text = 'VOID HUB'
@@ -2099,7 +2099,7 @@ function Library:create_ui()
                     self._size = 11
                 end
             
-                self._size += 32
+                self._size += 38
             
                 if ModuleManager._state then
                     Module.Size = UDim2.fromOffset(241, 93 + self._size)
@@ -2123,24 +2123,55 @@ function Library:create_ui()
                 Label.LayoutOrder = LayoutOrderModule
             
                 local Textbox = Instance.new('TextBox')
-                Textbox.FontFace = Font.new('rbxasset://fonts/families/SourceSansPro.json', Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+                Textbox.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.Regular, Enum.FontStyle.Normal)
                 Textbox.TextColor3 = Color3.fromRGB(255, 255, 255)
                 Textbox.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Textbox.PlaceholderText = settings.placeholder or "Enter text..."
+                Textbox.PlaceholderColor3 = Color3.fromRGB(180, 180, 180)
                 Textbox.Text = Library._config._flags[settings.flag] or ""
                 Textbox.Name = 'Textbox'
-                Textbox.Size = UDim2.new(0, 207, 0, 15)
+                Textbox.Size = UDim2.new(0, 207, 0, 20)
                 Textbox.BorderSizePixel = 0
-                Textbox.TextSize = 10
+                Textbox.TextSize = 11
                 Textbox.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
-                Textbox.BackgroundTransparency = 0.9
+                Textbox.BackgroundTransparency = 0.85
                 Textbox.ClearTextOnFocus = false
+                Textbox.TextXAlignment = Enum.TextXAlignment.Left
                 Textbox.Parent = Options
                 Textbox.LayoutOrder = LayoutOrderModule
             
                 local UICorner = Instance.new('UICorner')
-                UICorner.CornerRadius = UDim.new(0, 4)
+                UICorner.CornerRadius = UDim.new(0, 5)
                 UICorner.Parent = Textbox
+                
+                local UIPadding = Instance.new('UIPadding')
+                UIPadding.PaddingLeft = UDim.new(0, 8)
+                UIPadding.PaddingRight = UDim.new(0, 8)
+                UIPadding.Parent = Textbox
+                
+                local UIStroke = Instance.new('UIStroke')
+                UIStroke.Color = Color3.fromRGB(152, 181, 255)
+                UIStroke.Transparency = 0.7
+                UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+                UIStroke.Parent = Textbox
+                
+                Textbox.Focused:Connect(function()
+                    TweenService:Create(Textbox, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        BackgroundTransparency = 0.7
+                    }):Play()
+                    TweenService:Create(UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        Transparency = 0.3
+                    }):Play()
+                end)
+                
+                Textbox.FocusLost:Connect(function()
+                    TweenService:Create(Textbox, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        BackgroundTransparency = 0.85
+                    }):Play()
+                    TweenService:Create(UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        Transparency = 0.7
+                    }):Play()
+                end)
             
                 function TextboxManager:update_text(text: string)
                     self._text = text
@@ -2211,7 +2242,7 @@ function Library:create_ui()
                 local KeybindBox = Instance.new("Frame")
                 KeybindBox.Name = "KeybindBox"
                 KeybindBox.BackgroundTransparency = 0.699999988079071
-                KeybindBox.Position = UDim2.new(1, -25, 0.5, 0)
+                KeybindBox.Position = UDim2.new(1, -20, 0.5, 0)
                 KeybindBox.AnchorPoint = Vector2.new(1, 0.5)
                 KeybindBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 KeybindBox.Size = UDim2.new(0, 23, 0, 15)
@@ -2251,7 +2282,7 @@ function Library:create_ui()
                 Box.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Box.AnchorPoint = Vector2.new(1, 0.5)
                 Box.BackgroundTransparency = 0.9
-                Box.Position = UDim2.new(1, -5, 0.5, 0)
+                Box.Position = UDim2.new(1, -2, 0.5, 0)
                 Box.Name = "Box"
                 Box.Size = UDim2.new(0, 15, 0, 15)
                 Box.BorderSizePixel = 0
@@ -3007,9 +3038,9 @@ function Library:create_ui()
                         Option.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
                         Option.Active = true
                         Option.TextTransparency = 0.6000000238418579
-                        Option.AnchorPoint = Vector2.new(0, 0.5)
+                        Option.AnchorPoint = Vector2.new(0, 0)
                         Option.TextSize = 10
-                        Option.Size = UDim2.new(0, 186, 0, 16)
+                        Option.Size = UDim2.new(0, 186, 0, 18)
                         Option.TextColor3 = Color3.fromRGB(255, 255, 255)
                         Option.BorderColor3 = Color3.fromRGB(0, 0, 0)
                         Option.Text = "• " .. ((typeof(value) == "string" and value) or value.Name)
@@ -3018,7 +3049,7 @@ function Library:create_ui()
                         Option.BackgroundTransparency = 1
                         Option.TextXAlignment = Enum.TextXAlignment.Left
                         Option.Selectable = true
-                        Option.Position = UDim2.new(0.04999988153576851, 0, 0.34210526943206787, 0)
+                        Option.Position = UDim2.new(0, 0, 0, 0)
                         Option.BorderSizePixel = 0
                         Option.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
                         Option.Parent = Options
@@ -3052,7 +3083,7 @@ function Library:create_ui()
                             continue
                         end
     
-                        DropdownManager._size += 16
+                        DropdownManager._size += 18
                         Options.Size = UDim2.fromOffset(207, DropdownManager._size)
                     end
                 end
