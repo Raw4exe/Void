@@ -1158,7 +1158,7 @@ function Library:create_ui()
                         totalHeight = totalHeight + 8
                     end
                     
-                    moduleClone.Size = UDim2.fromOffset(241, 60 + totalHeight)
+                    moduleClone.Size = UDim2.fromOffset(241, 70 + totalHeight)
                 end
             end
         end
@@ -1615,7 +1615,7 @@ function Library:create_ui()
             Module.BackgroundTransparency = 0.5
             Module.Position = UDim2.new(0.004115226212888956, 0, 0, 0)
             Module.Name = 'Module'
-            Module.Size = UDim2.new(0, 241, 0, 60)
+            Module.Size = UDim2.new(0, 241, 0, 70)
             Module.BorderSizePixel = 0
             Module.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
             Module.Parent = settings.section
@@ -1642,7 +1642,7 @@ function Library:create_ui()
             Header.AutoButtonColor = false
             Header.BackgroundTransparency = 1
             Header.Name = 'Header'
-            Header.Size = UDim2.new(0, 241, 0, 60)
+            Header.Size = UDim2.new(0, 241, 0, 70)
             Header.BorderSizePixel = 0
             Header.TextSize = 14
             Header.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -1676,7 +1676,7 @@ function Library:create_ui()
             ModuleName.Name = 'ModuleName'
             ModuleName.Size = UDim2.new(0, 205, 0, 13)
             ModuleName.AnchorPoint = Vector2.new(0, 0.5)
-            ModuleName.Position = UDim2.new(0.073, 0, 0.25, 0)
+            ModuleName.Position = UDim2.new(0.073, 0, 0.35, 0)
             ModuleName.BackgroundTransparency = 1
             ModuleName.TextXAlignment = Enum.TextXAlignment.Left
             ModuleName.BorderSizePixel = 0
@@ -1787,7 +1787,7 @@ function Library:create_ui()
 
                 if self._state then
                     TweenService:Create(Module, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        Size = UDim2.fromOffset(241, 60 + self._size + self._multiplier)
+                        Size = UDim2.fromOffset(241, 70 + self._size + self._multiplier)
                     }):Play()
 
                     TweenService:Create(Toggle, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
@@ -1800,7 +1800,7 @@ function Library:create_ui()
                     }):Play()
                 else
                     TweenService:Create(Module, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        Size = UDim2.fromOffset(241, 60)
+                        Size = UDim2.fromOffset(241, 70)
                     }):Play()
 
                     TweenService:Create(Toggle, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
@@ -1966,7 +1966,7 @@ function Library:create_ui()
                 self._size += settings.customScale or 70
             
                 if ModuleManager._state then
-                    Module.Size = UDim2.fromOffset(241, 60 + self._size)
+                    Module.Size = UDim2.fromOffset(241, 70 + self._size)
                 end
             
                 Options.Size = UDim2.fromOffset(241, self._size)
@@ -2067,7 +2067,7 @@ function Library:create_ui()
                 self._size += settings.customScale or 50 -- Adjust the default height for text elements
             
                 if ModuleManager._state then
-                    Module.Size = UDim2.fromOffset(241, 60 + self._size)
+                    Module.Size = UDim2.fromOffset(241, 70 + self._size)
                 end
             
                 Options.Size = UDim2.fromOffset(241, self._size)
@@ -2147,7 +2147,7 @@ function Library:create_ui()
                 self._size += 33
             
                 if ModuleManager._state then
-                    Module.Size = UDim2.fromOffset(241, 60 + self._size)
+                    Module.Size = UDim2.fromOffset(241, 70 + self._size)
                 end
             
                 Options.Size = UDim2.fromOffset(241, self._size)
@@ -2222,7 +2222,7 @@ function Library:create_ui()
                 self._size += 20
             
                 if ModuleManager._state then
-                    Module.Size = UDim2.fromOffset(241, 60 + self._size)
+                    Module.Size = UDim2.fromOffset(241, 70 + self._size)
                 end
                 Options.Size = UDim2.fromOffset(241, self._size)
             
@@ -2443,7 +2443,7 @@ function Library:create_ui()
                 self._size += 20
             
                 if ModuleManager._state then
-                    Module.Size = UDim2.fromOffset(241, 60 + self._size)
+                    Module.Size = UDim2.fromOffset(241, 70 + self._size)
                 end
                 Options.Size = UDim2.fromOffset(241, self._size)
             
@@ -2510,7 +2510,7 @@ function Library:create_ui()
                 self._size += 27
             
                 if ModuleManager._state then
-                    Module.Size = UDim2.fromOffset(241, 60 + self._size)
+                    Module.Size = UDim2.fromOffset(241, 70 + self._size)
                 end
 
                 local dividerHeight = 1
@@ -2597,7 +2597,7 @@ function Library:create_ui()
                 self._size += 27
 
                 if ModuleManager._state then
-                    Module.Size = UDim2.fromOffset(241, 60 + self._size)
+                    Module.Size = UDim2.fromOffset(241, 70 + self._size)
                 end
 
                 Options.Size = UDim2.fromOffset(241, self._size)
@@ -2796,7 +2796,7 @@ function Library:create_ui()
 
                 if not settings.Order then
                     if ModuleManager._state then
-                        Module.Size = UDim2.fromOffset(241, 60 + self._size)
+                        Module.Size = UDim2.fromOffset(241, 70 + self._size)
                     end
                     Options.Size = UDim2.fromOffset(241, self._size)
                 end
@@ -3015,7 +3015,7 @@ function Library:create_ui()
                         CurrentDropSizeState = self._size;
 
                         TweenService:Create(Module, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                            Size = UDim2.fromOffset(241, 60 + ModuleManager._size + ModuleManager._multiplier)
+                            Size = UDim2.fromOffset(241, 70 + ModuleManager._size + ModuleManager._multiplier)
                         }):Play()
 
                         TweenService:Create(Module.Options, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
@@ -3039,7 +3039,7 @@ function Library:create_ui()
                         CurrentDropSizeState = 0;
 
                         TweenService:Create(Module, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                            Size = UDim2.fromOffset(241, 60 + ModuleManager._size + ModuleManager._multiplier)
+                            Size = UDim2.fromOffset(241, 70 + ModuleManager._size + ModuleManager._multiplier)
                         }):Play()
 
                         TweenService:Create(Module.Options, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
@@ -3182,7 +3182,7 @@ function Library:create_ui()
                 self._size += 20
             
                 if ModuleManager._state then
-                    Module.Size = UDim2.fromOffset(241, 60 + self._size);
+                    Module.Size = UDim2.fromOffset(241, 70 + self._size);
                 end
             
                 Options.Size = UDim2.fromOffset(241, self._size);
