@@ -3072,10 +3072,17 @@ function Library:create_ui()
                         
                         Option.MouseLeave:Connect(function()
                             local isSelected = false
+                            local optionValue = (typeof(value) == "string" and value) or value.Name
                             if settings.multi_dropdown then
-                                isSelected = table.find(Library._config._flags[settings.flag] or {}, value) ~= nil
+                                local selected = Library._config._flags[settings.flag] or {}
+                                for _, v in ipairs(selected) do
+                                    if v == optionValue then
+                                        isSelected = true
+                                        break
+                                    end
+                                end
                             else
-                                isSelected = Library._config._flags[settings.flag] == value
+                                isSelected = Library._config._flags[settings.flag] == optionValue
                             end
                             TweenService:Create(Option, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
                                 TextTransparency = isSelected and 0.2 or 0.6
@@ -3083,18 +3090,7 @@ function Library:create_ui()
                         end)
 
                         Option.MouseButton1Click:Connect(function()
-                            if not Library._config._flags[settings.flag] then
-                                Library._config._flags[settings.flag] = {};
-                            end;
-
-                            if settings.multi_dropdown then
-                                if table.find(Library._config._flags[settings.flag], value) then
-                                    Library:remove_table_value(Library._config._flags[settings.flag], value)
-                                else
-                                    table.insert(Library._config._flags[settings.flag], value)
-                                end
-                            end
-
+                            print("Dropdown clicked:", value)
                             DropdownManager:update(value)
                         end)
     
