@@ -3140,18 +3140,6 @@ function Library:create_ui()
                 else
                     CurrentOption.Text = "None"
                 end
-                                    if optionText == savedOption then
-                                        object.TextTransparency = 0.2
-                                    end
-                                end
-                            end
-                        end
-                    end
-                else
-                    if settings.options and settings.options[1] then
-                        DropdownManager:update(settings.options[1])
-                    end
-                end
     
                 Dropdown.MouseButton1Click:Connect(function()
                     DropdownManager:unfold_settings()
