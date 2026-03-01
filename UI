@@ -659,6 +659,176 @@ function Library:create_ui()
     Minimize.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Minimize.Parent = Handler
     
+    local ControlPanel = Instance.new('Frame')
+    ControlPanel.Name = 'ControlPanel'
+    ControlPanel.BackgroundTransparency = 1
+    ControlPanel.Position = UDim2.new(0.026, 0, 0.92, 0)
+    ControlPanel.Size = UDim2.new(0, 129, 0, 30)
+    ControlPanel.BorderSizePixel = 0
+    ControlPanel.Parent = Handler
+    
+    local ControlLayout = Instance.new('UIListLayout')
+    ControlLayout.FillDirection = Enum.FillDirection.Horizontal
+    ControlLayout.Padding = UDim.new(0, 8)
+    ControlLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    ControlLayout.Parent = ControlPanel
+    
+    local SettingsButton = Instance.new('ImageButton')
+    SettingsButton.Name = 'SettingsButton'
+    SettingsButton.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
+    SettingsButton.BackgroundTransparency = 0.5
+    SettingsButton.Size = UDim2.new(0, 30, 0, 30)
+    SettingsButton.BorderSizePixel = 0
+    SettingsButton.Image = 'rbxassetid://10734950309'
+    SettingsButton.ImageColor3 = Color3.fromRGB(152, 181, 255)
+    SettingsButton.ImageTransparency = 0.2
+    SettingsButton.AutoButtonColor = false
+    SettingsButton.Parent = ControlPanel
+    
+    local SettingsCorner = Instance.new('UICorner')
+    SettingsCorner.CornerRadius = UDim.new(0, 5)
+    SettingsCorner.Parent = SettingsButton
+    
+    local SettingsStroke = Instance.new('UIStroke')
+    SettingsStroke.Color = Color3.fromRGB(52, 66, 89)
+    SettingsStroke.Transparency = 0.5
+    SettingsStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    SettingsStroke.Parent = SettingsButton
+    
+    local PaletteButton = Instance.new('ImageButton')
+    PaletteButton.Name = 'PaletteButton'
+    PaletteButton.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
+    PaletteButton.BackgroundTransparency = 0.5
+    PaletteButton.Size = UDim2.new(0, 30, 0, 30)
+    PaletteButton.BorderSizePixel = 0
+    PaletteButton.Image = 'rbxassetid://10734910430'
+    PaletteButton.ImageColor3 = Color3.fromRGB(152, 181, 255)
+    PaletteButton.ImageTransparency = 0.2
+    PaletteButton.AutoButtonColor = false
+    PaletteButton.Parent = ControlPanel
+    
+    local PaletteCorner = Instance.new('UICorner')
+    PaletteCorner.CornerRadius = UDim.new(0, 5)
+    PaletteCorner.Parent = PaletteButton
+    
+    local PaletteStroke = Instance.new('UIStroke')
+    PaletteStroke.Color = Color3.fromRGB(52, 66, 89)
+    PaletteStroke.Transparency = 0.5
+    PaletteStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    PaletteStroke.Parent = PaletteButton
+    
+    local ConfigButton = Instance.new('ImageButton')
+    ConfigButton.Name = 'ConfigButton'
+    ConfigButton.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
+    ConfigButton.BackgroundTransparency = 0.5
+    ConfigButton.Size = UDim2.new(0, 30, 0, 30)
+    ConfigButton.BorderSizePixel = 0
+    ConfigButton.Image = 'rbxassetid://10734952273'
+    ConfigButton.ImageColor3 = Color3.fromRGB(152, 181, 255)
+    ConfigButton.ImageTransparency = 0.2
+    ConfigButton.AutoButtonColor = false
+    ConfigButton.Parent = ControlPanel
+    
+    local ConfigCorner = Instance.new('UICorner')
+    ConfigCorner.CornerRadius = UDim.new(0, 5)
+    ConfigCorner.Parent = ConfigButton
+    
+    local ConfigStroke = Instance.new('UIStroke')
+    ConfigStroke.Color = Color3.fromRGB(52, 66, 89)
+    ConfigStroke.Transparency = 0.5
+    ConfigStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    ConfigStroke.Parent = ConfigButton
+    
+    SettingsButton.MouseEnter:Connect(function()
+        TweenService:Create(SettingsButton, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.3,
+            ImageTransparency = 0
+        }):Play()
+        TweenService:Create(SettingsStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            Transparency = 0.3
+        }):Play()
+    end)
+    
+    SettingsButton.MouseLeave:Connect(function()
+        TweenService:Create(SettingsButton, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.5,
+            ImageTransparency = 0.2
+        }):Play()
+        TweenService:Create(SettingsStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            Transparency = 0.5
+        }):Play()
+    end)
+    
+    PaletteButton.MouseEnter:Connect(function()
+        TweenService:Create(PaletteButton, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.3,
+            ImageTransparency = 0
+        }):Play()
+        TweenService:Create(PaletteStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            Transparency = 0.3
+        }):Play()
+    end)
+    
+    PaletteButton.MouseLeave:Connect(function()
+        TweenService:Create(PaletteButton, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.5,
+            ImageTransparency = 0.2
+        }):Play()
+        TweenService:Create(PaletteStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            Transparency = 0.5
+        }):Play()
+    end)
+    
+    ConfigButton.MouseEnter:Connect(function()
+        TweenService:Create(ConfigButton, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.3,
+            ImageTransparency = 0
+        }):Play()
+        TweenService:Create(ConfigStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            Transparency = 0.3
+        }):Play()
+    end)
+    
+    ConfigButton.MouseLeave:Connect(function()
+        TweenService:Create(ConfigButton, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.5,
+            ImageTransparency = 0.2
+        }):Play()
+        TweenService:Create(ConfigStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            Transparency = 0.5
+        }):Play()
+    end)
+    
+    SettingsButton.MouseButton1Click:Connect(function()
+        TweenService:Create(SettingsButton, TweenInfo.new(0.1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.1
+        }):Play()
+        task.wait(0.1)
+        TweenService:Create(SettingsButton, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.5
+        }):Play()
+    end)
+    
+    PaletteButton.MouseButton1Click:Connect(function()
+        TweenService:Create(PaletteButton, TweenInfo.new(0.1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.1
+        }):Play()
+        task.wait(0.1)
+        TweenService:Create(PaletteButton, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.5
+        }):Play()
+    end)
+    
+    ConfigButton.MouseButton1Click:Connect(function()
+        TweenService:Create(ConfigButton, TweenInfo.new(0.1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.1
+        }):Play()
+        task.wait(0.1)
+        TweenService:Create(ConfigButton, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.5
+        }):Play()
+    end)
+    
     local UIScale = Instance.new('UIScale')
     UIScale.Parent = Container    
     
