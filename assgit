@@ -2211,7 +2211,7 @@ function Library:create_ui()
                 local KeybindBox = Instance.new("Frame")
                 KeybindBox.Name = "KeybindBox"
                 KeybindBox.BackgroundTransparency = 0.699999988079071
-                KeybindBox.Position = UDim2.new(1, -48, 0.5, 0)
+                KeybindBox.Position = UDim2.new(1, -25, 0.5, 0)
                 KeybindBox.AnchorPoint = Vector2.new(1, 0.5)
                 KeybindBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 KeybindBox.Size = UDim2.new(0, 23, 0, 15)
@@ -2251,7 +2251,7 @@ function Library:create_ui()
                 Box.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Box.AnchorPoint = Vector2.new(1, 0.5)
                 Box.BackgroundTransparency = 0.9
-                Box.Position = UDim2.new(1, -23, 0.5, 0)
+                Box.Position = UDim2.new(1, -5, 0.5, 0)
                 Box.Name = "Box"
                 Box.Size = UDim2.new(0, 15, 0, 15)
                 Box.BorderSizePixel = 0
@@ -3005,7 +3005,7 @@ function Library:create_ui()
                     for index, value in settings.options do
                         local Option = Instance.new('TextButton')
                         Option.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
-                        Option.Active = false
+                        Option.Active = true
                         Option.TextTransparency = 0.6000000238418579
                         Option.AnchorPoint = Vector2.new(0, 0.5)
                         Option.TextSize = 10
@@ -3017,7 +3017,7 @@ function Library:create_ui()
                         Option.Name = 'Option'
                         Option.BackgroundTransparency = 1
                         Option.TextXAlignment = Enum.TextXAlignment.Left
-                        Option.Selectable = false
+                        Option.Selectable = true
                         Option.Position = UDim2.new(0.04999988153576851, 0, 0.34210526943206787, 0)
                         Option.BorderSizePixel = 0
                         Option.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
