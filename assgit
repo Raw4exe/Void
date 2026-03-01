@@ -1720,7 +1720,6 @@ function Library:create_ui()
             Keybind.Size = UDim2.new(0, 23, 0, 15)
             Keybind.BorderSizePixel = 0
             Keybind.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
-            Keybind.Visible = false
             Keybind.Parent = Header
             
             local UICorner = Instance.new('UICorner')
@@ -1871,7 +1870,6 @@ function Library:create_ui()
             if Library._config._keybinds[settings.flag] then
                 local keybind_string = string.gsub(tostring(Library._config._keybinds[settings.flag]), 'Enum.KeyCode.', '')
                 TextLabel.Text = keybind_string
-                Keybind.Visible = true
 
                 ModuleManager:connect_keybind()
                 ModuleManager:scale_keybind()
@@ -1906,7 +1904,7 @@ function Library:create_ui()
                         Config:save(game.GameId, Library._config)
 
                         TextLabel.Text = 'N/A'
-                        Keybind.Visible = false
+                        ModuleManager:scale_keybind(true)
                         
                         if Connections[settings.flag..'_keybind'] then
                             Connections[settings.flag..'_keybind']:Disconnect()
@@ -1935,7 +1933,6 @@ function Library:create_ui()
                     ModuleManager:connect_keybind()
                     ModuleManager:scale_keybind()
                     
-                    Keybind.Visible = true
                     Library._choosing_keybind = false
 
                     local keybind_string = string.gsub(tostring(Library._config._keybinds[settings.flag]), 'Enum.KeyCode.', '')
