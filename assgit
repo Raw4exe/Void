@@ -2211,7 +2211,7 @@ function Library:create_ui()
                 local KeybindBox = Instance.new("Frame")
                 KeybindBox.Name = "KeybindBox"
                 KeybindBox.BackgroundTransparency = 0.699999988079071
-                KeybindBox.Position = UDim2.new(1, -43, 0.5, 0)
+                KeybindBox.Position = UDim2.new(1, -48, 0.5, 0)
                 KeybindBox.AnchorPoint = Vector2.new(1, 0.5)
                 KeybindBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 KeybindBox.Size = UDim2.new(0, 23, 0, 15)
@@ -2251,7 +2251,7 @@ function Library:create_ui()
                 Box.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Box.AnchorPoint = Vector2.new(1, 0.5)
                 Box.BackgroundTransparency = 0.9
-                Box.Position = UDim2.new(1, -20, 0.5, 0)
+                Box.Position = UDim2.new(1, -23, 0.5, 0)
                 Box.Name = "Box"
                 Box.Size = UDim2.new(0, 15, 0, 15)
                 Box.BorderSizePixel = 0
@@ -3066,8 +3066,24 @@ function Library:create_ui()
 
                 if Library:flag_type(settings.flag, 'string') then
                     DropdownManager:update(Library._config._flags[settings.flag])
+                elseif Library:flag_type(settings.flag, 'table') and settings.multi_dropdown then
+                    if #Library._config._flags[settings.flag] > 0 then
+                        CurrentOption.Text = table.concat(Library._config._flags[settings.flag], ", ")
+                        for _, savedOption in ipairs(Library._config._flags[settings.flag]) do
+                            for _, object in Options:GetChildren() do
+                                if object.Name == "Option" then
+                                    local optionText = object.Text:gsub("^• ", "")
+                                    if optionText == savedOption then
+                                        object.TextTransparency = 0.2
+                                    end
+                                end
+                            end
+                        end
+                    end
                 else
-                    DropdownManager:update(settings.options[1])
+                    if settings.options and settings.options[1] then
+                        DropdownManager:update(settings.options[1])
+                    end
                 end
     
                 Dropdown.MouseButton1Click:Connect(function()
