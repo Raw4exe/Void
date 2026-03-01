@@ -1726,16 +1726,22 @@ function Library:create_ui()
             UICorner.CornerRadius = UDim.new(0, 3)
             UICorner.Parent = Keybind
             
+            local UIStroke = Instance.new('UIStroke')
+            UIStroke.Color = Color3.fromRGB(52, 66, 89)
+            UIStroke.Transparency = 0.3
+            UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+            UIStroke.Parent = Keybind
+            
             local TextLabel = Instance.new('TextLabel')
             TextLabel.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
             TextLabel.TextColor3 = Color3.fromRGB(209, 222, 255)
             TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
             TextLabel.Text = 'N/A'
-            TextLabel.AnchorPoint = Vector2.new(0, 0.5)
-            TextLabel.Size = UDim2.new(0, 25, 0, 13)
+            TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+            TextLabel.Size = UDim2.new(1, -4, 1, 0)
             TextLabel.BackgroundTransparency = 1
-            TextLabel.TextXAlignment = Enum.TextXAlignment.Left
-            TextLabel.Position = UDim2.new(0, 0, 0.5, 0)
+            TextLabel.TextXAlignment = Enum.TextXAlignment.Center
+            TextLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
             TextLabel.BorderSizePixel = 0
             TextLabel.TextSize = 10
             TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
