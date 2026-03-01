@@ -1648,7 +1648,7 @@ function Library:create_ui()
                 local KeybindBox = Instance.new("Frame")
                 KeybindBox.Name = "KeybindBox"
                 KeybindBox.BackgroundTransparency = 0.699999988079071
-                KeybindBox.Position = UDim2.new(1, -60, 0.5, 0)
+                KeybindBox.Position = UDim2.new(1, -43, 0.5, 0)
                 KeybindBox.AnchorPoint = Vector2.new(1, 0.5)
                 KeybindBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 KeybindBox.Size = UDim2.new(0, 23, 0, 15)
@@ -2380,8 +2380,8 @@ function Library:create_ui()
                         -- Update the transparent effect of each option
                         for _, object in Options:GetChildren() do
                             if object.Name == "Option" then
-                                table.insert(OptionsChild, object.Text)
-                                if table.find(selected, object.Text) then
+                                table.insert(OptionsChild, object.Text:gsub("^• ", ""))
+                                if table.find(selected, object.Text:gsub("^• ", "")) then
                                     object.TextTransparency = 0.2
                                 else
                                     object.TextTransparency = 0.6
@@ -2405,8 +2405,8 @@ function Library:create_ui()
                         CurrentOption.Text = (typeof(option) == "string" and option) or option.Name
                         for _, object in Options:GetChildren() do
                             if object.Name == "Option" then
-                                -- Only update transparency for actual option text buttons
-                                if object.Text == CurrentOption.Text then
+                                local optionText = object.Text:gsub("^• ", "")
+                                if optionText == CurrentOption.Text then
                                     object.TextTransparency = 0.2
                                 else
                                     object.TextTransparency = 0.6
@@ -2492,7 +2492,7 @@ function Library:create_ui()
                         Option.Size = UDim2.new(0, 186, 0, 16)
                         Option.TextColor3 = Color3.fromRGB(255, 255, 255)
                         Option.BorderColor3 = Color3.fromRGB(0, 0, 0)
-                        Option.Text = (typeof(value) == "string" and value) or value.Name;
+                        Option.Text = "• " .. ((typeof(value) == "string" and value) or value.Name)
                         Option.AutoButtonColor = false
                         Option.Name = 'Option'
                         Option.BackgroundTransparency = 1
