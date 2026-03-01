@@ -631,7 +631,7 @@ function Library:create_ui()
     ClientName.Name = 'ClientName'
     ClientName.Size = UDim2.new(0, 110, 0, 22)
     ClientName.AnchorPoint = Vector2.new(0, 0.5)
-    ClientName.Position = UDim2.new(0.0560000017285347, 0, 0.054999999701976776, 0)
+    ClientName.Position = UDim2.new(0.07, 0, 0.054999999701976776, 0)
     ClientName.BackgroundTransparency = 1
     ClientName.TextXAlignment = Enum.TextXAlignment.Left
     ClientName.BorderSizePixel = 0
@@ -916,6 +916,7 @@ function Library:create_ui()
     SearchLeftSection.ScrollBarThickness = 0
     SearchLeftSection.Size = UDim2.new(0, 243, 0, 445)
     SearchLeftSection.Selectable = false
+    SearchLeftSection.Active = false
     SearchLeftSection.AnchorPoint = Vector2.new(0, 0.5)
     SearchLeftSection.ScrollBarImageTransparency = 1
     SearchLeftSection.BackgroundTransparency = 1
@@ -943,6 +944,7 @@ function Library:create_ui()
     SearchRightSection.ScrollBarThickness = 0
     SearchRightSection.Size = UDim2.new(0, 243, 0, 445)
     SearchRightSection.Selectable = false
+    SearchRightSection.Active = false
     SearchRightSection.AnchorPoint = Vector2.new(0, 0.5)
     SearchRightSection.ScrollBarImageTransparency = 1
     SearchRightSection.BackgroundTransparency = 1
