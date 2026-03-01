@@ -696,7 +696,7 @@ function Library:create_ui()
     local ControlPanel = Instance.new('Frame')
     ControlPanel.Name = 'ControlPanel'
     ControlPanel.BackgroundTransparency = 1
-    ControlPanel.Position = UDim2.new(0.015, 0, 0.88, 0)
+    ControlPanel.Position = UDim2.new(0.015, 0, 0.86, 0)
     ControlPanel.AnchorPoint = Vector2.new(0, 0)
     ControlPanel.Size = UDim2.new(0, 80, 0, 22)
     ControlPanel.BorderSizePixel = 0
@@ -706,7 +706,7 @@ function Library:create_ui()
     SearchBar.Name = 'SearchBar'
     SearchBar.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
     SearchBar.BackgroundTransparency = 0.5
-    SearchBar.Position = UDim2.new(0.015, 0, 0.93, 0)
+    SearchBar.Position = UDim2.new(0.015, 0, 0.92, 0)
     SearchBar.Size = UDim2.new(0, 129, 0, 28)
     SearchBar.BorderSizePixel = 0
     SearchBar.Parent = Handler
@@ -732,14 +732,26 @@ function Library:create_ui()
     SearchIcon.ImageTransparency = 0.3
     SearchIcon.Parent = SearchBar
     
+    local ClearButton = Instance.new('ImageButton')
+    ClearButton.Name = 'ClearButton'
+    ClearButton.BackgroundTransparency = 1
+    ClearButton.Position = UDim2.new(1, -20, 0.5, 0)
+    ClearButton.AnchorPoint = Vector2.new(0, 0.5)
+    ClearButton.Size = UDim2.new(0, 14, 0, 14)
+    ClearButton.Image = 'rbxassetid://10747384394'
+    ClearButton.ImageColor3 = Color3.fromRGB(152, 181, 255)
+    ClearButton.ImageTransparency = 1
+    ClearButton.AutoButtonColor = false
+    ClearButton.Parent = SearchBar
+    
     local SearchBox = Instance.new('TextBox')
     SearchBox.Name = 'SearchBox'
     SearchBox.BackgroundTransparency = 1
     SearchBox.Position = UDim2.new(0, 28, 0, 0)
-    SearchBox.Size = UDim2.new(1, -28, 1, 0)
+    SearchBox.Size = UDim2.new(1, -50, 1, 0)
     SearchBox.Font = Enum.Font.GothamSemibold
     SearchBox.Text = ''
-    SearchBox.PlaceholderText = self._search_placeholder or 'Search module or element'
+    SearchBox.PlaceholderText = self._search_placeholder or 'Search Bar'
     SearchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
     SearchBox.TextTransparency = 0.2
     SearchBox.PlaceholderColor3 = Color3.fromRGB(255, 255, 255)
@@ -751,7 +763,7 @@ function Library:create_ui()
     local DotsLabel = Instance.new('TextLabel')
     DotsLabel.Name = 'DotsLabel'
     DotsLabel.BackgroundTransparency = 1
-    DotsLabel.Position = UDim2.new(1, -20, 0.5, 0)
+    DotsLabel.Position = UDim2.new(1, -40, 0.5, 0)
     DotsLabel.AnchorPoint = Vector2.new(0, 0.5)
     DotsLabel.Size = UDim2.new(0, 20, 0, 14)
     DotsLabel.Font = Enum.Font.GothamSemibold
@@ -762,6 +774,25 @@ function Library:create_ui()
     DotsLabel.TextXAlignment = Enum.TextXAlignment.Left
     DotsLabel.Visible = false
     DotsLabel.Parent = SearchBar
+    
+    local isSearchActive = false
+    
+    ClearButton.MouseButton1Click:Connect(function()
+        SearchBox.Text = ''
+        isSearchActive = false
+    end)
+    
+    ClearButton.MouseEnter:Connect(function()
+        TweenService:Create(ClearButton, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            ImageTransparency = 0.3
+        }):Play()
+    end)
+    
+    ClearButton.MouseLeave:Connect(function()
+        TweenService:Create(ClearButton, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            ImageTransparency = 1
+        }):Play()
+    end)
     
     local dotsAnimation = nil
     local function startDotsAnimation()
@@ -790,6 +821,18 @@ function Library:create_ui()
         DotsLabel.Visible = false
         DotsLabel.Text = ''
     end
+    
+    SearchBox:GetPropertyChangedSignal('Text'):Connect(function()
+        if SearchBox.Text ~= '' then
+            TweenService:Create(ClearButton, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                ImageTransparency = 0.5
+            }):Play()
+        else
+            TweenService:Create(ClearButton, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                ImageTransparency = 1
+            }):Play()
+        end
+    end)
     
     SearchBox.Focused:Connect(function()
         TweenService:Create(SearchBar, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
@@ -875,56 +918,64 @@ function Library:create_ui()
     
     local originalModuleData = {}
     
-    local function performSearch(query)
+    local function clearSearchResults()
+        SearchLeftSection.Visible = false
+        SearchRightSection.Visible = false
+        
+        for _, clone in pairs(SearchLeftSection:GetChildren()) do
+            if clone:IsA('Frame') and clone.Name == 'Module' then
+                clone:Destroy()
+            end
+        end
+        for _, clone in pairs(SearchRightSection:GetChildren()) do
+            if clone:IsA('Frame') and clone.Name == 'Module' then
+                clone:Destroy()
+            end
+        end
+        
+        for _, section in pairs(Sections:GetChildren()) do
+            if section:IsA('ScrollingFrame') and section.Name ~= 'SearchLeftSection' and section.Name ~= 'SearchRightSection' then
+                section.Visible = true
+            end
+        end
+        
+        isSearchActive = false
+        stopDotsAnimation()
+    end
+    
+    local function fuzzyMatch(text, query)
+        text = text:lower()
         query = query:lower()
         
-        if query == '' then
-            SearchLeftSection.Visible = false
-            SearchRightSection.Visible = false
+        if text:find(query, 1, true) then
+            return true, 100
+        end
+        
+        local score = 0
+        local textIndex = 1
+        
+        for i = 1, #query do
+            local char = query:sub(i, i)
+            local found = text:find(char, textIndex, true)
             
-            for _, clone in pairs(SearchLeftSection:GetChildren()) do
-                if clone:IsA('Frame') and clone.Name == 'Module' then
-                    clone:Destroy()
-                end
+            if found then
+                score = score + (100 - (found - textIndex))
+                textIndex = found + 1
+            else
+                return false, 0
             end
-            for _, clone in pairs(SearchRightSection:GetChildren()) do
-                if clone:IsA('Frame') and clone.Name == 'Module' then
-                    clone:Destroy()
-                end
-            end
-            
-            for _, data in pairs(originalModuleData) do
-                local module = data.module
-                local originalParent = data.originalParent
-                module.Parent = originalParent
-                module.Visible = true
-                
-                local options = module:FindFirstChild('Options')
-                if options then
-                    for _, element in pairs(options:GetChildren()) do
-                        if element:IsA('GuiObject') and element.Name ~= 'UIPadding' and element.Name ~= 'UIListLayout' then
-                            element.Visible = data.elementStates[element] or true
-                        end
-                    end
-                end
-                
-                if data.originalSize then
-                    module.Size = data.originalSize
-                end
-            end
-            
-            originalModuleData = {}
-            
-            for _, section in pairs(Sections:GetChildren()) do
-                if section:IsA('ScrollingFrame') and section.Name ~= 'SearchLeftSection' and section.Name ~= 'SearchRightSection' then
-                    section.Visible = true
-                end
-            end
-            
-            stopDotsAnimation()
+        end
+        
+        return true, score
+    end
+    
+    local function performSearch(query)
+        if query == '' or query == nil then
+            clearSearchResults()
             return
         end
         
+        isSearchActive = true
         startDotsAnimation()
         
         for _, section in pairs(Sections:GetChildren()) do
@@ -955,10 +1006,13 @@ function Library:create_ui()
                     if module:IsA('Frame') and module.Name == 'Module' then
                         local header = module:FindFirstChild('Header')
                         local moduleName = header and header:FindFirstChild('ModuleName')
-                        local moduleMatches = moduleName and moduleName.Text:lower():find(query)
+                        local moduleText = moduleName and moduleName.Text or ''
+                        
+                        local moduleMatches, moduleScore = fuzzyMatch(moduleText, query)
                         
                         local options = module:FindFirstChild('Options')
                         local matchedElements = {}
+                        local maxElementScore = 0
                         
                         if options then
                             for _, element in pairs(options:GetChildren()) do
@@ -973,26 +1027,32 @@ function Library:create_ui()
                                         elementName = element.Title.Text
                                     end
                                     
-                                    local elementMatches = elementName:lower():find(query)
+                                    local elementMatches, elementScore = fuzzyMatch(elementName, query)
                                     
-                                    if moduleMatches or elementMatches then
-                                        table.insert(matchedElements, element)
+                                    if elementMatches then
+                                        table.insert(matchedElements, {element = element, score = elementScore})
+                                        maxElementScore = math.max(maxElementScore, elementScore)
                                     end
                                 end
                             end
                         end
                         
                         if moduleMatches or #matchedElements > 0 then
+                            local finalScore = math.max(moduleScore, maxElementScore)
                             table.insert(matchedModules, {
                                 module = module,
                                 matchedElements = matchedElements,
-                                originalParent = section
+                                score = finalScore
                             })
                         end
                     end
                 end
             end
         end
+        
+        table.sort(matchedModules, function(a, b)
+            return a.score > b.score
+        end)
         
         for i, data in ipairs(matchedModules) do
             local module = data.module
@@ -1010,7 +1070,7 @@ function Library:create_ui()
                     if element:IsA('GuiObject') and element.Name ~= 'UIPadding' and element.Name ~= 'UIListLayout' then
                         local isMatched = false
                         for _, matched in pairs(matchedElements) do
-                            if element.Name == matched.Name then
+                            if element.Name == matched.element.Name then
                                 isMatched = true
                                 break
                             end
@@ -1349,6 +1409,17 @@ function Library:create_ui()
     end
 
     function self:update_sections(left_section: ScrollingFrame, right_section: ScrollingFrame)
+        if isSearchActive then
+            for _, object in Sections:GetChildren() do
+                if object.Name == 'SearchLeftSection' or object.Name == 'SearchRightSection' then
+                    object.Visible = true
+                else
+                    object.Visible = false
+                end
+            end
+            return
+        end
+        
         for _, object in Sections:GetChildren() do
             if object == left_section or object == right_section then
                 object.Visible = true
