@@ -2938,7 +2938,11 @@ function Library:create_ui()
                             table.insert(selected, optionValue)
                         end
                         
-                        CurrentOption.Text = table.concat(selected, ", ")
+                        if #selected == 0 then
+                            CurrentOption.Text = "None"
+                        else
+                            CurrentOption.Text = table.concat(selected, ", ")
+                        end
                         
                         for _, object in Options:GetChildren() do
                             if object.Name == "Option" then
@@ -2954,20 +2958,25 @@ function Library:create_ui()
                         Library._config._flags[settings.flag] = selected
                     else
                         local optionValue = (typeof(option) == "string" and option) or option.Name
-                        CurrentOption.Text = optionValue
+                        
+                        if Library._config._flags[settings.flag] == optionValue then
+                            Library._config._flags[settings.flag] = nil
+                            CurrentOption.Text = "None"
+                        else
+                            Library._config._flags[settings.flag] = optionValue
+                            CurrentOption.Text = optionValue
+                        end
                         
                         for _, object in Options:GetChildren() do
                             if object.Name == "Option" then
                                 local optionText = object.Text:gsub("^• ", "")
-                                if optionText == optionValue then
+                                if optionText == optionValue and Library._config._flags[settings.flag] == optionValue then
                                     object.TextTransparency = 0.2
                                 else
                                     object.TextTransparency = 0.6
                                 end
                             end
                         end
-                        
-                        Library._config._flags[settings.flag] = optionValue
                     end
                     
                     Config:save(game.GameId, Library._config)
@@ -3119,6 +3128,18 @@ function Library:create_ui()
                             for _, object in Options:GetChildren() do
                                 if object.Name == "Option" then
                                     local optionText = object.Text:gsub("^• ", "")
+                                    if optionText == savedOption then
+                                        object.TextTransparency = 0.2
+                                    end
+                                end
+                            end
+                        end
+                    else
+                        CurrentOption.Text = "None"
+                    end
+                else
+                    CurrentOption.Text = "None"
+                end
                                     if optionText == savedOption then
                                         object.TextTransparency = 0.2
                                     end
