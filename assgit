@@ -588,7 +588,7 @@ function Library:create_ui()
     ClientName.FontFace = Font.new('rbxasset://fonts/families/FredokaOne.json', Enum.FontWeight.Regular, Enum.FontStyle.Normal)
     ClientName.TextColor3 = Color3.fromRGB(152, 181, 255)
     ClientName.TextTransparency = 0.20000000298023224
-    ClientName.Text = 'VOID [BETA]'
+    ClientName.Text = 'VOID HUB'
     ClientName.Name = 'ClientName'
     ClientName.Size = UDim2.new(0, 90, 0, 18)
     ClientName.AnchorPoint = Vector2.new(0, 0.5)
@@ -698,6 +698,23 @@ function Library:create_ui()
     ControlPanel.BackgroundTransparency = 1
     ControlPanel.Position = UDim2.new(0.015, 0, 0.86, 0)
     ControlPanel.AnchorPoint = Vector2.new(0, 0)
+    ControlPanel.Size = UDim2.new(0, 80, 0, 22)
+    ControlPanel.BorderSizePixel = 0
+    ControlPanel.Parent = Handler
+    
+    local Tooltip = Instance.new('TextLabel')
+    Tooltip.Name = 'Tooltip'
+    Tooltip.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+    Tooltip.TextColor3 = Color3.fromRGB(152, 181, 255)
+    Tooltip.TextTransparency = 1
+    Tooltip.BackgroundTransparency = 1
+    Tooltip.Size = UDim2.new(0, 200, 0, 25)
+    Tooltip.Position = UDim2.new(0.5, 0, 0, -35)
+    Tooltip.AnchorPoint = Vector2.new(0.5, 0)
+    Tooltip.TextSize = 14
+    Tooltip.BorderSizePixel = 0
+    Tooltip.ZIndex = 10
+    Tooltip.Parent = Container
     ControlPanel.Size = UDim2.new(0, 80, 0, 22)
     ControlPanel.BorderSizePixel = 0
     ControlPanel.Parent = Handler
@@ -1098,25 +1115,6 @@ function Library:create_ui()
         performSearch(SearchBox.Text)
     end)
     
-    local ControlLayout = Instance.new('UIListLayout')
-    ControlLayout.FillDirection = Enum.FillDirection.Horizontal
-    ControlLayout.Padding = UDim.new(0, 5)
-    ControlLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    ControlLayout.Parent = ControlPanel
-    
-    local Tooltip = Instance.new('TextLabel')
-    Tooltip.Name = 'Tooltip'
-    Tooltip.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-    Tooltip.TextColor3 = Color3.fromRGB(152, 181, 255)
-    Tooltip.TextTransparency = 1
-    Tooltip.BackgroundTransparency = 1
-    Tooltip.Size = UDim2.new(0, 200, 0, 30)
-    Tooltip.Position = UDim2.new(0.5, 0, -0.08, 0)
-    Tooltip.AnchorPoint = Vector2.new(0.5, 0)
-    Tooltip.TextSize = 14
-    Tooltip.BorderSizePixel = 0
-    Tooltip.Parent = Handler
-    
     local function showTooltip(text)
         Tooltip.Text = text
         TweenService:Create(Tooltip, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
@@ -1129,6 +1127,12 @@ function Library:create_ui()
             TextTransparency = 1
         }):Play()
     end
+    
+    local ControlLayout = Instance.new('UIListLayout')
+    ControlLayout.FillDirection = Enum.FillDirection.Horizontal
+    ControlLayout.Padding = UDim.new(0, 5)
+    ControlLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    ControlLayout.Parent = ControlPanel
     
     local function createControlButton(name, icon, order, tooltipText)
         local Button = Instance.new('ImageButton')
