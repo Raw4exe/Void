@@ -339,7 +339,12 @@ local Library = {
 
     _dragging = false,
     _drag_start = nil,
-    _container_position = nil
+    _container_position = nil,
+    
+    _search_placeholder = 'Search module or element',
+    _control_settings_enabled = true,
+    _control_palette_enabled = true,
+    _control_config_enabled = true
 }
 Library.__index = Library
 
@@ -688,11 +693,20 @@ function Library:create_ui()
     SidePanelContent.Size = UDim2.new(1, 0, 1, 0)
     SidePanelContent.Parent = SidePanel
     
+    local ControlPanel = Instance.new('Frame')
+    ControlPanel.Name = 'ControlPanel'
+    ControlPanel.BackgroundTransparency = 1
+    ControlPanel.Position = UDim2.new(0.015, 0, 0.82, 0)
+    ControlPanel.AnchorPoint = Vector2.new(0, 0)
+    ControlPanel.Size = UDim2.new(0, 80, 0, 22)
+    ControlPanel.BorderSizePixel = 0
+    ControlPanel.Parent = Handler
+    
     local SearchBar = Instance.new('Frame')
     SearchBar.Name = 'SearchBar'
     SearchBar.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
     SearchBar.BackgroundTransparency = 0.5
-    SearchBar.Position = UDim2.new(0.026, 0, 0.87, 0)
+    SearchBar.Position = UDim2.new(0.015, 0, 0.88, 0)
     SearchBar.Size = UDim2.new(0, 129, 0, 28)
     SearchBar.BorderSizePixel = 0
     SearchBar.Parent = Handler
@@ -713,7 +727,7 @@ function Library:create_ui()
     SearchIcon.Position = UDim2.new(0, 8, 0.5, 0)
     SearchIcon.AnchorPoint = Vector2.new(0, 0.5)
     SearchIcon.Size = UDim2.new(0, 14, 0, 14)
-    SearchIcon.Image = 'rbxassetid://10734898355'
+    SearchIcon.Image = 'rbxassetid://10734943674'
     SearchIcon.ImageColor3 = Color3.fromRGB(152, 181, 255)
     SearchIcon.ImageTransparency = 0.3
     SearchIcon.Parent = SearchBar
@@ -725,7 +739,7 @@ function Library:create_ui()
     SearchBox.Size = UDim2.new(1, -28, 1, 0)
     SearchBox.Font = Enum.Font.GothamSemibold
     SearchBox.Text = ''
-    SearchBox.PlaceholderText = 'Search module or element'
+    SearchBox.PlaceholderText = self._search_placeholder or 'Search module or element'
     SearchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
     SearchBox.TextTransparency = 0.2
     SearchBox.PlaceholderColor3 = Color3.fromRGB(255, 255, 255)
@@ -879,15 +893,6 @@ function Library:create_ui()
         performSearch(SearchBox.Text)
     end)
     
-    local ControlPanel = Instance.new('Frame')
-    ControlPanel.Name = 'ControlPanel'
-    ControlPanel.BackgroundTransparency = 1
-    ControlPanel.Position = UDim2.new(0.015, 0, 0.95, 0)
-    ControlPanel.AnchorPoint = Vector2.new(0, 1)
-    ControlPanel.Size = UDim2.new(0, 80, 0, 22)
-    ControlPanel.BorderSizePixel = 0
-    ControlPanel.Parent = Handler
-    
     local ControlLayout = Instance.new('UIListLayout')
     ControlLayout.FillDirection = Enum.FillDirection.Horizontal
     ControlLayout.Padding = UDim.new(0, 5)
@@ -949,9 +954,19 @@ function Library:create_ui()
         return Button
     end
     
-    local SettingsButton = createControlButton('SettingsButton', 'rbxassetid://10734950309', 1)
-    local PaletteButton = createControlButton('PaletteButton', 'rbxassetid://10734910430', 2)
-    local ConfigButton = createControlButton('ConfigButton', 'rbxassetid://10734952273', 3)
+    local SettingsButton, PaletteButton, ConfigButton
+    
+    if self._control_settings_enabled then
+        SettingsButton = createControlButton('SettingsButton', 'rbxassetid://10734950309', 1)
+    end
+    
+    if self._control_palette_enabled then
+        PaletteButton = createControlButton('PaletteButton', 'rbxassetid://10734910430', 2)
+    end
+    
+    if self._control_config_enabled then
+        ConfigButton = createControlButton('ConfigButton', 'rbxassetid://10734952273', 3)
+    end
     
     local currentOpenPanel = nil
     
@@ -983,38 +998,44 @@ function Library:create_ui()
         end
     end
     
-    SettingsButton.MouseButton1Click:Connect(function()
-        TweenService:Create(SettingsButton, TweenInfo.new(0.1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-            BackgroundTransparency = 0
-        }):Play()
-        task.wait(0.1)
-        TweenService:Create(SettingsButton, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-            BackgroundTransparency = 0.3
-        }):Play()
-        toggleSidePanel('Settings')
-    end)
+    if SettingsButton then
+        SettingsButton.MouseButton1Click:Connect(function()
+            TweenService:Create(SettingsButton, TweenInfo.new(0.1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                BackgroundTransparency = 0
+            }):Play()
+            task.wait(0.1)
+            TweenService:Create(SettingsButton, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                BackgroundTransparency = 0.3
+            }):Play()
+            toggleSidePanel('Settings')
+        end)
+    end
     
-    PaletteButton.MouseButton1Click:Connect(function()
-        TweenService:Create(PaletteButton, TweenInfo.new(0.1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-            BackgroundTransparency = 0
-        }):Play()
-        task.wait(0.1)
-        TweenService:Create(PaletteButton, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-            BackgroundTransparency = 0.3
-        }):Play()
-        toggleSidePanel('Palette')
-    end)
+    if PaletteButton then
+        PaletteButton.MouseButton1Click:Connect(function()
+            TweenService:Create(PaletteButton, TweenInfo.new(0.1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                BackgroundTransparency = 0
+            }):Play()
+            task.wait(0.1)
+            TweenService:Create(PaletteButton, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                BackgroundTransparency = 0.3
+            }):Play()
+            toggleSidePanel('Palette')
+        end)
+    end
     
-    ConfigButton.MouseButton1Click:Connect(function()
-        TweenService:Create(ConfigButton, TweenInfo.new(0.1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-            BackgroundTransparency = 0
-        }):Play()
-        task.wait(0.1)
-        TweenService:Create(ConfigButton, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-            BackgroundTransparency = 0.3
-        }):Play()
-        toggleSidePanel('Config')
-    end)
+    if ConfigButton then
+        ConfigButton.MouseButton1Click:Connect(function()
+            TweenService:Create(ConfigButton, TweenInfo.new(0.1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                BackgroundTransparency = 0
+            }):Play()
+            task.wait(0.1)
+            TweenService:Create(ConfigButton, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                BackgroundTransparency = 0.3
+            }):Play()
+            toggleSidePanel('Config')
+        end)
+    end
     
     local UIScale = Instance.new('UIScale')
     UIScale.Parent = Container    
