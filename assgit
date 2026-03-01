@@ -341,7 +341,7 @@ local Library = {
     _drag_start = nil,
     _container_position = nil,
     
-    _search_placeholder = 'Search Bar',
+    _search_placeholder = 'Search',
     _control_settings_enabled = true,
     _control_palette_enabled = true,
     _control_config_enabled = true
@@ -590,21 +590,21 @@ function Library:create_ui()
     ClientName.TextTransparency = 0.20000000298023224
     ClientName.Text = 'VOID HUB'
     ClientName.Name = 'ClientName'
-    ClientName.Size = UDim2.new(0, 90, 0, 18)
+    ClientName.Size = UDim2.new(0, 110, 0, 22)
     ClientName.AnchorPoint = Vector2.new(0, 0.5)
     ClientName.Position = UDim2.new(0.0560000017285347, 0, 0.054999999701976776, 0)
     ClientName.BackgroundTransparency = 1
     ClientName.TextXAlignment = Enum.TextXAlignment.Left
     ClientName.BorderSizePixel = 0
     ClientName.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    ClientName.TextSize = 16
+    ClientName.TextSize = 18
     ClientName.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     ClientName.Parent = Handler
     
     local UIGradient = Instance.new('UIGradient')
     UIGradient.Color = ColorSequence.new{
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(155, 155, 155)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255))
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(152, 181, 255)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 150, 255))
     }
     UIGradient.Parent = ClientName
     
@@ -620,6 +620,14 @@ function Library:create_ui()
     local UICorner = Instance.new('UICorner')
     UICorner.CornerRadius = UDim.new(1, 0)
     UICorner.Parent = Pin
+    
+    local PinGradient = Instance.new('UIGradient')
+    PinGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(152, 181, 255)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 150, 255))
+    }
+    PinGradient.Rotation = 90
+    PinGradient.Parent = Pin
     
     local Icon = Instance.new('ImageLabel')
     Icon.ImageColor3 = Color3.fromRGB(152, 181, 255)
@@ -854,6 +862,28 @@ function Library:create_ui()
         TweenService:Create(SearchIcon, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
             ImageTransparency = 0.3
         }):Play()
+    end)
+    
+    SearchBar.MouseEnter:Connect(function()
+        if not SearchBox:IsFocused() then
+            TweenService:Create(SearchBar, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                BackgroundTransparency = 0.4
+            }):Play()
+            TweenService:Create(SearchStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                Transparency = 0.3
+            }):Play()
+        end
+    end)
+    
+    SearchBar.MouseLeave:Connect(function()
+        if not SearchBox:IsFocused() then
+            TweenService:Create(SearchBar, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                BackgroundTransparency = 0.5
+            }):Play()
+            TweenService:Create(SearchStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                Transparency = 0.5
+            }):Play()
+        end
     end)
     
     local SearchLeftSection = Instance.new('ScrollingFrame')
@@ -1429,7 +1459,7 @@ function Library:create_ui()
         local TextLabel = Instance.new('TextLabel')
         TextLabel.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
         TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-        TextLabel.TextTransparency = 0.7 -- 0.800000011920929
+        TextLabel.TextTransparency = 0.7
         TextLabel.Text = title
         TextLabel.Size = UDim2.new(0, font_size.X, 0, 16)
         TextLabel.AnchorPoint = Vector2.new(0, 0.5)
@@ -1442,13 +1472,12 @@ function Library:create_ui()
         TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         TextLabel.Parent = Tab
         
-        local UIGradient = Instance.new('UIGradient')
-        UIGradient.Color = ColorSequence.new{
-            ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-            ColorSequenceKeypoint.new(0.7, Color3.fromRGB(155, 155, 155)),
-            ColorSequenceKeypoint.new(1, Color3.fromRGB(58, 58, 58))
+        local TextGradient = Instance.new('UIGradient')
+        TextGradient.Color = ColorSequence.new{
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(152, 181, 255)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 150, 255))
         }
-        UIGradient.Parent = TextLabel
+        TextGradient.Parent = TextLabel
         
         local Icon = Instance.new('ImageLabel')
         Icon.ScaleType = Enum.ScaleType.Fit
@@ -1459,10 +1488,18 @@ function Library:create_ui()
         Icon.Position = UDim2.new(0.10000000149011612, 0, 0.5, 0)
         Icon.Name = 'Icon'
         Icon.Image = icon
+        Icon.ImageColor3 = Color3.fromRGB(152, 181, 255)
         Icon.Size = UDim2.new(0, 12, 0, 12)
         Icon.BorderSizePixel = 0
         Icon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         Icon.Parent = Tab
+        
+        local IconGradient = Instance.new('UIGradient')
+        IconGradient.Color = ColorSequence.new{
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(152, 181, 255)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 150, 255))
+        }
+        IconGradient.Parent = Icon
 
         local LeftSection = Instance.new('ScrollingFrame')
         LeftSection.Name = 'LeftSection'
@@ -1673,7 +1710,7 @@ function Library:create_ui()
             Keybind.BackgroundTransparency = 0.699999988079071
             Keybind.Position = UDim2.new(0.15000000596046448, 0, 0.7350000143051147, 0)
             Keybind.BorderColor3 = Color3.fromRGB(0, 0, 0)
-            Keybind.Size = UDim2.new(0, 33, 0, 15)
+            Keybind.Size = UDim2.new(0, 28, 0, 13)
             Keybind.BorderSizePixel = 0
             Keybind.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
             Keybind.Parent = Header
