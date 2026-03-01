@@ -1104,7 +1104,52 @@ function Library:create_ui()
     ControlLayout.SortOrder = Enum.SortOrder.LayoutOrder
     ControlLayout.Parent = ControlPanel
     
-    local function createControlButton(name, icon, order)
+    local Tooltip = Instance.new('TextLabel')
+    Tooltip.Name = 'Tooltip'
+    Tooltip.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    Tooltip.TextColor3 = Color3.fromRGB(152, 181, 255)
+    Tooltip.TextTransparency = 1
+    Tooltip.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
+    Tooltip.BackgroundTransparency = 1
+    Tooltip.Size = UDim2.new(0, 100, 0, 20)
+    Tooltip.Position = UDim2.new(0.5, 0, -0.5, 0)
+    Tooltip.AnchorPoint = Vector2.new(0.5, 1)
+    Tooltip.TextSize = 10
+    Tooltip.BorderSizePixel = 0
+    Tooltip.Parent = ControlPanel
+    
+    local TooltipCorner = Instance.new('UICorner')
+    TooltipCorner.CornerRadius = UDim.new(0, 4)
+    TooltipCorner.Parent = Tooltip
+    
+    local TooltipStroke = Instance.new('UIStroke')
+    TooltipStroke.Color = Color3.fromRGB(52, 66, 89)
+    TooltipStroke.Transparency = 1
+    TooltipStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    TooltipStroke.Parent = Tooltip
+    
+    local function showTooltip(text)
+        Tooltip.Text = text
+        TweenService:Create(Tooltip, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            TextTransparency = 0,
+            BackgroundTransparency = 0.3
+        }):Play()
+        TweenService:Create(TooltipStroke, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            Transparency = 0.5
+        }):Play()
+    end
+    
+    local function hideTooltip()
+        TweenService:Create(Tooltip, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            TextTransparency = 1,
+            BackgroundTransparency = 1
+        }):Play()
+        TweenService:Create(TooltipStroke, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            Transparency = 1
+        }):Play()
+    end
+    
+    local function createControlButton(name, icon, order, tooltipText)
         local Button = Instance.new('ImageButton')
         Button.Name = name
         Button.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
@@ -1144,6 +1189,7 @@ function Library:create_ui()
             TweenService:Create(Stroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
                 Transparency = 0.2
             }):Play()
+            showTooltip(tooltipText)
         end)
         
         Button.MouseLeave:Connect(function()
@@ -1154,6 +1200,7 @@ function Library:create_ui()
             TweenService:Create(Stroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
                 Transparency = 0.5
             }):Play()
+            hideTooltip()
         end)
         
         return Button
@@ -1162,18 +1209,18 @@ function Library:create_ui()
     local SettingsButton, PaletteButton, ConfigButton, ListButton
     
     if self._control_settings_enabled then
-        SettingsButton = createControlButton('SettingsButton', 'rbxassetid://10734950309', 1)
+        SettingsButton = createControlButton('SettingsButton', 'rbxassetid://10734950309', 1, 'UI Settings')
     end
     
     if self._control_palette_enabled then
-        PaletteButton = createControlButton('PaletteButton', 'rbxassetid://10734910430', 2)
+        PaletteButton = createControlButton('PaletteButton', 'rbxassetid://10734910430', 2, 'Color Palette')
     end
     
     if self._control_config_enabled then
-        ConfigButton = createControlButton('ConfigButton', 'rbxassetid://10734952273', 3)
+        ConfigButton = createControlButton('ConfigButton', 'rbxassetid://10734952273', 3, 'Config')
     end
     
-    ListButton = createControlButton('ListButton', 'rbxassetid://10723433811', 4)
+    ListButton = createControlButton('ListButton', 'rbxassetid://10723433811', 4, 'Update List')
     
     local UIScale = Instance.new('UIScale')
     UIScale.Parent = Container    
