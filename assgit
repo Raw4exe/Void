@@ -2956,9 +2956,14 @@ function Library:create_ui()
 
                         CurrentTargetValue = convertStringToTable(CurrentOption.Text or "");
 
-                        for _, v in CurrentTargetValue do
+                        for i, v in ipairs(CurrentTargetValue) do
                             if not table.find(OptionsChild, v) and table.find(selected, v) then
-                                table.remove(selected, _)
+                                for j, sel in ipairs(selected) do
+                                    if sel == v then
+                                        table.remove(selected, j)
+                                        break
+                                    end
+                                end
                             end;
                         end;
 
