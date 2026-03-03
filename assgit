@@ -689,24 +689,49 @@ function Library:create_ui()
     SearchIcon.Name = 'SearchIcon'
     SearchIcon.Image = 'rbxassetid://10734943674'
     SearchIcon.Size = UDim2.new(0, 16, 0, 16)
-    SearchIcon.Position = UDim2.new(0, 2, 0.5, 0)
+    SearchIcon.Position = UDim2.new(0, 1, 0.5, 0)
     SearchIcon.AnchorPoint = Vector2.new(0, 0.5)
     SearchIcon.BackgroundTransparency = 1
-    SearchIcon.ImageColor3 = Color3.fromRGB(150, 150, 150)
-    SearchIcon.ImageTransparency = 0.3
+    SearchIcon.ImageColor3 = Color3.fromRGB(120, 120, 120)
+    SearchIcon.ImageTransparency = 0.4
     SearchIcon.Parent = SearchBar
+    
+    local SearchIconShadow = Instance.new('ImageLabel')
+    SearchIconShadow.Name = 'SearchIconShadow'
+    SearchIconShadow.Image = 'rbxassetid://10734943674'
+    SearchIconShadow.Size = UDim2.new(0, 16, 0, 16)
+    SearchIconShadow.Position = UDim2.new(0, 2, 0.5, 1)
+    SearchIconShadow.AnchorPoint = Vector2.new(0, 0.5)
+    SearchIconShadow.BackgroundTransparency = 1
+    SearchIconShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+    SearchIconShadow.ImageTransparency = 0.8
+    SearchIconShadow.ZIndex = SearchIcon.ZIndex - 1
+    SearchIconShadow.Parent = SearchBar
     
     local ClearIcon = Instance.new('ImageButton')
     ClearIcon.Name = 'ClearIcon'
     ClearIcon.Image = 'rbxassetid://10747384394'
     ClearIcon.Size = UDim2.new(0, 14, 0, 14)
-    ClearIcon.Position = UDim2.new(1, -16, 0.5, 0)
+    ClearIcon.Position = UDim2.new(1, -14, 0.5, 0)
     ClearIcon.AnchorPoint = Vector2.new(0, 0.5)
     ClearIcon.BackgroundTransparency = 1
-    ClearIcon.ImageColor3 = Color3.fromRGB(180, 180, 180)
+    ClearIcon.ImageColor3 = Color3.fromRGB(150, 150, 150)
     ClearIcon.ImageTransparency = 1
     ClearIcon.Visible = false
     ClearIcon.Parent = SearchBar
+    
+    local ClearIconShadow = Instance.new('ImageLabel')
+    ClearIconShadow.Name = 'ClearIconShadow'
+    ClearIconShadow.Image = 'rbxassetid://10747384394'
+    ClearIconShadow.Size = UDim2.new(0, 14, 0, 14)
+    ClearIconShadow.Position = UDim2.new(1, -13, 0.5, 1)
+    ClearIconShadow.AnchorPoint = Vector2.new(0, 0.5)
+    ClearIconShadow.BackgroundTransparency = 1
+    ClearIconShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+    ClearIconShadow.ImageTransparency = 1
+    ClearIconShadow.Visible = false
+    ClearIconShadow.ZIndex = ClearIcon.ZIndex - 1
+    ClearIconShadow.Parent = SearchBar
     
     SearchBar.MouseEnter:Connect(function()
         TweenService:Create(SearchBar, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
@@ -715,6 +740,9 @@ function Library:create_ui()
         TweenService:Create(SearchIcon, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
             ImageTransparency = 0.1
         }):Play()
+        TweenService:Create(SearchIconShadow, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
+            ImageTransparency = 0.6
+        }):Play()
     end)
     
     SearchBar.MouseLeave:Connect(function()
@@ -722,11 +750,18 @@ function Library:create_ui()
             BackgroundTransparency = 0.3
         }):Play()
         TweenService:Create(SearchIcon, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
-            ImageTransparency = 0.3
+            ImageTransparency = 0.4
+        }):Play()
+        TweenService:Create(SearchIconShadow, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
+            ImageTransparency = 0.8
         }):Play()
         if SearchBar.Text == "" then
             ClearIcon.Visible = false
+            ClearIconShadow.Visible = false
             TweenService:Create(ClearIcon, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
+                ImageTransparency = 1
+            }):Play()
+            TweenService:Create(ClearIconShadow, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
                 ImageTransparency = 1
             }):Play()
         end
@@ -735,15 +770,23 @@ function Library:create_ui()
     SearchBar:GetPropertyChangedSignal('Text'):Connect(function()
         if SearchBar.Text ~= "" then
             ClearIcon.Visible = true
+            ClearIconShadow.Visible = true
             TweenService:Create(ClearIcon, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
                 ImageTransparency = 0.2
+            }):Play()
+            TweenService:Create(ClearIconShadow, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
+                ImageTransparency = 0.8
             }):Play()
         else
             TweenService:Create(ClearIcon, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
                 ImageTransparency = 1
             }):Play()
+            TweenService:Create(ClearIconShadow, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
+                ImageTransparency = 1
+            }):Play()
             wait(0.2)
             ClearIcon.Visible = false
+            ClearIconShadow.Visible = false
         end
     end)
     
@@ -3006,7 +3049,7 @@ function Library:create_ui()
                 ButtonContainer.LayoutOrder = LayoutOrderModule
                 
                 local Button = Instance.new("TextButton")
-                Button.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+                Button.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.Regular, Enum.FontStyle.Normal)
                 Button.TextSize = 11
                 Button.Size = UDim2.new(1, 0, 0, 16)
                 Button.BackgroundColor3 = Color3.fromRGB(45, 55, 75)
