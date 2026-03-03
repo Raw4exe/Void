@@ -668,7 +668,7 @@ function Library:create_ui()
     SearchBar.TextColor3 = Color3.fromRGB(210, 210, 210)
     SearchBar.TextSize = 11
     SearchBar.BackgroundColor3 = Color3.fromRGB(32, 38, 51)
-    SearchBar.BackgroundTransparency = 0.3
+    SearchBar.BackgroundTransparency = 0.15
     SearchBar.Position = UDim2.new(0.02, 0, 0.92, 0)
     SearchBar.Size = UDim2.new(0, 140, 0, 24)
     SearchBar.BorderSizePixel = 0
@@ -689,18 +689,26 @@ function Library:create_ui()
     SearchIcon.Name = 'SearchIcon'
     SearchIcon.Image = 'rbxassetid://10734943674'
     SearchIcon.Size = UDim2.new(0, 16, 0, 16)
-    SearchIcon.Position = UDim2.new(0, 1, 0.5, 0)
+    SearchIcon.Position = UDim2.new(0, 0, 0.5, 0)
     SearchIcon.AnchorPoint = Vector2.new(0, 0.5)
     SearchIcon.BackgroundTransparency = 1
     SearchIcon.ImageColor3 = Color3.fromRGB(120, 120, 120)
     SearchIcon.ImageTransparency = 0.4
     SearchIcon.Parent = SearchBar
     
+    local SearchIconGradient = Instance.new('UIGradient')
+    SearchIconGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(152, 181, 255)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 140, 200))
+    }
+    SearchIconGradient.Rotation = 45
+    SearchIconGradient.Parent = SearchIcon
+    
     local SearchIconShadow = Instance.new('ImageLabel')
     SearchIconShadow.Name = 'SearchIconShadow'
     SearchIconShadow.Image = 'rbxassetid://10734943674'
     SearchIconShadow.Size = UDim2.new(0, 16, 0, 16)
-    SearchIconShadow.Position = UDim2.new(0, 2, 0.5, 1)
+    SearchIconShadow.Position = UDim2.new(0, 1, 0.5, 1)
     SearchIconShadow.AnchorPoint = Vector2.new(0, 0.5)
     SearchIconShadow.BackgroundTransparency = 1
     SearchIconShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
@@ -712,7 +720,7 @@ function Library:create_ui()
     ClearIcon.Name = 'ClearIcon'
     ClearIcon.Image = 'rbxassetid://10747384394'
     ClearIcon.Size = UDim2.new(0, 14, 0, 14)
-    ClearIcon.Position = UDim2.new(1, -14, 0.5, 0)
+    ClearIcon.Position = UDim2.new(1, -12, 0.5, 0)
     ClearIcon.AnchorPoint = Vector2.new(0, 0.5)
     ClearIcon.BackgroundTransparency = 1
     ClearIcon.ImageColor3 = Color3.fromRGB(150, 150, 150)
@@ -720,11 +728,19 @@ function Library:create_ui()
     ClearIcon.Visible = false
     ClearIcon.Parent = SearchBar
     
+    local ClearIconGradient = Instance.new('UIGradient')
+    ClearIconGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 120, 120)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(200, 80, 80))
+    }
+    ClearIconGradient.Rotation = 45
+    ClearIconGradient.Parent = ClearIcon
+    
     local ClearIconShadow = Instance.new('ImageLabel')
     ClearIconShadow.Name = 'ClearIconShadow'
     ClearIconShadow.Image = 'rbxassetid://10747384394'
     ClearIconShadow.Size = UDim2.new(0, 14, 0, 14)
-    ClearIconShadow.Position = UDim2.new(1, -13, 0.5, 1)
+    ClearIconShadow.Position = UDim2.new(1, -11, 0.5, 1)
     ClearIconShadow.AnchorPoint = Vector2.new(0, 0.5)
     ClearIconShadow.BackgroundTransparency = 1
     ClearIconShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
@@ -2666,7 +2682,9 @@ function Library:create_ui()
             
                 local KeybindBox = Instance.new("TextLabel")
                 KeybindBox.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
-                KeybindBox.Size = UDim2.new(0, 23, 0, 15)
+                KeybindBox.Size = UDim2.new(0, 20, 0, 15)
+                KeybindBox.Position = UDim2.new(1, 0, 0.5, 0)
+                KeybindBox.AnchorPoint = Vector2.new(1, 0.5)
                 KeybindBox.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
                 KeybindBox.TextColor3 = Color3.fromRGB(255, 255, 255)
                 KeybindBox.TextSize = 10
@@ -2700,6 +2718,7 @@ function Library:create_ui()
 
                 if KeybindBox.Text == "Unknown" then
                     KeybindBox.Text = "None";
+                    KeybindBox.Size = UDim2.fromOffset(20, 15)
                 else
                     local keybind_string = string.gsub(KeybindBox.Text, "Enum.KeyCode.", "")
                     if KeybindBox.Text == "MouseButton1" then
@@ -2713,8 +2732,11 @@ function Library:create_ui()
                     font_params.Size = 10
                     font_params.Width = 10000
                     local font_size = TextService:GetTextBoundsAsync(font_params)
-                    local newWidth = math.max(font_size.X + 8, 23)
+                    local newWidth = math.max(font_size.X + 8, 20)
                     KeybindBox.Size = UDim2.fromOffset(newWidth, 15)
+                    
+                    local currentPos = KeybindBox.Position
+                    KeybindBox.Position = UDim2.new(1, -(newWidth + 5), 0.5, 0)
                 end;
 
                 local UseF_Var = nil;
@@ -2735,6 +2757,19 @@ function Library:create_ui()
                     local CheckboxCorner = Instance.new("UICorner")
                     CheckboxCorner.CornerRadius = UDim.new(0, 3)
                     CheckboxCorner.Parent = Checkbox
+                    
+                    local CheckboxShadow = Instance.new("Frame")
+                    CheckboxShadow.Size = UDim2.new(0, 15, 0, 15)
+                    CheckboxShadow.Position = UDim2.new(0, 1, 0, 1)
+                    CheckboxShadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+                    CheckboxShadow.BackgroundTransparency = 0.7
+                    CheckboxShadow.BorderSizePixel = 0
+                    CheckboxShadow.ZIndex = Checkbox.ZIndex - 1
+                    CheckboxShadow.Parent = Checkbox
+                    
+                    local CheckboxShadowCorner = Instance.new("UICorner")
+                    CheckboxShadowCorner.CornerRadius = UDim.new(0, 3)
+                    CheckboxShadowCorner.Parent = CheckboxShadow
             
                     local function toggleState()
                         checked = not checked
@@ -2777,8 +2812,9 @@ function Library:create_ui()
                             font_params.Size = 10
                             font_params.Width = 10000
                             local font_size = TextService:GetTextBoundsAsync(font_params)
-                            local newWidth = math.max(font_size.X + 8, 23)
+                            local newWidth = math.max(font_size.X + 8, 20)
                             KeybindBox.Size = UDim2.fromOffset(newWidth, 15)
+                            KeybindBox.Position = UDim2.new(1, -(newWidth + 5), 0.5, 0)
                             KeybindBox.Text = keybind_string
                             inputConnection:Disconnect()
                             return
@@ -2795,8 +2831,9 @@ function Library:create_ui()
                                 font_params.Size = 10
                                 font_params.Width = 10000
                                 local font_size = TextService:GetTextBoundsAsync(font_params)
-                                local newWidth = math.max(font_size.X + 8, 23)
+                                local newWidth = math.max(font_size.X + 8, 20)
                                 KeybindBox.Size = UDim2.fromOffset(newWidth, 15)
+                                KeybindBox.Position = UDim2.new(1, -(newWidth + 5), 0.5, 0)
                                 KeybindBox.Text = keybind_string;
                             end;
                             Config:save(game.GameId, Library._config)
@@ -2804,7 +2841,8 @@ function Library:create_ui()
                         elseif input.UserInputType == Enum.UserInputType.MouseButton3 then
                             Library._config._flags[settings.flag].BIND = "Unknown"
                             KeybindBox.Text = "None"
-                            KeybindBox.Size = UDim2.fromOffset(23, 15)
+                            KeybindBox.Size = UDim2.fromOffset(20, 15)
+                            KeybindBox.Position = UDim2.new(1, -25, 0.5, 0)
                             Config:save(game.GameId, Library._config)
                             inputConnection:Disconnect()
                         end
@@ -2877,7 +2915,7 @@ function Library:create_ui()
                 
                 local KeybindBox = Instance.new("TextLabel")
                 KeybindBox.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
-                KeybindBox.Size = UDim2.new(0, 23, 0, 15)
+                KeybindBox.Size = UDim2.new(0, 20, 0, 15)
                 KeybindBox.Position = UDim2.new(1, -5, 0.5, 0)
                 KeybindBox.AnchorPoint = Vector2.new(1, 0.5)
                 KeybindBox.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
@@ -2919,7 +2957,7 @@ function Library:create_ui()
                     font_params.Size = 10
                     font_params.Width = 10000
                     local font_size = TextService:GetTextBoundsAsync(font_params)
-                    local newWidth = math.max(font_size.X + 8, 23)
+                    local newWidth = math.max(font_size.X + 8, 20)
                     KeybindBox.Size = UDim2.fromOffset(newWidth, 15)
                 end
                 
@@ -3050,7 +3088,7 @@ function Library:create_ui()
                 
                 local Button = Instance.new("TextButton")
                 Button.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-                Button.TextSize = 11
+                Button.TextSize = 10
                 Button.Size = UDim2.new(1, 0, 0, 16)
                 Button.BackgroundColor3 = Color3.fromRGB(45, 55, 75)
                 Button.TextColor3 = Color3.fromRGB(255, 255, 255)
