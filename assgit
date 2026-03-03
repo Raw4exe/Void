@@ -670,7 +670,7 @@ function Library:create_ui()
     SearchBar.BackgroundColor3 = Color3.fromRGB(32, 38, 51)
     SearchBar.BackgroundTransparency = 0.3
     SearchBar.Position = UDim2.new(0.02, 0, 0.92, 0)
-    SearchBar.Size = UDim2.new(0, 180, 0, 24)
+    SearchBar.Size = UDim2.new(0, 140, 0, 24)
     SearchBar.BorderSizePixel = 0
     SearchBar.TextXAlignment = Enum.TextXAlignment.Left
     SearchBar.ClearTextOnFocus = false
@@ -2702,10 +2702,10 @@ function Library:create_ui()
                 local KeybindButton = Instance.new("TextButton")
                 KeybindButton.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
                 KeybindButton.TextSize = 11
-                KeybindButton.Size = UDim2.new(1, -50, 0, 16)
+                KeybindButton.Size = UDim2.new(1, -60, 0, 16)
                 KeybindButton.BackgroundTransparency = 1
                 KeybindButton.TextColor3 = Color3.fromRGB(240, 240, 240)
-                KeybindButton.Text = "  " .. (settings.title or "Keybind")
+                KeybindButton.Text = (settings.title or "Keybind")
                 KeybindButton.AutoButtonColor = false
                 KeybindButton.TextXAlignment = Enum.TextXAlignment.Left
                 KeybindButton.TextTransparency = 0.1
@@ -2714,7 +2714,7 @@ function Library:create_ui()
                 local KeybindBox = Instance.new("TextLabel")
                 KeybindBox.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
                 KeybindBox.Size = UDim2.new(0, 23, 0, 15)
-                KeybindBox.Position = UDim2.new(1, -23, 0.5, 0)
+                KeybindBox.Position = UDim2.new(1, -18, 0.5, 0)
                 KeybindBox.AnchorPoint = Vector2.new(1, 0.5)
                 KeybindBox.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
                 KeybindBox.TextColor3 = Color3.fromRGB(255, 255, 255)
