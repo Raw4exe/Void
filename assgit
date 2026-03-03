@@ -219,6 +219,10 @@ function AcrylicBlur:render(distance: number)
     end
 
     local function update()
+        if not self._root or not self._root.Parent then
+            return
+        end
+        
         local top_left = positions.top_left
         local top_right = positions.top_right
         local bottom_right = positions.bottom_right
@@ -235,10 +239,19 @@ function AcrylicBlur:render(distance: number)
         end
 
         self._root.CFrame = CFrame.fromMatrix((top_left3D + bottom_right3D) / 2, workspace.CurrentCamera.CFrame.XVector, workspace.CurrentCamera.CFrame.YVector, workspace.CurrentCamera.CFrame.ZVector)
-        self._root.Mesh.Scale = Vector3.new(width, height, 0)
+        local specialMesh = self._root:FindFirstChild("SpecialMesh")
+        if specialMesh then
+            specialMesh.Scale = Vector3.new(width, height, 0)
+        else
+            self._root.Size = Vector3.new(width, height, 0.01)
+        end
     end
 
     local function on_change()
+        if not self._frame or not self._frame.Parent then
+            return
+        end
+        
         local offset = Util:get_offset()
         local size = self._frame.AbsoluteSize - Vector2.new(offset, offset)
         local position = self._frame.AbsolutePosition + Vector2.new(offset / 2, offset / 2)
@@ -247,8 +260,12 @@ function AcrylicBlur:render(distance: number)
         task.spawn(update)
     end
 
-    Connections['cframe_update'] = workspace.CurrentCamera:GetPropertyChangedSignal('CFrame'):Connect(update)
-    Connections['viewport_size_update'] = workspace.CurrentCamera:GetPropertyChangedSignal('ViewportSize'):Connect(update)
+    Connections['cframe_update'] = workspace.CurrentCamera:GetPropertyChangedSignal('CFrame'):Connect(function()
+        pcall(update)
+    end)
+    Connections['viewport_size_update'] = workspace.CurrentCamera:GetPropertyChangedSignal('ViewportSize'):Connect(function()
+        pcall(update)
+    end)
     Connections['field_of_view_update'] = workspace.CurrentCamera:GetPropertyChangedSignal('FieldOfView'):Connect(update)
 
     Connections['frame_absolute_position'] = self._frame:GetPropertyChangedSignal('AbsolutePosition'):Connect(on_change)
