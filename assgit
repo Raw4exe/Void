@@ -2685,7 +2685,7 @@ function Library:create_ui()
                     self._size = 11
                 end
                 
-                self._size += 30
+                self._size += 16
                 
                 if ModuleManager._state then
                     Module.Size = UDim2.fromOffset(241, 93 + self._size)
@@ -2703,7 +2703,7 @@ function Library:create_ui()
                 KeybindButton.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
                 KeybindButton.TextSize = 11
                 KeybindButton.Size = UDim2.new(1, -35, 0, 16)
-                KeybindButton.BackgroundColor3 = Color3.fromRGB(32, 38, 51)
+                KeybindButton.BackgroundTransparency = 1
                 KeybindButton.TextColor3 = Color3.fromRGB(210, 210, 210)
                 KeybindButton.Text = "    " .. (settings.title or "Keybind")
                 KeybindButton.AutoButtonColor = false
@@ -2715,13 +2715,13 @@ function Library:create_ui()
                 KeybindBox.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
                 KeybindBox.Size = UDim2.new(0, 23, 0, 15)
                 KeybindBox.Position = UDim2.new(1, -28, 0.5, 0)
-                KeybindBox.AnchorPoint = Vector2.new(0, 0.5)
+                KeybindBox.AnchorPoint = Vector2.new(1, 0.5)
                 KeybindBox.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
                 KeybindBox.TextColor3 = Color3.fromRGB(255, 255, 255)
                 KeybindBox.TextSize = 10
                 KeybindBox.BackgroundTransparency = 0.7
                 KeybindBox.Text = "None"
-                KeybindBox.TextXAlignment = Enum.TextXAlignment.Left
+                KeybindBox.TextXAlignment = Enum.TextXAlignment.Center
                 KeybindBox.Parent = KeybindContainer
                 
                 local UICorner = Instance.new("UICorner")
@@ -2730,6 +2730,10 @@ function Library:create_ui()
                 
                 if not Library._config._flags then
                     Library._config._flags = {}
+                end
+                
+                if not Library._config._keybinds then
+                    Library._config._keybinds = {}
                 end
                 
                 if not Library._config._keybinds[settings.flag] then
@@ -2748,8 +2752,9 @@ function Library:create_ui()
                     font_params.Size = 10
                     font_params.Width = 10000
                     local font_size = TextService:GetTextBoundsAsync(font_params)
-                    local newWidth = font_size.X + 8
+                    local newWidth = math.max(font_size.X + 8, 23)
                     KeybindBox.Size = UDim2.fromOffset(newWidth, 15)
+                    KeybindBox.Position = UDim2.new(1, -newWidth - 5, 0.5, 0)
                 end
                 
                 KeybindBox.InputBegan:Connect(function(input, gameProcessed)
@@ -2769,6 +2774,7 @@ function Library:create_ui()
                             Config:save(game.GameId, Library._config)
                             KeybindBox.Text = "None"
                             KeybindBox.Size = UDim2.fromOffset(23, 15)
+                            KeybindBox.Position = UDim2.new(1, -28, 0.5, 0)
                             
                             if Connections[settings.flag .. "_keybind"] then
                                 Connections[settings.flag .. "_keybind"]:Disconnect()
@@ -2794,8 +2800,9 @@ function Library:create_ui()
                         font_params.Size = 10
                         font_params.Width = 10000
                         local font_size = TextService:GetTextBoundsAsync(font_params)
-                        local newWidth = font_size.X + 8
+                        local newWidth = math.max(font_size.X + 8, 23)
                         KeybindBox.Size = UDim2.fromOffset(newWidth, 15)
+                        KeybindBox.Position = UDim2.new(1, -newWidth - 5, 0.5, 0)
                         
                         Library._choosing_keybind = false
                         KeybindBox.Text = keybind_string
@@ -2809,8 +2816,6 @@ function Library:create_ui()
                         end)
                     end)
                 end)
-                
-                ModuleManager._size += 30
                 
                 return KeybindManager
             end
