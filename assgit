@@ -681,6 +681,81 @@ function Library:create_ui()
     SearchUICorner.Parent = SearchBar
     
     local SearchUIPadding = Instance.new('UIPadding')
+    SearchUIPadding.PaddingLeft = UDim.new(0, 28)
+    SearchUIPadding.PaddingRight = UDim.new(0, 28)
+    SearchUIPadding.Parent = SearchBar
+    
+    local SearchIcon = Instance.new('ImageLabel')
+    SearchIcon.Name = 'SearchIcon'
+    SearchIcon.Image = 'rbxassetid://10734943674'
+    SearchIcon.Size = UDim2.new(0, 16, 0, 16)
+    SearchIcon.Position = UDim2.new(0, 6, 0.5, 0)
+    SearchIcon.AnchorPoint = Vector2.new(0, 0.5)
+    SearchIcon.BackgroundTransparency = 1
+    SearchIcon.ImageColor3 = Color3.fromRGB(150, 150, 150)
+    SearchIcon.ImageTransparency = 0.3
+    SearchIcon.Parent = SearchBar
+    
+    local ClearIcon = Instance.new('ImageButton')
+    ClearIcon.Name = 'ClearIcon'
+    ClearIcon.Image = 'rbxassetid://10747384394'
+    ClearIcon.Size = UDim2.new(0, 14, 0, 14)
+    ClearIcon.Position = UDim2.new(1, -20, 0.5, 0)
+    ClearIcon.AnchorPoint = Vector2.new(0, 0.5)
+    ClearIcon.BackgroundTransparency = 1
+    ClearIcon.ImageColor3 = Color3.fromRGB(180, 180, 180)
+    ClearIcon.ImageTransparency = 1
+    ClearIcon.Visible = false
+    ClearIcon.Parent = SearchBar
+    
+    SearchBar.MouseEnter:Connect(function()
+        TweenService:Create(SearchBar, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
+            BackgroundTransparency = 0.1
+        }):Play()
+        TweenService:Create(SearchIcon, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
+            ImageTransparency = 0.1
+        }):Play()
+    end)
+    
+    SearchBar.MouseLeave:Connect(function()
+        TweenService:Create(SearchBar, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
+            BackgroundTransparency = 0.3
+        }):Play()
+        TweenService:Create(SearchIcon, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
+            ImageTransparency = 0.3
+        }):Play()
+        if SearchBar.Text == "" then
+            ClearIcon.Visible = false
+            TweenService:Create(ClearIcon, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
+                ImageTransparency = 1
+            }):Play()
+        end
+    end)
+    
+    SearchBar:GetPropertyChangedSignal('Text'):Connect(function()
+        if SearchBar.Text ~= "" then
+            ClearIcon.Visible = true
+            TweenService:Create(ClearIcon, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
+                ImageTransparency = 0.2
+            }):Play()
+        else
+            TweenService:Create(ClearIcon, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
+                ImageTransparency = 1
+            }):Play()
+            wait(0.2)
+            ClearIcon.Visible = false
+        end
+    end)
+    
+    ClearIcon.MouseButton1Click:Connect(function()
+        SearchBar.Text = ""
+    end)
+    
+    local SearchUICorner = Instance.new('UICorner')
+    SearchUICorner.CornerRadius = UDim.new(0, 4)
+    SearchUICorner.Parent = SearchBar
+    
+    local SearchUIPadding = Instance.new('UIPadding')
     SearchUIPadding.PaddingLeft = UDim.new(0, 8)
     SearchUIPadding.Parent = SearchBar
     
@@ -2714,7 +2789,7 @@ function Library:create_ui()
                 local KeybindBox = Instance.new("TextLabel")
                 KeybindBox.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
                 KeybindBox.Size = UDim2.new(0, 23, 0, 15)
-                KeybindBox.Position = UDim2.new(1, -5, 0.5, 0)
+                KeybindBox.Position = UDim2.new(1, -3, 0.5, 0)
                 KeybindBox.AnchorPoint = Vector2.new(1, 0.5)
                 KeybindBox.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
                 KeybindBox.TextColor3 = Color3.fromRGB(255, 255, 255)
