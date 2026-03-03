@@ -584,7 +584,7 @@ function Library:create_ui()
     ClientName.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
     ClientName.TextColor3 = Color3.fromRGB(152, 181, 255)
     ClientName.TextTransparency = 0.20000000298023224
-    ClientName.Text = 'March'
+    ClientName.Text = 'Zen'
     ClientName.Name = 'ClientName'
     ClientName.Size = UDim2.new(0, 31, 0, 13)
     ClientName.AnchorPoint = Vector2.new(0, 0.5)
@@ -2789,7 +2789,7 @@ function Library:create_ui()
                 local KeybindBox = Instance.new("TextLabel")
                 KeybindBox.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
                 KeybindBox.Size = UDim2.new(0, 23, 0, 15)
-                KeybindBox.Position = UDim2.new(1, -3, 0.5, 0)
+                KeybindBox.Position = UDim2.new(1, -8, 0.5, 0)
                 KeybindBox.AnchorPoint = Vector2.new(1, 0.5)
                 KeybindBox.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
                 KeybindBox.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -2890,6 +2890,64 @@ function Library:create_ui()
                 end)
                 
                 return KeybindManager
+            end
+
+            function ModuleManager:create_button(settings)
+                LayoutOrderModule = LayoutOrderModule + 1
+                
+                if self._size == 0 then
+                    self._size = 11
+                end
+                
+                self._size += 22
+                
+                if ModuleManager._state then
+                    Module.Size = UDim2.fromOffset(241, 93 + self._size)
+                end
+                
+                Options.Size = UDim2.fromOffset(241, self._size)
+                
+                local ButtonContainer = Instance.new("Frame")
+                ButtonContainer.Size = UDim2.new(0, 207, 0, 16)
+                ButtonContainer.BackgroundTransparency = 1
+                ButtonContainer.Parent = Options
+                ButtonContainer.LayoutOrder = LayoutOrderModule
+                
+                local Button = Instance.new("TextButton")
+                Button.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+                Button.TextSize = 11
+                Button.Size = UDim2.new(1, 0, 0, 16)
+                Button.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+                Button.Text = settings.title or "Button"
+                Button.AutoButtonColor = false
+                Button.TextXAlignment = Enum.TextXAlignment.Center
+                Button.BackgroundTransparency = 0.2
+                Button.Parent = ButtonContainer
+                
+                local UICorner = Instance.new("UICorner")
+                UICorner.CornerRadius = UDim.new(0, 3)
+                UICorner.Parent = Button
+                
+                Button.MouseEnter:Connect(function()
+                    TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
+                        BackgroundTransparency = 0.1
+                    }):Play()
+                end)
+                
+                Button.MouseLeave:Connect(function()
+                    TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
+                        BackgroundTransparency = 0.2
+                    }):Play()
+                end)
+                
+                Button.MouseButton1Click:Connect(function()
+                    if settings.callback then
+                        settings.callback()
+                    end
+                end)
+                
+                return ButtonContainer
             end
                     
 
