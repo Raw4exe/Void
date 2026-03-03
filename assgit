@@ -689,7 +689,7 @@ function Library:create_ui()
     SearchIcon.Name = 'SearchIcon'
     SearchIcon.Image = 'rbxassetid://10734943674'
     SearchIcon.Size = UDim2.new(0, 16, 0, 16)
-    SearchIcon.Position = UDim2.new(0, 6, 0.5, 0)
+    SearchIcon.Position = UDim2.new(0, 4, 0.5, 0)
     SearchIcon.AnchorPoint = Vector2.new(0, 0.5)
     SearchIcon.BackgroundTransparency = 1
     SearchIcon.ImageColor3 = Color3.fromRGB(150, 150, 150)
@@ -700,7 +700,7 @@ function Library:create_ui()
     ClearIcon.Name = 'ClearIcon'
     ClearIcon.Image = 'rbxassetid://10747384394'
     ClearIcon.Size = UDim2.new(0, 14, 0, 14)
-    ClearIcon.Position = UDim2.new(1, -20, 0.5, 0)
+    ClearIcon.Position = UDim2.new(1, -18, 0.5, 0)
     ClearIcon.AnchorPoint = Vector2.new(0, 0.5)
     ClearIcon.BackgroundTransparency = 1
     ClearIcon.ImageColor3 = Color3.fromRGB(180, 180, 180)
@@ -2623,12 +2623,13 @@ function Library:create_ui()
             
                 local KeybindBox = Instance.new("TextLabel")
                 KeybindBox.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
-                KeybindBox.Size = UDim2.new(0, 15, 0, 15)
+                KeybindBox.Size = UDim2.new(0, 23, 0, 15)
                 KeybindBox.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
                 KeybindBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-                KeybindBox.TextSize = 11
-                KeybindBox.BackgroundTransparency = 1
+                KeybindBox.TextSize = 10
+                KeybindBox.BackgroundTransparency = 0.7
                 KeybindBox.LayoutOrder = 2;
+                KeybindBox.TextXAlignment = Enum.TextXAlignment.Center
                 KeybindBox.Parent = RightContainer
             
                 local KeybindButton = Instance.new("TextButton")
@@ -2639,11 +2640,6 @@ function Library:create_ui()
 
                 local CheckboxCorner = Instance.new("UICorner", KeybindBox)
                 CheckboxCorner.CornerRadius = UDim.new(0, 3)
-
-                local UIStroke = Instance.new("UIStroke", KeybindBox)
-                UIStroke.Color = Color3.fromRGB(152, 181, 255)
-                UIStroke.Thickness = 1
-                UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
             
                 if not Library._config._flags then
                     Library._config._flags = {}
@@ -2660,7 +2656,22 @@ function Library:create_ui()
                 KeybindBox.Text = Library._config._flags[settings.flag].BIND
 
                 if KeybindBox.Text == "Unknown" then
-                    KeybindBox.Text = "...";
+                    KeybindBox.Text = "None";
+                else
+                    local keybind_string = string.gsub(KeybindBox.Text, "Enum.KeyCode.", "")
+                    if KeybindBox.Text == "MouseButton1" then
+                        keybind_string = "LMB"
+                    end
+                    KeybindBox.Text = keybind_string
+                    
+                    local font_params = Instance.new('GetTextBoundsParams')
+                    font_params.Text = keybind_string
+                    font_params.Font = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+                    font_params.Size = 10
+                    font_params.Width = 10000
+                    local font_size = TextService:GetTextBoundsAsync(font_params)
+                    local newWidth = math.max(font_size.X + 8, 23)
+                    KeybindBox.Size = UDim2.fromOffset(newWidth, 15)
                 end;
 
                 local UseF_Var = nil;
@@ -2709,17 +2720,46 @@ function Library:create_ui()
                     local inputConnection
                     inputConnection = game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
                         if gameProcessed then return end
+                        
+                        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                            Library._config._flags[settings.flag].BIND = "MouseButton1"
+                            Config:save(game.GameId, Library._config)
+                            
+                            local keybind_string = "LMB"
+                            local font_params = Instance.new('GetTextBoundsParams')
+                            font_params.Text = keybind_string
+                            font_params.Font = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+                            font_params.Size = 10
+                            font_params.Width = 10000
+                            local font_size = TextService:GetTextBoundsAsync(font_params)
+                            local newWidth = math.max(font_size.X + 8, 23)
+                            KeybindBox.Size = UDim2.fromOffset(newWidth, 15)
+                            KeybindBox.Text = keybind_string
+                            inputConnection:Disconnect()
+                            return
+                        end
+                        
                         if input.UserInputType == Enum.UserInputType.Keyboard then
                             local newKey = input.KeyCode.Name
                             Library._config._flags[settings.flag].BIND = newKey
                             if newKey ~= "Unknown" then
-                                KeybindBox.Text = newKey;
+                                local keybind_string = string.gsub(newKey, "Enum.KeyCode.", "")
+                                local font_params = Instance.new('GetTextBoundsParams')
+                                font_params.Text = keybind_string
+                                font_params.Font = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+                                font_params.Size = 10
+                                font_params.Width = 10000
+                                local font_size = TextService:GetTextBoundsAsync(font_params)
+                                local newWidth = math.max(font_size.X + 8, 23)
+                                KeybindBox.Size = UDim2.fromOffset(newWidth, 15)
+                                KeybindBox.Text = keybind_string;
                             end;
-                            Config:save(game.GameId, Library._config) -- Save new keybind
+                            Config:save(game.GameId, Library._config)
                             inputConnection:Disconnect()
                         elseif input.UserInputType == Enum.UserInputType.MouseButton3 then
                             Library._config._flags[settings.flag].BIND = "Unknown"
-                            KeybindBox.Text = "..."
+                            KeybindBox.Text = "None"
+                            KeybindBox.Size = UDim2.fromOffset(23, 15)
                             Config:save(game.GameId, Library._config)
                             inputConnection:Disconnect()
                         end
@@ -2730,7 +2770,11 @@ function Library:create_ui()
                 local keyPressConnection
                 keyPressConnection = game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
                     if gameProcessed then return end
-                    if input.UserInputType == Enum.UserInputType.Keyboard then
+                    if Library._config._flags[settings.flag].BIND == "MouseButton1" then
+                        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                            UseF_Var();
+                        end
+                    elseif input.UserInputType == Enum.UserInputType.Keyboard then
                         if input.KeyCode.Name == Library._config._flags[settings.flag].BIND then
                             UseF_Var();
                         end
@@ -2819,6 +2863,9 @@ function Library:create_ui()
                 
                 if Library._config._keybinds[settings.flag] then
                     local keybind_string = string.gsub(tostring(Library._config._keybinds[settings.flag]), 'Enum.KeyCode.', '')
+                    if Library._config._keybinds[settings.flag] == "MouseButton1" then
+                        keybind_string = "LMB"
+                    end
                     KeybindBox.Text = keybind_string
                     
                     local font_params = Instance.new('GetTextBoundsParams')
@@ -2840,6 +2887,40 @@ function Library:create_ui()
                     local chooseConnection
                     chooseConnection = UserInputService.InputBegan:Connect(function(keyInput, processed)
                         if processed then return end
+                        
+                        if keyInput.UserInputType == Enum.UserInputType.MouseButton1 then
+                            Library._config._keybinds[settings.flag] = "MouseButton1"
+                            Config:save(game.GameId, Library._config)
+                            if Connections[settings.flag .. "_keybind"] then
+                                Connections[settings.flag .. "_keybind"]:Disconnect()
+                                Connections[settings.flag .. "_keybind"] = nil
+                            end
+                            
+                            local keybind_string = "LMB"
+                            local font_params = Instance.new('GetTextBoundsParams')
+                            font_params.Text = keybind_string
+                            font_params.Font = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+                            font_params.Size = 10
+                            font_params.Width = 10000
+                            local font_size = TextService:GetTextBoundsAsync(font_params)
+                            local newWidth = math.max(font_size.X + 8, 23)
+                            KeybindBox.Size = UDim2.fromOffset(newWidth, 15)
+                            
+                            Library._choosing_keybind = false
+                            KeybindBox.Text = keybind_string
+                            
+                            Connections[settings.flag .. "_keybind"] = UserInputService.InputBegan:Connect(function(input, process)
+                                if process then return end
+                                if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                                    if settings.callback then
+                                        settings.callback()
+                                    end
+                                end
+                            end)
+                            chooseConnection:Disconnect()
+                            return
+                        end
+                        
                         if keyInput.UserInputType ~= Enum.UserInputType.Keyboard then return end
                         if keyInput.KeyCode == Enum.KeyCode.Unknown then return end
                         
@@ -2881,9 +2962,16 @@ function Library:create_ui()
                         
                         Connections[settings.flag .. "_keybind"] = UserInputService.InputBegan:Connect(function(input, process)
                             if process then return end
-                            if tostring(input.KeyCode) ~= Library._config._keybinds[settings.flag] then return end
-                            if settings.callback then
-                                settings.callback()
+                            if Library._config._keybinds[settings.flag] == "MouseButton1" then
+                                if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                                    if settings.callback then
+                                        settings.callback()
+                                    end
+                                end
+                            elseif tostring(input.KeyCode) == Library._config._keybinds[settings.flag] then
+                                if settings.callback then
+                                    settings.callback()
+                                end
                             end
                         end)
                     end)
