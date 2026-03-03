@@ -2685,7 +2685,7 @@ function Library:create_ui()
                     self._size = 11
                 end
                 
-                self._size += 16
+                self._size += 22
                 
                 if ModuleManager._state then
                     Module.Size = UDim2.fromOffset(241, 93 + self._size)
@@ -2754,7 +2754,6 @@ function Library:create_ui()
                     local font_size = TextService:GetTextBoundsAsync(font_params)
                     local newWidth = math.max(font_size.X + 8, 23)
                     KeybindBox.Size = UDim2.fromOffset(newWidth, 15)
-                    KeybindBox.Position = UDim2.new(1, -newWidth - 5, 0.5, 0)
                 end
                 
                 KeybindBox.InputBegan:Connect(function(input, gameProcessed)
@@ -2774,7 +2773,6 @@ function Library:create_ui()
                             Config:save(game.GameId, Library._config)
                             KeybindBox.Text = "None"
                             KeybindBox.Size = UDim2.fromOffset(23, 15)
-                            KeybindBox.Position = UDim2.new(1, -28, 0.5, 0)
                             
                             if Connections[settings.flag .. "_keybind"] then
                                 Connections[settings.flag .. "_keybind"]:Disconnect()
@@ -2802,7 +2800,6 @@ function Library:create_ui()
                         local font_size = TextService:GetTextBoundsAsync(font_params)
                         local newWidth = math.max(font_size.X + 8, 23)
                         KeybindBox.Size = UDim2.fromOffset(newWidth, 15)
-                        KeybindBox.Position = UDim2.new(1, -newWidth - 5, 0.5, 0)
                         
                         Library._choosing_keybind = false
                         KeybindBox.Text = keybind_string
