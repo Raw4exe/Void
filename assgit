@@ -23,16 +23,24 @@ getgenv().GG = {
 local SelectedLanguage = GG.Language
 
 function convertStringToTable(inputString)
+    if not inputString or inputString == "" then
+        return {}
+    end
+    
     local result = {}
     for value in string.gmatch(inputString, "([^,]+)") do
         local trimmedValue = value:match("^%s*(.-)%s*$")
-        tablein(result, trimmedValue)
+        if trimmedValue and trimmedValue ~= "" then
+            table.insert(result, trimmedValue)
+        end
     end
-
     return result
 end
 
 function convertTableToString(inputTable)
+    if not inputTable or #inputTable == 0 then
+        return ""
+    end
     return table.concat(inputTable, ", ")
 end
 
@@ -2244,6 +2252,499 @@ function Library:create_ui()
             end
 
             function ModuleManager:create_dropdown(settings: any)
+                if not settings.Order then
+                    LayoutOrderModule = LayoutOrderModule + 1
+                end
+
+                local DropdownManager = {
+                    _state = false,
+                    _size = 0,
+                    selected_values = {}
+                }
+
+                if not settings.Order then
+                    if self._size == 0 then
+                        self._size = 11
+                    end
+                    self._size += 44
+                end
+
+                if not settings.Order then
+                    if ModuleManager._state then
+                        Module.Size = UDim2.fromOffset(241, 93 + self._size)
+                    end
+                    Options.Size = UDim2.fromOffset(241, self._size)
+                end
+
+                if not Library._config._flags[settings.flag] then
+                    if settings.multi_dropdown then
+                        Library._config._flags[settings.flag] = {}
+                    else
+                        Library._config._flags[settings.flag] = nil
+                    end
+                end
+
+                local Dropdown = Instance.new('TextButton')
+                Dropdown.FontFace = Font.new('rbxasset://fonts/families/SourceSansPro.json', Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+                Dropdown.TextColor3 = Color3.fromRGB(0, 0, 0)
+                Dropdown.BorderColor3 = Color3.fromRGB(0, 0, 0)
+                Dropdown.Text = ''
+                Dropdown.AutoButtonColor = false
+                Dropdown.BackgroundTransparency = 1
+                Dropdown.Name = 'Dropdown'
+                Dropdown.Size = UDim2.new(0, 207, 0, 39)
+                Dropdown.BorderSizePixel = 0
+                Dropdown.TextSize = 14
+                Dropdown.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+                Dropdown.Parent = Options
+
+                if not settings.Order then
+                    Dropdown.LayoutOrder = LayoutOrderModule
+                else
+                    Dropdown.LayoutOrder = settings.OrderValue
+                end
+
+                local TextLabel = Instance.new('TextLabel')
+                if GG and GG.SelectedLanguage == "th" then
+                    TextLabel.FontFace = Font.new("rbxasset://fonts/families/NotoSansThai.json", Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+                    TextLabel.TextSize = 13
+                else
+                    TextLabel.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+                    TextLabel.TextSize = 11
+                end
+                TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+                TextLabel.TextTransparency = 0.2
+                TextLabel.Text = settings.title
+                TextLabel.Size = UDim2.new(0, 207, 0, 13)
+                TextLabel.BackgroundTransparency = 1
+                TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+                TextLabel.BorderSizePixel = 0
+                TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+                TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                TextLabel.Parent = Dropdown
+
+                local Box = Instance.new('Frame')
+                Box.ClipsDescendants = true
+                Box.BorderColor3 = Color3.fromRGB(0, 0, 0)
+                Box.AnchorPoint = Vector2.new(0.5, 0)
+                Box.BackgroundTransparency = 0.9
+                Box.Position = UDim2.new(0.5, 0, 1.2, 0)
+                Box.Name = 'Box'
+                Box.Size = UDim2.new(0, 207, 0, 22)
+                Box.BorderSizePixel = 0
+                Box.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                Box.Parent = TextLabel
+
+                local UICorner = Instance.new('UICorner')
+                UICorner.CornerRadius = UDim.new(0, 4)
+                UICorner.Parent = Box
+
+                local Header = Instance.new('Frame')
+                Header.BorderColor3 = Color3.fromRGB(0, 0, 0)
+                Header.AnchorPoint = Vector2.new(0.5, 0)
+                Header.BackgroundTransparency = 1
+                Header.Position = UDim2.new(0.5, 0, 0, 0)
+                Header.Name = 'Header'
+                Header.Size = UDim2.new(0, 207, 0, 22)
+                Header.BorderSizePixel = 0
+                Header.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                Header.Parent = Box
+
+                local CurrentOption = Instance.new('TextLabel')
+                CurrentOption.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+                CurrentOption.TextColor3 = Color3.fromRGB(255, 255, 255)
+                CurrentOption.TextTransparency = 0.2
+                CurrentOption.Name = 'CurrentOption'
+                CurrentOption.Size = UDim2.new(0, 140, 0, 13)
+                CurrentOption.AnchorPoint = Vector2.new(0, 0.5)
+                CurrentOption.Position = UDim2.new(0.05, 0, 0.5, 0)
+                CurrentOption.BackgroundTransparency = 1
+                CurrentOption.TextXAlignment = Enum.TextXAlignment.Left
+                CurrentOption.BorderSizePixel = 0
+                CurrentOption.BorderColor3 = Color3.fromRGB(0, 0, 0)
+                CurrentOption.TextSize = 10
+                CurrentOption.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                CurrentOption.Text = "None"
+                CurrentOption.Parent = Header
+
+                local SelectedOptionsContainer = Instance.new('Frame')
+                SelectedOptionsContainer.Name = 'SelectedOptionsContainer'
+                SelectedOptionsContainer.Size = UDim2.new(0, 140, 0, 13)
+                SelectedOptionsContainer.Position = UDim2.new(0.05, 0, 0.5, 0)
+                SelectedOptionsContainer.AnchorPoint = Vector2.new(0, 0.5)
+                SelectedOptionsContainer.BackgroundTransparency = 1
+                SelectedOptionsContainer.Visible = false
+                SelectedOptionsContainer.Parent = Header
+
+                local SelectedLayout = Instance.new('UIListLayout')
+                SelectedLayout.FillDirection = Enum.FillDirection.Horizontal
+                SelectedLayout.Padding = UDim.new(0, 2)
+                SelectedLayout.SortOrder = Enum.SortOrder.LayoutOrder
+                SelectedLayout.Parent = SelectedOptionsContainer
+
+                local UIGradient = Instance.new('UIGradient')
+                UIGradient.Transparency = NumberSequence.new{
+                    NumberSequenceKeypoint.new(0, 0),
+                    NumberSequenceKeypoint.new(0.704, 0),
+                    NumberSequenceKeypoint.new(0.872, 0.36),
+                    NumberSequenceKeypoint.new(1, 1)
+                }
+                UIGradient.Parent = CurrentOption
+
+                local Arrow = Instance.new('ImageLabel')
+                Arrow.BorderColor3 = Color3.fromRGB(0, 0, 0)
+                Arrow.AnchorPoint = Vector2.new(0, 0.5)
+                Arrow.Image = 'rbxassetid://84232453189324'
+                Arrow.BackgroundTransparency = 1
+                Arrow.Position = UDim2.new(0.91, 0, 0.5, 0)
+                Arrow.Name = 'Arrow'
+                Arrow.Size = UDim2.new(0, 8, 0, 8)
+                Arrow.BorderSizePixel = 0
+                Arrow.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                Arrow.Parent = Header
+
+                local OptionsFrame = Instance.new('ScrollingFrame')
+                OptionsFrame.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
+                OptionsFrame.Active = true
+                OptionsFrame.ScrollBarImageTransparency = 1
+                OptionsFrame.AutomaticCanvasSize = Enum.AutomaticSize.XY
+                OptionsFrame.ScrollBarThickness = 0
+                OptionsFrame.Name = 'Options'
+                OptionsFrame.Size = UDim2.new(0, 207, 0, 0)
+                OptionsFrame.BackgroundTransparency = 1
+                OptionsFrame.Position = UDim2.new(0, 0, 1, 0)
+                OptionsFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                OptionsFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+                OptionsFrame.BorderSizePixel = 0
+                OptionsFrame.CanvasSize = UDim2.new(0, 0, 0.5, 0)
+                OptionsFrame.Parent = Box
+
+                local UIListLayout = Instance.new('UIListLayout')
+                UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+                UIListLayout.Parent = OptionsFrame
+
+                local UIPadding = Instance.new('UIPadding')
+                UIPadding.PaddingTop = UDim.new(0, -1)
+                UIPadding.PaddingLeft = UDim.new(0, 10)
+                UIPadding.Parent = OptionsFrame
+
+                function DropdownManager:getValue(value)
+                    return (typeof(value) == "string" and value) or (value and value.Name) or tostring(value)
+                end
+
+                function DropdownManager:updateSelectedDisplay()
+                    for _, child in pairs(SelectedOptionsContainer:GetChildren()) do
+                        if child.Name == "SelectedOption" then
+                            child:Destroy()
+                        end
+                    end
+
+                    if settings.multi_dropdown and Library._config._flags[settings.flag] and type(Library._config._flags[settings.flag]) == "table" and #Library._config._flags[settings.flag] > 0 then
+                        CurrentOption.Visible = false
+                        SelectedOptionsContainer.Visible = true
+
+                        for i, selectedValue in pairs(Library._config._flags[settings.flag]) do
+                            local valueText = self:getValue(selectedValue)
+                            
+                            local SelectedOption = Instance.new('Frame')
+                            SelectedOption.Name = 'SelectedOption'
+                            SelectedOption.Size = UDim2.new(0, 0, 0, 13)
+                            SelectedOption.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                            SelectedOption.BackgroundTransparency = 0.7
+                            SelectedOption.BorderSizePixel = 0
+                            SelectedOption.Parent = SelectedOptionsContainer
+
+                            local OptionCorner = Instance.new('UICorner')
+                            OptionCorner.CornerRadius = UDim.new(0, 3)
+                            OptionCorner.Parent = SelectedOption
+
+                            local OptionText = Instance.new('TextLabel')
+                            OptionText.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+                            OptionText.TextColor3 = Color3.fromRGB(255, 255, 255)
+                            OptionText.TextTransparency = 0.2
+                            OptionText.Text = valueText
+                            OptionText.TextSize = 9
+                            OptionText.Size = UDim2.new(1, -15, 1, 0)
+                            OptionText.Position = UDim2.new(0, 3, 0, 0)
+                            OptionText.BackgroundTransparency = 1
+                            OptionText.TextXAlignment = Enum.TextXAlignment.Left
+                            OptionText.Parent = SelectedOption
+
+                            local RemoveButton = Instance.new('TextButton')
+                            RemoveButton.Size = UDim2.new(0, 10, 0, 10)
+                            RemoveButton.Position = UDim2.new(1, -12, 0.5, 0)
+                            RemoveButton.AnchorPoint = Vector2.new(0, 0.5)
+                            RemoveButton.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
+                            RemoveButton.BackgroundTransparency = 0.3
+                            RemoveButton.Text = "×"
+                            RemoveButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+                            RemoveButton.TextSize = 8
+                            RemoveButton.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+                            RemoveButton.BorderSizePixel = 0
+                            RemoveButton.Parent = SelectedOption
+
+                            local RemoveCorner = Instance.new('UICorner')
+                            RemoveCorner.CornerRadius = UDim.new(1, 0)
+                            RemoveCorner.Parent = RemoveButton
+
+                            local success, textSize = pcall(function()
+                                if TextService and TextService.GetTextBoundsAsync then
+                                    local textBounds = Instance.new('GetTextBoundsParams')
+                                    textBounds.Text = valueText
+                                    textBounds.Font = OptionText.FontFace
+                                    textBounds.Size = OptionText.TextSize
+                                    textBounds.Width = 1000
+                                    return TextService:GetTextBoundsAsync(textBounds)
+                                else
+                                    return {X = #valueText * 6}
+                                end
+                            end)
+                            
+                            local textWidth = (success and textSize.X) or (#valueText * 6)
+                            SelectedOption.Size = UDim2.new(0, textWidth + 20, 0, 13)
+
+                            RemoveButton.MouseButton1Click:Connect(function()
+                                if Library._config._flags[settings.flag] and type(Library._config._flags[settings.flag]) == "table" then
+                                    Library:remove_table_value(Library._config._flags[settings.flag], selectedValue)
+                                    self:updateSelectedDisplay()
+                                    self:updateOptionDots()
+                                    if Config and Config.save then
+                                        Config:save(game.GameId, Library._config)
+                                    end
+                                    if settings.callback then
+                                        settings.callback(selectedValue)
+                                    end
+                                end
+                            end)
+                        end
+                    else
+                        CurrentOption.Visible = true
+                        SelectedOptionsContainer.Visible = false
+                    end
+                end
+
+                function DropdownManager:updateOptionDots()
+                    for _, child in pairs(OptionsFrame:GetChildren()) do
+                        if child.Name == "Option" then
+                            local dot = child:FindFirstChild("SelectionDot")
+                            if dot then
+                                if settings.multi_dropdown then
+                                    if Library._config._flags[settings.flag] and type(Library._config._flags[settings.flag]) == "table" then
+                                        local isSelected = false
+                                        for _, selectedValue in pairs(Library._config._flags[settings.flag]) do
+                                            if self:getValue(selectedValue) == child.Text then
+                                                isSelected = true
+                                                break
+                                            end
+                                        end
+                                        dot.Visible = isSelected
+                                    else
+                                        dot.Visible = false
+                                    end
+                                else
+                                    dot.Visible = (Library._config._flags[settings.flag] and self:getValue(Library._config._flags[settings.flag]) == child.Text)
+                                end
+                            end
+                        end
+                    end
+                end
+
+                function DropdownManager:update(option)
+                    if not option then return end
+
+                    if settings.multi_dropdown then
+                        if not Library._config._flags[settings.flag] then
+                            Library._config._flags[settings.flag] = {}
+                        end
+
+                        if type(Library._config._flags[settings.flag]) ~= "table" then
+                            Library._config._flags[settings.flag] = {}
+                        end
+
+                        local found = false
+                        for i, v in pairs(Library._config._flags[settings.flag]) do
+                            if self:getValue(v) == self:getValue(option) then
+                                table.remove(Library._config._flags[settings.flag], i)
+                                found = true
+                                break
+                            end
+                        end
+
+                        if not found then
+                            table.insert(Library._config._flags[settings.flag], option)
+                        end
+
+                        local selectedTexts = {}
+                        for _, v in pairs(Library._config._flags[settings.flag]) do
+                            table.insert(selectedTexts, self:getValue(v))
+                        end
+                        CurrentOption.Text = #selectedTexts > 0 and table.concat(selectedTexts, ", ") or "None"
+                    else
+                        if Library._config._flags[settings.flag] == option then
+                            Library._config._flags[settings.flag] = nil
+                            CurrentOption.Text = "None"
+                        else
+                            Library._config._flags[settings.flag] = option
+                            CurrentOption.Text = self:getValue(option)
+                        end
+                    end
+
+                    self:updateSelectedDisplay()
+                    self:updateOptionDots()
+
+                    if Config and Config.save then
+                        Config:save(game.GameId, Library._config)
+                    end
+
+                    if settings.callback then
+                        settings.callback(option)
+                    end
+                end
+
+                local CurrentDropSizeState = 0
+
+                function DropdownManager:unfold_settings()
+                    self._state = not self._state
+
+                    if self._state then
+                        ModuleManager._multiplier += self._size
+                        CurrentDropSizeState = self._size
+
+                        TweenService:Create(Module, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                            Size = UDim2.fromOffset(241, 93 + ModuleManager._size + ModuleManager._multiplier)
+                        }):Play()
+
+                        TweenService:Create(Module.Options, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                            Size = UDim2.fromOffset(241, ModuleManager._size + ModuleManager._multiplier)
+                        }):Play()
+
+                        TweenService:Create(Dropdown, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                            Size = UDim2.fromOffset(207, 39 + self._size)
+                        }):Play()
+
+                        TweenService:Create(Box, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                            Size = UDim2.fromOffset(207, 22 + self._size)
+                        }):Play()
+
+                        TweenService:Create(Arrow, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                            Rotation = 180
+                        }):Play()
+                    else
+                        ModuleManager._multiplier -= self._size
+                        CurrentDropSizeState = 0
+
+                        TweenService:Create(Module, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                            Size = UDim2.fromOffset(241, 93 + ModuleManager._size + ModuleManager._multiplier)
+                        }):Play()
+
+                        TweenService:Create(Module.Options, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                            Size = UDim2.fromOffset(241, ModuleManager._size + ModuleManager._multiplier)
+                        }):Play()
+
+                        TweenService:Create(Dropdown, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                            Size = UDim2.fromOffset(207, 39)
+                        }):Play()
+
+                        TweenService:Create(Box, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                            Size = UDim2.fromOffset(207, 22)
+                        }):Play()
+
+                        TweenService:Create(Arrow, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                            Rotation = 0
+                        }):Play()
+                    end
+                end
+
+                if settings.options and #settings.options > 0 then
+                    DropdownManager._size = 3
+
+                    for index, value in pairs(settings.options) do
+                        local Option = Instance.new('TextButton')
+                        Option.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+                        Option.Active = false
+                        Option.TextTransparency = 0.6
+                        Option.AnchorPoint = Vector2.new(0, 0.5)
+                        Option.TextSize = 10
+                        Option.Size = UDim2.new(0, 186, 0, 16)
+                        Option.TextColor3 = Color3.fromRGB(255, 255, 255)
+                        Option.BorderColor3 = Color3.fromRGB(0, 0, 0)
+                        Option.Text = DropdownManager:getValue(value)
+                        Option.AutoButtonColor = false
+                        Option.Name = 'Option'
+                        Option.BackgroundTransparency = 1
+                        Option.TextXAlignment = Enum.TextXAlignment.Left
+                        Option.Selectable = false
+                        Option.Position = UDim2.new(0.05, 0, 0.34, 0)
+                        Option.BorderSizePixel = 0
+                        Option.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                        Option.Parent = OptionsFrame
+
+                        local SelectionDot = Instance.new('Frame')
+                        SelectionDot.Name = 'SelectionDot'
+                        SelectionDot.Size = UDim2.new(0, 4, 0, 4)
+                        SelectionDot.Position = UDim2.new(0, -8, 0.5, 0)
+                        SelectionDot.AnchorPoint = Vector2.new(0.5, 0.5)
+                        SelectionDot.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                        SelectionDot.BorderSizePixel = 0
+                        SelectionDot.Visible = false
+                        SelectionDot.Parent = Option
+
+                        local DotCorner = Instance.new('UICorner')
+                        DotCorner.CornerRadius = UDim.new(1, 0)
+                        DotCorner.Parent = SelectionDot
+
+                        local OptionGradient = Instance.new('UIGradient')
+                        OptionGradient.Transparency = NumberSequence.new{
+                            NumberSequenceKeypoint.new(0, 0),
+                            NumberSequenceKeypoint.new(0.704, 0),
+                            NumberSequenceKeypoint.new(0.872, 0.36),
+                            NumberSequenceKeypoint.new(1, 1)
+                        }
+                        OptionGradient.Parent = Option
+
+                        Option.MouseButton1Click:Connect(function()
+                            DropdownManager:update(value)
+                        end)
+
+                        if settings.maximum_options and index > settings.maximum_options then
+                            continue
+                        end
+
+                        DropdownManager._size += 16
+                        OptionsFrame.Size = UDim2.fromOffset(207, DropdownManager._size)
+                    end
+                end
+
+                Header.MouseButton1Click:Connect(function()
+                    DropdownManager:unfold_settings()
+                end)
+
+                function DropdownManager:New(value)
+                    if Dropdown and Dropdown.Parent then
+                        Dropdown:Destroy()
+                    end
+                    if value then
+                        value.OrderValue = Dropdown and Dropdown.LayoutOrder or 1
+                    end
+                    ModuleManager._multiplier -= CurrentDropSizeState
+                    return ModuleManager:create_dropdown(value)
+                end
+
+                if Library._config._flags[settings.flag] then
+                    if settings.multi_dropdown then
+                        DropdownManager:updateSelectedDisplay()
+                        DropdownManager:updateOptionDots()
+                    else
+                        CurrentOption.Text = DropdownManager:getValue(Library._config._flags[settings.flag])
+                        DropdownManager:updateOptionDots()
+                    end
+                elseif settings.options and #settings.options > 0 then
+                    if not settings.multi_dropdown then
+                        DropdownManager:update(settings.options[1])
+                    end
+                end
+
+                return DropdownManager
 
                 if not settings.Order then
                     LayoutOrderModule = LayoutOrderModule + 1;
