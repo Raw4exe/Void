@@ -689,7 +689,7 @@ function Library:create_ui()
     SearchIcon.Name = 'SearchIcon'
     SearchIcon.Image = 'rbxassetid://10734943674'
     SearchIcon.Size = UDim2.new(0, 16, 0, 16)
-    SearchIcon.Position = UDim2.new(0, 0, 0.5, 0)
+    SearchIcon.Position = UDim2.new(0, -2, 0.5, 0)
     SearchIcon.AnchorPoint = Vector2.new(0, 0.5)
     SearchIcon.BackgroundTransparency = 1
     SearchIcon.ImageColor3 = Color3.fromRGB(120, 120, 120)
@@ -708,7 +708,7 @@ function Library:create_ui()
     SearchIconShadow.Name = 'SearchIconShadow'
     SearchIconShadow.Image = 'rbxassetid://10734943674'
     SearchIconShadow.Size = UDim2.new(0, 16, 0, 16)
-    SearchIconShadow.Position = UDim2.new(0, 1, 0.5, 1)
+    SearchIconShadow.Position = UDim2.new(0, -1, 0.5, 1)
     SearchIconShadow.AnchorPoint = Vector2.new(0, 0.5)
     SearchIconShadow.BackgroundTransparency = 1
     SearchIconShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
@@ -720,7 +720,7 @@ function Library:create_ui()
     ClearIcon.Name = 'ClearIcon'
     ClearIcon.Image = 'rbxassetid://10747384394'
     ClearIcon.Size = UDim2.new(0, 14, 0, 14)
-    ClearIcon.Position = UDim2.new(1, -12, 0.5, 0)
+    ClearIcon.Position = UDim2.new(1, -8, 0.5, 0)
     ClearIcon.AnchorPoint = Vector2.new(0, 0.5)
     ClearIcon.BackgroundTransparency = 1
     ClearIcon.ImageColor3 = Color3.fromRGB(150, 150, 150)
@@ -740,7 +740,7 @@ function Library:create_ui()
     ClearIconShadow.Name = 'ClearIconShadow'
     ClearIconShadow.Image = 'rbxassetid://10747384394'
     ClearIconShadow.Size = UDim2.new(0, 14, 0, 14)
-    ClearIconShadow.Position = UDim2.new(1, -11, 0.5, 1)
+    ClearIconShadow.Position = UDim2.new(1, -7, 0.5, 1)
     ClearIconShadow.AnchorPoint = Vector2.new(0, 0.5)
     ClearIconShadow.BackgroundTransparency = 1
     ClearIconShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
@@ -2327,7 +2327,7 @@ function Library:create_ui()
                 CurrentOption.TextColor3 = Color3.fromRGB(255, 255, 255)
                 CurrentOption.TextTransparency = 0.20000000298023224
                 CurrentOption.Name = 'CurrentOption'
-                CurrentOption.Size = UDim2.new(0, 161, 0, 13)
+                CurrentOption.Size = UDim2.new(0, 140, 0, 13)
                 CurrentOption.AnchorPoint = Vector2.new(0, 0.5)
                 CurrentOption.Position = UDim2.new(0.04999988153576851, 0, 0.5, 0)
                 CurrentOption.BackgroundTransparency = 1
@@ -2337,6 +2337,21 @@ function Library:create_ui()
                 CurrentOption.TextSize = 10
                 CurrentOption.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
                 CurrentOption.Parent = Header
+                
+                local SelectedOptionsContainer = Instance.new('Frame')
+                SelectedOptionsContainer.Name = 'SelectedOptionsContainer'
+                SelectedOptionsContainer.Size = UDim2.new(0, 140, 0, 13)
+                SelectedOptionsContainer.Position = UDim2.new(0.04999988153576851, 0, 0.5, 0)
+                SelectedOptionsContainer.AnchorPoint = Vector2.new(0, 0.5)
+                SelectedOptionsContainer.BackgroundTransparency = 1
+                SelectedOptionsContainer.Visible = false
+                SelectedOptionsContainer.Parent = Header
+                
+                local SelectedLayout = Instance.new('UIListLayout')
+                SelectedLayout.FillDirection = Enum.FillDirection.Horizontal
+                SelectedLayout.Padding = UDim.new(0, 2)
+                SelectedLayout.SortOrder = Enum.SortOrder.LayoutOrder
+                SelectedLayout.Parent = SelectedOptionsContainer
                 local UIGradient = Instance.new('UIGradient')
                 UIGradient.Transparency = NumberSequence.new{
                     NumberSequenceKeypoint.new(0, 0),
@@ -2386,6 +2401,92 @@ function Library:create_ui()
                 local UIListLayout = Instance.new('UIListLayout')
                 UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
                 UIListLayout.Parent = Box
+
+                function DropdownManager:updateSelectedDisplay()
+                    -- Clear existing selected option displays
+                    for _, child in SelectedOptionsContainer:GetChildren() do
+                        if child.Name == "SelectedOption" then
+                            child:Destroy()
+                        end
+                    end
+                    
+                    if settings.multi_dropdown and Library._config._flags[settings.flag] and #Library._config._flags[settings.flag] > 0 then
+                        CurrentOption.Visible = false
+                        SelectedOptionsContainer.Visible = true
+                        
+                        for i, selectedValue in pairs(Library._config._flags[settings.flag]) do
+                            local SelectedOption = Instance.new('Frame')
+                            SelectedOption.Name = 'SelectedOption'
+                            SelectedOption.Size = UDim2.new(0, 0, 0, 13)
+                            SelectedOption.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                            SelectedOption.BackgroundTransparency = 0.7
+                            SelectedOption.BorderSizePixel = 0
+                            SelectedOption.Parent = SelectedOptionsContainer
+                            
+                            local OptionCorner = Instance.new('UICorner')
+                            OptionCorner.CornerRadius = UDim.new(0, 3)
+                            OptionCorner.Parent = SelectedOption
+                            
+                            local OptionText = Instance.new('TextLabel')
+                            OptionText.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+                            OptionText.TextColor3 = Color3.fromRGB(255, 255, 255)
+                            OptionText.TextTransparency = 0.2
+                            OptionText.Text = (typeof(selectedValue) == "string" and selectedValue) or selectedValue.Name
+                            OptionText.TextSize = 9
+                            OptionText.Size = UDim2.new(1, -15, 1, 0)
+                            OptionText.Position = UDim2.new(0, 3, 0, 0)
+                            OptionText.BackgroundTransparency = 1
+                            OptionText.TextXAlignment = Enum.TextXAlignment.Left
+                            OptionText.Parent = SelectedOption
+                            
+                            local RemoveButton = Instance.new('TextButton')
+                            RemoveButton.Size = UDim2.new(0, 10, 0, 10)
+                            RemoveButton.Position = UDim2.new(1, -12, 0.5, 0)
+                            RemoveButton.AnchorPoint = Vector2.new(0, 0.5)
+                            RemoveButton.BackgroundColor3 = Color3.fromRGB(255, 100, 100)
+                            RemoveButton.BackgroundTransparency = 0.3
+                            RemoveButton.Text = "×"
+                            RemoveButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+                            RemoveButton.TextSize = 8
+                            RemoveButton.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+                            RemoveButton.BorderSizePixel = 0
+                            RemoveButton.Parent = SelectedOption
+                            
+                            local RemoveCorner = Instance.new('UICorner')
+                            RemoveCorner.CornerRadius = UDim.new(1, 0)
+                            RemoveCorner.Parent = RemoveButton
+                            
+                            -- Calculate text width and set frame size
+                            local textBounds = TextService:GetTextBoundsAsync(Instance.new('GetTextBoundsParams'))
+                            textBounds.Text = OptionText.Text
+                            textBounds.Font = OptionText.FontFace
+                            textBounds.Size = OptionText.TextSize
+                            textBounds.Width = 1000
+                            local textSize = TextService:GetTextBoundsAsync(textBounds)
+                            SelectedOption.Size = UDim2.new(0, textSize.X + 20, 0, 13)
+                            
+                            RemoveButton.MouseButton1Click:Connect(function()
+                                Library:remove_table_value(Library._config._flags[settings.flag], selectedValue)
+                                DropdownManager:update(selectedValue)
+                                DropdownManager:updateSelectedDisplay()
+                                
+                                -- Update dots in dropdown
+                                for _, child in Options:GetChildren() do
+                                    if child.Name == "Option" and child.Text == ((typeof(selectedValue) == "string" and selectedValue) or selectedValue.Name) then
+                                        local dot = child:FindFirstChild("SelectionDot")
+                                        if dot then dot.Visible = false end
+                                    end
+                                end
+                                
+                                Config:save(game.GameId, Library._config)
+                                settings.callback(selectedValue)
+                            end)
+                        end
+                    else
+                        CurrentOption.Visible = true
+                        SelectedOptionsContainer.Visible = false
+                    end
+                end
 
                 function DropdownManager:update(option: string)
                     -- If multi-dropdown is enabled
@@ -2489,6 +2590,9 @@ function Library:create_ui()
                     -- Save the configuration state
                     Config:save(game.GameId, Library._config)
                 
+                    -- Update selected display
+                    DropdownManager:updateSelectedDisplay()
+                
                     -- Callback with the updated option(s)
                     settings.callback(option)
                 end
@@ -2573,6 +2677,20 @@ function Library:create_ui()
                         Option.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
                         Option.Parent = Options
                         
+                        local SelectionDot = Instance.new('Frame')
+                        SelectionDot.Name = 'SelectionDot'
+                        SelectionDot.Size = UDim2.new(0, 4, 0, 4)
+                        SelectionDot.Position = UDim2.new(0, -8, 0.5, 0)
+                        SelectionDot.AnchorPoint = Vector2.new(0.5, 0.5)
+                        SelectionDot.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                        SelectionDot.BorderSizePixel = 0
+                        SelectionDot.Visible = false
+                        SelectionDot.Parent = Option
+                        
+                        local DotCorner = Instance.new('UICorner')
+                        DotCorner.CornerRadius = UDim.new(1, 0)
+                        DotCorner.Parent = SelectionDot
+                        
                         local UIGradient = Instance.new('UIGradient')
                         UIGradient.Transparency = NumberSequence.new{
                             NumberSequenceKeypoint.new(0, 0),
@@ -2590,8 +2708,28 @@ function Library:create_ui()
                             if settings.multi_dropdown then
                                 if table.find(Library._config._flags[settings.flag], value) then
                                     Library:remove_table_value(Library._config._flags[settings.flag], value)
+                                    SelectionDot.Visible = false
                                 else
                                     table.insert(Library._config._flags[settings.flag], value)
+                                    SelectionDot.Visible = true
+                                end
+                            else
+                                -- For single dropdown, allow deselection even if it's the only option
+                                if Library._config._flags[settings.flag] == value then
+                                    Library._config._flags[settings.flag] = nil
+                                    SelectionDot.Visible = false
+                                    CurrentOption.Text = "None"
+                                else
+                                    -- Hide all dots first
+                                    for _, child in Options:GetChildren() do
+                                        if child.Name == "Option" then
+                                            local dot = child:FindFirstChild("SelectionDot")
+                                            if dot then dot.Visible = false end
+                                        end
+                                    end
+                                    -- Show dot for selected option
+                                    SelectionDot.Visible = true
+                                    Library._config._flags[settings.flag] = value
                                 end
                             end
 
@@ -2619,6 +2757,30 @@ function Library:create_ui()
                 else
                     DropdownManager:update(settings.options[1])
                 end
+                
+                -- Initialize dots based on current selection
+                if settings.multi_dropdown and Library._config._flags[settings.flag] then
+                    for _, child in Options:GetChildren() do
+                        if child.Name == "Option" then
+                            local dot = child:FindFirstChild("SelectionDot")
+                            if dot and table.find(Library._config._flags[settings.flag], child.Text) then
+                                dot.Visible = true
+                            end
+                        end
+                    end
+                elseif Library._config._flags[settings.flag] then
+                    for _, child in Options:GetChildren() do
+                        if child.Name == "Option" then
+                            local dot = child:FindFirstChild("SelectionDot")
+                            if dot and child.Text == ((typeof(Library._config._flags[settings.flag]) == "string" and Library._config._flags[settings.flag]) or Library._config._flags[settings.flag].Name) then
+                                dot.Visible = true
+                            end
+                        end
+                    end
+                end
+                
+                -- Initialize selected display
+                DropdownManager:updateSelectedDisplay()
     
                 Dropdown.MouseButton1Click:Connect(function()
                     DropdownManager:unfold_settings()
