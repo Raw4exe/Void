@@ -689,7 +689,7 @@ function Library:create_ui()
     SearchIcon.Name = 'SearchIcon'
     SearchIcon.Image = 'rbxassetid://10734943674'
     SearchIcon.Size = UDim2.new(0, 16, 0, 16)
-    SearchIcon.Position = UDim2.new(0, 4, 0.5, 0)
+    SearchIcon.Position = UDim2.new(0, 2, 0.5, 0)
     SearchIcon.AnchorPoint = Vector2.new(0, 0.5)
     SearchIcon.BackgroundTransparency = 1
     SearchIcon.ImageColor3 = Color3.fromRGB(150, 150, 150)
@@ -700,7 +700,7 @@ function Library:create_ui()
     ClearIcon.Name = 'ClearIcon'
     ClearIcon.Image = 'rbxassetid://10747384394'
     ClearIcon.Size = UDim2.new(0, 14, 0, 14)
-    ClearIcon.Position = UDim2.new(1, -18, 0.5, 0)
+    ClearIcon.Position = UDim2.new(1, -16, 0.5, 0)
     ClearIcon.AnchorPoint = Vector2.new(0, 0.5)
     ClearIcon.BackgroundTransparency = 1
     ClearIcon.ImageColor3 = Color3.fromRGB(180, 180, 180)
@@ -2721,6 +2721,8 @@ function Library:create_ui()
                     inputConnection = game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
                         if gameProcessed then return end
                         
+                        if input.UserInputType == Enum.UserInputType.MouseWheel then return end
+                        
                         if input.UserInputType == Enum.UserInputType.MouseButton1 then
                             Library._config._flags[settings.flag].BIND = "MouseButton1"
                             Config:save(game.GameId, Library._config)
@@ -2833,7 +2835,7 @@ function Library:create_ui()
                 local KeybindBox = Instance.new("TextLabel")
                 KeybindBox.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
                 KeybindBox.Size = UDim2.new(0, 23, 0, 15)
-                KeybindBox.Position = UDim2.new(1, -8, 0.5, 0)
+                KeybindBox.Position = UDim2.new(1, -5, 0.5, 0)
                 KeybindBox.AnchorPoint = Vector2.new(1, 0.5)
                 KeybindBox.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
                 KeybindBox.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -2887,6 +2889,8 @@ function Library:create_ui()
                     local chooseConnection
                     chooseConnection = UserInputService.InputBegan:Connect(function(keyInput, processed)
                         if processed then return end
+                        
+                        if keyInput.UserInputType == Enum.UserInputType.MouseWheel then return end
                         
                         if keyInput.UserInputType == Enum.UserInputType.MouseButton1 then
                             Library._config._keybinds[settings.flag] = "MouseButton1"
@@ -3005,27 +3009,59 @@ function Library:create_ui()
                 Button.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
                 Button.TextSize = 11
                 Button.Size = UDim2.new(1, 0, 0, 16)
-                Button.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                Button.BackgroundColor3 = Color3.fromRGB(45, 55, 75)
                 Button.TextColor3 = Color3.fromRGB(255, 255, 255)
                 Button.Text = settings.title or "Button"
                 Button.AutoButtonColor = false
                 Button.TextXAlignment = Enum.TextXAlignment.Center
-                Button.BackgroundTransparency = 0.2
+                Button.BackgroundTransparency = 0
                 Button.Parent = ButtonContainer
                 
                 local UICorner = Instance.new("UICorner")
                 UICorner.CornerRadius = UDim.new(0, 3)
                 UICorner.Parent = Button
                 
+                local UIStroke = Instance.new("UIStroke")
+                UIStroke.Color = Color3.fromRGB(25, 30, 40)
+                UIStroke.Thickness = 1
+                UIStroke.Transparency = 0.3
+                UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+                UIStroke.Parent = Button
+                
+                local DropShadow = Instance.new("ImageLabel")
+                DropShadow.Name = "DropShadow"
+                DropShadow.BackgroundTransparency = 1
+                DropShadow.Image = "rbxasset://textures/ui/Controls/DropShadow.png"
+                DropShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+                DropShadow.ImageTransparency = 0.5
+                DropShadow.ScaleType = Enum.ScaleType.Slice
+                DropShadow.SliceCenter = Rect.new(49, 49, 450, 450)
+                DropShadow.Size = UDim2.new(1, 8, 1, 8)
+                DropShadow.Position = UDim2.new(0, -4, 0, -4)
+                DropShadow.ZIndex = Button.ZIndex - 1
+                DropShadow.Parent = ButtonContainer
+                
                 Button.MouseEnter:Connect(function()
                     TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
-                        BackgroundTransparency = 0.1
+                        BackgroundColor3 = Color3.fromRGB(55, 65, 85)
+                    }):Play()
+                    TweenService:Create(UIStroke, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
+                        Transparency = 0.1
+                    }):Play()
+                    TweenService:Create(DropShadow, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
+                        ImageTransparency = 0.7
                     }):Play()
                 end)
                 
                 Button.MouseLeave:Connect(function()
                     TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
-                        BackgroundTransparency = 0.2
+                        BackgroundColor3 = Color3.fromRGB(45, 55, 75)
+                    }):Play()
+                    TweenService:Create(UIStroke, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
+                        Transparency = 0.3
+                    }):Play()
+                    TweenService:Create(DropShadow, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
+                        ImageTransparency = 0.5
                     }):Play()
                 end)
                 
