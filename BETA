@@ -1115,7 +1115,7 @@ function Library:create_ui()
             local Keybind = Instance.new('Frame')
             Keybind.Name = 'Keybind'
             Keybind.BackgroundTransparency = 0.699999988079071
-            Keybind.Position = UDim2.new(0.45, 0, 0.7450000143051147, 0)
+            Keybind.Position = UDim2.new(0.15000000596046448, 0, 0.7350000143051147, 0)
             Keybind.BorderColor3 = Color3.fromRGB(0, 0, 0)
             Keybind.Size = UDim2.new(0, 28, 0, 13)
             Keybind.BorderSizePixel = 0
@@ -1130,7 +1130,7 @@ function Library:create_ui()
             TextLabel.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
             TextLabel.TextColor3 = Color3.fromRGB(209, 222, 255)
             TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
-            TextLabel.Text = 'N/A'
+            TextLabel.Text = 'None'
             TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
             TextLabel.Size = UDim2.new(0, 25, 0, 13)
             TextLabel.BackgroundTransparency = 1
@@ -1249,18 +1249,16 @@ function Library:create_ui()
                     font_params.Width = 10000
             
                     local font_size = TextService:GetTextBoundsAsync(font_params)
-                    -- Для одиночных букв используем меньший базовый размер
-                    local base_width = string.len(keybind_string) == 1 and 20 or 28
-                    local new_width = math.max(base_width, font_size.X + 8)
+                    local new_width = math.max(28, font_size.X + 8)
                     
-                    Keybind.Size = UDim2.fromOffset(new_width, 13) -- Высота остается 13
-                    Keybind.Position = UDim2.new(0.45, 0, 0.7450000143051147, 0)
-                    TextLabel.Size = UDim2.fromOffset(new_width - 8, 13) -- Высота остается 13
+                    Keybind.Size = UDim2.fromOffset(new_width, 13)
+                    Keybind.Position = UDim2.new(0.15000000596046448, 0, 0.7350000143051147, 0) -- Расширяется вправо
+                    TextLabel.Size = UDim2.fromOffset(new_width - 8, 13)
                     TextLabel.TextXAlignment = Enum.TextXAlignment.Center
                 else
-                    Keybind.Size = UDim2.fromOffset(20, 13) -- Высота остается 13
-                    Keybind.Position = UDim2.new(0.45, 0, 0.7450000143051147, 0)
-                    TextLabel.Size = UDim2.fromOffset(12, 13) -- Высота остается 13
+                    Keybind.Size = UDim2.fromOffset(28, 13)
+                    Keybind.Position = UDim2.new(0.15000000596046448, 0, 0.7350000143051147, 0)
+                    TextLabel.Size = UDim2.fromOffset(20, 13)
                     TextLabel.TextXAlignment = Enum.TextXAlignment.Center
                 end
             end
@@ -1306,13 +1304,13 @@ function Library:create_ui()
                         return
                     end
 
-                    if input.KeyCode == Enum.KeyCode.Backspace or input.KeyCode == Enum.KeyCode.Delete then
+                    if input.KeyCode == Enum.KeyCode.Backspace then
                         ModuleManager:scale_keybind(true)
 
                         Library._config._keybinds[settings.flag] = nil
                         Config:save(game.GameId, Library._config)
 
-                        TextLabel.Text = 'N/A'
+                        TextLabel.Text = 'None'
                         
                         if Connections[settings.flag..'_keybind'] then
                             Connections[settings.flag..'_keybind']:Disconnect()
@@ -1356,6 +1354,90 @@ function Library:create_ui()
                 
                 ModuleManager:change_state(not ModuleManager._state)
             end)
+
+            function ModuleManager:create_paragraph(settings: any)
+                LayoutOrderModule = LayoutOrderModule + 1;
+
+                local ParagraphManager = {}
+                
+                if self._size == 0 then
+                    self._size = 11
+                end
+            
+                self._size += settings.customScale or 70
+            
+                if ModuleManager._state then
+                    Module.Size = UDim2.fromOffset(241, 93 + self._size)
+                end
+            
+                Options.Size = UDim2.fromOffset(241, self._size)
+            
+                -- Container Frame
+                local Paragraph = Instance.new('Frame')
+                Paragraph.BackgroundColor3 = Color3.fromRGB(32, 38, 51)
+                Paragraph.BackgroundTransparency = 0.1
+                Paragraph.Size = UDim2.new(0, 207, 0, 30) -- Initial size, auto-resized later
+                Paragraph.BorderSizePixel = 0
+                Paragraph.Name = "Paragraph"
+                Paragraph.AutomaticSize = Enum.AutomaticSize.Y -- Support auto-resizing height
+                Paragraph.Parent = Options
+                Paragraph.LayoutOrder = LayoutOrderModule;
+            
+                local UICorner = Instance.new('UICorner')
+                UICorner.CornerRadius = UDim.new(0, 4)
+                UICorner.Parent = Paragraph
+            
+                -- Title Label
+                local Title = Instance.new('TextLabel')
+                Title.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+                Title.TextColor3 = Color3.fromRGB(210, 210, 210)
+                Title.Text = settings.title or "Title"
+                Title.Size = UDim2.new(1, -10, 0, 20)
+                Title.Position = UDim2.new(0, 5, 0, 5)
+                Title.BackgroundTransparency = 1
+                Title.TextXAlignment = Enum.TextXAlignment.Left
+                Title.TextYAlignment = Enum.TextYAlignment.Center
+                Title.TextSize = 12
+                Title.AutomaticSize = Enum.AutomaticSize.XY
+                Title.Parent = Paragraph
+            
+                -- Body Text
+                local Body = Instance.new('TextLabel')
+                Body.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+                Body.TextColor3 = Color3.fromRGB(180, 180, 180)
+                
+                if not settings.rich then
+                    Body.Text = settings.text or "Skibidi"
+                else
+                    Body.RichText = true
+                    Body.Text = settings.richtext or "<font color='rgb(255,0,0)'>March</font> user"
+                end
+                
+                Body.Size = UDim2.new(1, -10, 0, 20)
+                Body.Position = UDim2.new(0, 5, 0, 30)
+                Body.BackgroundTransparency = 1
+                Body.TextXAlignment = Enum.TextXAlignment.Left
+                Body.TextYAlignment = Enum.TextYAlignment.Top
+                Body.TextSize = 11
+                Body.TextWrapped = true
+                Body.AutomaticSize = Enum.AutomaticSize.XY
+                Body.Parent = Paragraph
+            
+                -- Hover effect for Paragraph (optional)
+                Paragraph.MouseEnter:Connect(function()
+                    TweenService:Create(Paragraph, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        BackgroundColor3 = Color3.fromRGB(42, 50, 66)
+                    }):Play()
+                end)
+            
+                Paragraph.MouseLeave:Connect(function()
+                    TweenService:Create(Paragraph, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        BackgroundColor3 = Color3.fromRGB(32, 38, 51)
+                    }):Play()
+                end)
+
+                return ParagraphManager
+            end
 
             function ModuleManager:create_text(settings: any)
                 LayoutOrderModule = LayoutOrderModule + 1
@@ -1558,7 +1640,7 @@ function Library:create_ui()
                 local KeybindBox = Instance.new("Frame")
                 KeybindBox.Name = "KeybindBox"
                 KeybindBox.Size = UDim2.fromOffset(28, 13)
-                KeybindBox.Position = UDim2.new(1, -45, 0.5, 0)
+                KeybindBox.Position = UDim2.new(1, -50, 0.5, 0)
                 KeybindBox.AnchorPoint = Vector2.new(0, 0.5)
                 KeybindBox.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
                 KeybindBox.BackgroundTransparency = 0.699999988079071
@@ -1647,18 +1729,16 @@ function Library:create_ui()
                         font_params.Width = 10000
                 
                         local font_size = TextService:GetTextBoundsAsync(font_params)
-                        -- Для одиночных букв используем меньший базовый размер
-                        local base_width = string.len(keybind_string) == 1 and 20 or 28
-                        local new_width = math.max(base_width, font_size.X + 8)
+                        local new_width = math.max(28, font_size.X + 8)
+                        local width_diff = new_width - 28 -- Calculate difference from base size
                         
-                        -- Фиксированная правая граница - расширяется только влево
-                        KeybindBox.Size = UDim2.fromOffset(new_width, 13) -- Высота остается 13
-                        KeybindBox.Position = UDim2.new(1, -new_width - 20, 0.5, 0) -- Сдвинули вправо
-                        KeybindLabel.Size = UDim2.fromOffset(new_width - 8, 13) -- Высота остается 13
+                        KeybindBox.Size = UDim2.fromOffset(new_width, 13)
+                        KeybindBox.Position = UDim2.new(1, -50 - width_diff, 0.5, 0)
+                        KeybindLabel.Size = UDim2.fromOffset(new_width - 8, 13)
                     else
-                        KeybindBox.Size = UDim2.fromOffset(20, 13) -- Высота остается 13
-                        KeybindBox.Position = UDim2.new(1, -40, 0.5, 0) -- Сдвинули вправо
-                        KeybindLabel.Size = UDim2.fromOffset(12, 13) -- Высота остается 13
+                        KeybindBox.Size = UDim2.fromOffset(28, 13)
+                        KeybindBox.Position = UDim2.new(1, -50, 0.5, 0)
+                        KeybindLabel.Size = UDim2.fromOffset(20, 13)
                     end
                 end
 
@@ -1705,7 +1785,7 @@ function Library:create_ui()
                         if keyInput.UserInputType ~= Enum.UserInputType.Keyboard then return end
                         if keyInput.KeyCode == Enum.KeyCode.Unknown then return end
             
-                        if keyInput.KeyCode == Enum.KeyCode.Backspace or keyInput.KeyCode == Enum.KeyCode.Delete then
+                        if keyInput.KeyCode == Enum.KeyCode.Backspace then
                             CheckboxManager:scale_keybind(true)
                             Library._config._keybinds[settings.flag] = nil
                             Config:save(game.GameId, Library._config)
@@ -2241,23 +2321,16 @@ function Library:create_ui()
                         -- Update the transparent effect of each option
                         for _, object in Options:GetChildren() do
                             if object.Name == "Option" then
-                                local optionText = string.gsub(object.Text, "^%s*", "") -- Remove leading spaces
-                                table.insert(OptionsChild, optionText)
-                                if table.find(selected, optionText) then
+                                table.insert(OptionsChild, object.Text)
+                                if table.find(selected, object.Text) then
                                     object.TextTransparency = 0.2
-                                    if object:FindFirstChild("Dot") then
-                                        object.Dot.TextTransparency = 0.1
-                                    end
                                 else
                                     object.TextTransparency = 0.6
-                                    if object:FindFirstChild("Dot") then
-                                        object.Dot.TextTransparency = 0.3
-                                    end
                                 end
                             end
                         end
 
-                        CurrentOption.Text = convertStringToTable(CurrentOption.Text);
+                        CurrentTargetValue = convertStringToTable(CurrentOption.Text);
 
                         for _, v in CurrentTargetValue do
                             if not table.find(OptionsChild, v) and table.find(selected, v) then
@@ -2274,17 +2347,10 @@ function Library:create_ui()
                         for _, object in Options:GetChildren() do
                             if object.Name == "Option" then
                                 -- Only update transparency for actual option text buttons
-                                local optionText = string.gsub(object.Text, "^%s*", "") -- Remove leading spaces
-                                if optionText == CurrentOption.Text then
+                                if object.Text == CurrentOption.Text then
                                     object.TextTransparency = 0.2
-                                    if object:FindFirstChild("Dot") then
-                                        object.Dot.TextTransparency = 0.1
-                                    end
                                 else
                                     object.TextTransparency = 0.6
-                                    if object:FindFirstChild("Dot") then
-                                        object.Dot.TextTransparency = 0.3
-                                    end
                                 end
                             end
                         end
@@ -2367,7 +2433,7 @@ function Library:create_ui()
                         Option.Size = UDim2.new(0, 186, 0, 16)
                         Option.TextColor3 = Color3.fromRGB(255, 255, 255)
                         Option.BorderColor3 = Color3.fromRGB(0, 0, 0)
-                        Option.Text = "  " .. ((typeof(value) == "string" and value) or value.Name)
+                        Option.Text = (typeof(value) == "string" and value) or value.Name;
                         Option.AutoButtonColor = false
                         Option.Name = 'Option'
                         Option.BackgroundTransparency = 1
@@ -2387,80 +2453,16 @@ function Library:create_ui()
                         }
                         UIGradient.Parent = Option
 
-                        -- Заменяем Frame на TextLabel с символом "·"
-                        local Dot = Instance.new('TextLabel')
-                        Dot.Name = 'Dot'
-                        Dot.Size = UDim2.fromOffset(8, 16)
-                        Dot.Position = UDim2.new(0, -6, 0.5, 0) -- Сдвинули еще левее
-                        Dot.AnchorPoint = Vector2.new(0, 0.5)
-                        Dot.BackgroundTransparency = 1
-                        Dot.Text = "·"
-                        Dot.TextColor3 = Color3.fromRGB(255, 255, 255)
-                        Dot.TextTransparency = 0.3
-                        Dot.TextSize = 14
-                        Dot.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.Bold)
-                        Dot.TextXAlignment = Enum.TextXAlignment.Center
-                        Dot.TextYAlignment = Enum.TextYAlignment.Center
-                        Dot.BorderSizePixel = 0
-                        Dot.Parent = Option
-
                         Option.MouseButton1Click:Connect(function()
                             if not Library._config._flags[settings.flag] then
                                 Library._config._flags[settings.flag] = {};
                             end;
 
-                            -- Allow cancellation if only one option exists (for both multi and single dropdowns)
-                            if #settings.options == 1 then
-                                local optionText = (typeof(value) == "string" and value) or value.Name
-                                if settings.multi_dropdown then
-                                    -- For multi dropdown with one option
-                                    if table.find(Library._config._flags[settings.flag], value) then
-                                        -- Cancel selection - remove from array
-                                        Library:remove_table_value(Library._config._flags[settings.flag], value)
-                                        CurrentOption.Text = "N/A"
-                                        Config:save(game.GameId, Library._config)
-                                        settings.callback(Library._config._flags[settings.flag])
-                                        -- Update visual state
-                                        for _, obj in Options:GetChildren() do
-                                            if obj.Name == "Option" then
-                                                obj.TextTransparency = 0.6
-                                                if obj:FindFirstChild("Dot") then
-                                                    obj.Dot.TextTransparency = 0.3
-                                                end
-                                            end
-                                        end
-                                        return
-                                    else
-                                        table.insert(Library._config._flags[settings.flag], value)
-                                    end
+                            if settings.multi_dropdown then
+                                if table.find(Library._config._flags[settings.flag], value) then
+                                    Library:remove_table_value(Library._config._flags[settings.flag], value)
                                 else
-                                    -- For single dropdown with one option
-                                    if CurrentOption.Text == optionText then
-                                        -- Cancel selection - set to empty/none
-                                        CurrentOption.Text = "N/A"
-                                        Library._config._flags[settings.flag] = nil
-                                        Config:save(game.GameId, Library._config)
-                                        settings.callback(nil)
-                                        -- Update visual state
-                                        for _, obj in Options:GetChildren() do
-                                            if obj.Name == "Option" then
-                                                obj.TextTransparency = 0.6
-                                                if obj:FindFirstChild("Dot") then
-                                                    obj.Dot.TextTransparency = 0.3
-                                                end
-                                            end
-                                        end
-                                        return
-                                    end
-                                end
-                            else
-                                -- Normal behavior for multiple options
-                                if settings.multi_dropdown then
-                                    if table.find(Library._config._flags[settings.flag], value) then
-                                        Library:remove_table_value(Library._config._flags[settings.flag], value)
-                                    else
-                                        table.insert(Library._config._flags[settings.flag], value)
-                                    end
+                                    table.insert(Library._config._flags[settings.flag], value)
                                 end
                             end
 
@@ -2505,7 +2507,7 @@ function Library:create_ui()
                     self._size = 11
                 end
 
-                self._size += 30 -- Увеличили размер модуля для кнопки
+                self._size += 22
 
                 if ModuleManager._state then
                     Module.Size = UDim2.fromOffset(241, 93 + self._size)
@@ -2516,42 +2518,78 @@ function Library:create_ui()
                 local Button = Instance.new('TextButton')
                 Button.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
                 Button.TextColor3 = Color3.fromRGB(210, 210, 210)
+                Button.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Button.Text = settings.title or "Button"
                 Button.AutoButtonColor = false
-                Button.BackgroundColor3 = Color3.fromRGB(32, 38, 51)
-                Button.BackgroundTransparency = 0.1
+                Button.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
+                Button.BackgroundTransparency = 0.3
                 Button.Name = 'Button'
-                Button.Size = UDim2.new(0, 207, 0, 18) -- Вернули ширину как была
+                Button.Size = UDim2.new(0, 207, 0, 22)
                 Button.BorderSizePixel = 0
                 Button.TextSize = 10
                 Button.Parent = Options
                 Button.LayoutOrder = LayoutOrderModule
 
                 local UICorner = Instance.new('UICorner')
-                UICorner.CornerRadius = UDim.new(0, 4)
+                UICorner.CornerRadius = UDim.new(0, 6)
                 UICorner.Parent = Button
 
+                local UIStroke = Instance.new('UIStroke')
+                UIStroke.Color = Color3.fromRGB(52, 66, 89)
+                UIStroke.Transparency = 0.7
+                UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+                UIStroke.Parent = Button
+
+                local Shadow = Instance.new('Frame')
+                Shadow.Name = 'Shadow'
+                Shadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+                Shadow.BackgroundTransparency = 0.95
+                Shadow.Size = UDim2.new(1, 2, 1, 2)
+                Shadow.Position = UDim2.new(0, -1, 0, 1)
+                Shadow.ZIndex = Button.ZIndex - 1
+                Shadow.Parent = Button
+
+                local ShadowCorner = Instance.new('UICorner')
+                ShadowCorner.CornerRadius = UDim.new(0, 6)
+                ShadowCorner.Parent = Shadow
+
                 Button.MouseEnter:Connect(function()
-                    TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        BackgroundTransparency = 0.05
+                    TweenService:Create(Button, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        BackgroundColor3 = Color3.fromRGB(32, 38, 51),
+                        BackgroundTransparency = 0.1
+                    }):Play()
+                    TweenService:Create(UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        Transparency = 0.4
+                    }):Play()
+                    TweenService:Create(Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        BackgroundTransparency = 0.9
                     }):Play()
                 end)
 
                 Button.MouseLeave:Connect(function()
-                    TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        BackgroundTransparency = 0.1
+                    TweenService:Create(Button, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        BackgroundColor3 = Color3.fromRGB(22, 28, 38),
+                        BackgroundTransparency = 0.3
+                    }):Play()
+                    TweenService:Create(UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        Transparency = 0.7
+                    }):Play()
+                    TweenService:Create(Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        BackgroundTransparency = 0.95
                     }):Play()
                 end)
 
                 Button.MouseButton1Click:Connect(function()
-                    TweenService:Create(Button, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {
-                        BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                    TweenService:Create(Button, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {
+                        BackgroundColor3 = Color3.fromRGB(152, 181, 255),
+                        TextColor3 = Color3.fromRGB(255, 255, 255)
                     }):Play()
                     
-                    task.wait(0.1)
+                    task.wait(0.15)
                     
-                    TweenService:Create(Button, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                        BackgroundColor3 = Color3.fromRGB(32, 38, 51)
+                    TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                        BackgroundColor3 = Color3.fromRGB(32, 38, 51),
+                        TextColor3 = Color3.fromRGB(210, 210, 210)
                     }):Play()
                     
                     if settings.callback then
@@ -2601,8 +2639,8 @@ function Library:create_ui()
 
                 local KeybindBox = Instance.new('Frame')
                 KeybindBox.Name = 'KeybindBox'
-                KeybindBox.Size = UDim2.fromOffset(20, 13) -- Уменьшенный базовый размер
-                KeybindBox.Position = UDim2.new(1, -20, 0.5, 0) -- Позиция справа
+                KeybindBox.Size = UDim2.fromOffset(28, 13)
+                KeybindBox.Position = UDim2.new(1, -28, 0.5, 0)
                 KeybindBox.AnchorPoint = Vector2.new(1, 0.5)
                 KeybindBox.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
                 KeybindBox.BackgroundTransparency = 0.699999988079071
@@ -2615,7 +2653,7 @@ function Library:create_ui()
 
                 local KeybindLabel = Instance.new('TextLabel')
                 KeybindLabel.Name = 'KeybindLabel'
-                KeybindLabel.Size = UDim2.new(0, 12, 0, 13)
+                KeybindLabel.Size = UDim2.new(0, 20, 0, 13)
                 KeybindLabel.AnchorPoint = Vector2.new(0.5, 0.5)
                 KeybindLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
                 KeybindLabel.BackgroundTransparency = 1
@@ -2623,7 +2661,7 @@ function Library:create_ui()
                 KeybindLabel.TextSize = 10
                 KeybindLabel.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
                 KeybindLabel.TextXAlignment = Enum.TextXAlignment.Center
-                KeybindLabel.Text = settings.default or "N/A"
+                KeybindLabel.Text = settings.default or "None"
                 KeybindLabel.Parent = KeybindBox
 
                 function KeybindManager:scale_keybind(empty: boolean)
@@ -2637,21 +2675,16 @@ function Library:create_ui()
                         font_params.Width = 10000
                 
                         local font_size = TextService:GetTextBoundsAsync(font_params)
-                        -- Для одиночных букв используем меньший базовый размер
-                        local base_width = string.len(keybind_string) == 1 and 20 or 28
-                        local new_width = math.max(base_width, font_size.X + 8)
+                        local new_width = math.max(28, font_size.X + 8)
+                        local width_diff = new_width - 28
                         
-                        -- ЖЕЛЕЗНО фиксированная правая граница - ТОЛЬКО расширяется влево
-                        KeybindBox.Size = UDim2.fromOffset(new_width, 13) -- Высота остается 13
-                        -- Позиция ЖЕЛЕЗНО не меняется - всегда одна и та же правая граница
-                        KeybindBox.Position = UDim2.new(1, -5, 0.5, 0) -- ЖЕЛЕЗНО фиксированная позиция (ещё правее)
-                        KeybindBox.AnchorPoint = Vector2.new(1, 0.5) -- Якорь справа
-                        KeybindLabel.Size = UDim2.fromOffset(new_width - 8, 13) -- Высота остается 13
+                        KeybindBox.Size = UDim2.fromOffset(new_width, 13)
+                        KeybindBox.Position = UDim2.new(1, -28 - width_diff, 0.5, 0)
+                        KeybindLabel.Size = UDim2.fromOffset(new_width - 8, 13)
                     else
-                        KeybindBox.Size = UDim2.fromOffset(20, 13) -- Высота остается 13
-                        KeybindBox.Position = UDim2.new(1, -5, 0.5, 0) -- ЖЕЛЕЗНО фиксированная позиция (ещё правее)
-                        KeybindBox.AnchorPoint = Vector2.new(1, 0.5) -- Якорь справа
-                        KeybindLabel.Size = UDim2.fromOffset(12, 13) -- Высота остается 13
+                        KeybindBox.Size = UDim2.fromOffset(28, 13)
+                        KeybindBox.Position = UDim2.new(1, -28, 0.5, 0)
+                        KeybindLabel.Size = UDim2.fromOffset(20, 13)
                     end
                 end
 
@@ -2702,11 +2735,11 @@ function Library:create_ui()
                         if keyInput.UserInputType ~= Enum.UserInputType.Keyboard then return end
                         if keyInput.KeyCode == Enum.KeyCode.Unknown then return end
 
-                        if keyInput.KeyCode == Enum.KeyCode.Backspace or keyInput.KeyCode == Enum.KeyCode.Delete then
+                        if keyInput.KeyCode == Enum.KeyCode.Backspace then
                             KeybindManager:scale_keybind(true)
                             Library._config._keybinds[settings.flag] = nil
                             Config:save(game.GameId, Library._config)
-                            KeybindLabel.Text = settings.default or "N/A"
+                            KeybindLabel.Text = settings.default or "None"
                             if Connections[settings.flag .. "_standalone_keybind"] then
                                 Connections[settings.flag .. "_standalone_keybind"]:Disconnect()
                                 Connections[settings.flag .. "_standalone_keybind"] = nil
@@ -2819,7 +2852,7 @@ function Library:create_ui()
                 if not Library._config._flags[settings.flag] then
                     Library._config._flags[settings.flag] = {
                         checked = false,
-                        BIND = settings.default or "N/A"
+                        BIND = settings.default or "Unknown"
                     }
                 end
             
@@ -2827,7 +2860,7 @@ function Library:create_ui()
                 KeybindBox.Text = Library._config._flags[settings.flag].BIND
 
                 if KeybindBox.Text == "Unknown" then
-                    KeybindBox.Text = "N/A";
+                    KeybindBox.Text = "...";
                 end;
 
                 local UseF_Var = nil;
@@ -2885,8 +2918,8 @@ function Library:create_ui()
                             Config:save(game.GameId, Library._config) -- Save new keybind
                             inputConnection:Disconnect()
                         elseif input.UserInputType == Enum.UserInputType.MouseButton3 then
-                            Library._config._flags[settings.flag].BIND = "N/A"
-                            KeybindBox.Text = "N/A"
+                            Library._config._flags[settings.flag].BIND = "Unknown"
+                            KeybindBox.Text = "..."
                             Config:save(game.GameId, Library._config)
                             inputConnection:Disconnect()
                         end
