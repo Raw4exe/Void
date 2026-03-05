@@ -1962,6 +1962,57 @@ function Library:create_ui()
                 local UICorner = Instance.new('UICorner')
                 UICorner.CornerRadius = UDim.new(1, 0)
                 UICorner.Parent = Drag
+
+                -- Create 5 clickable segments
+                local Segments = Instance.new('Frame')
+                Segments.Name = 'Segments'
+                Segments.Size = UDim2.new(1, 0, 1, 0)
+                Segments.BackgroundTransparency = 1
+                Segments.Parent = Drag
+
+                for i = 1, 5 do
+                    local Segment = Instance.new('TextButton')
+                    Segment.Name = 'Segment' .. i
+                    Segment.Size = UDim2.new(0.2, -1, 1, 0)
+                    Segment.Position = UDim2.new((i-1) * 0.2, (i-1), 0, 0)
+                    Segment.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                    Segment.BackgroundTransparency = 0.95
+                    Segment.BorderSizePixel = 0
+                    Segment.Text = ''
+                    Segment.AutoButtonColor = false
+                    Segment.Parent = Segments
+
+                    local SegmentCorner = Instance.new('UICorner')
+                    SegmentCorner.CornerRadius = UDim.new(1, 0)
+                    SegmentCorner.Parent = Segment
+
+                    -- Acrylic blur effect for segments
+                    AcrylicBlur.new(Segment)
+
+                    -- Hover effects
+                    Segment.MouseEnter:Connect(function()
+                        TweenService:Create(Segment, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                            BackgroundTransparency = 0.8
+                        }):Play()
+                    end)
+
+                    Segment.MouseLeave:Connect(function()
+                        TweenService:Create(Segment, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                            BackgroundTransparency = 0.95
+                        }):Play()
+                    end)
+
+                    -- Click functionality
+                    Segment.MouseButton1Click:Connect(function()
+                        local segment_percentage = (i - 1) / 4 -- 0, 0.25, 0.5, 0.75, 1
+                        local value = settings.minimum_value + (settings.maximum_value - settings.minimum_value) * segment_percentage
+                        SliderManager:set_percentage(value)
+                        
+                        if not settings.ignoresaved then
+                            Config:save(game.GameId, Library._config)
+                        end
+                    end)
+                end
                 
                 local Fill = Instance.new('Frame')
                 Fill.BorderColor3 = Color3.fromRGB(0, 0, 0)
@@ -1973,6 +2024,7 @@ function Library:create_ui()
                 Fill.BorderSizePixel = 0
                 Fill.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
                 Fill.Parent = Drag
+                Fill.ZIndex = 2
                 
                 local UICorner = Instance.new('UICorner')
                 UICorner.CornerRadius = UDim.new(0, 3)
@@ -1994,6 +2046,7 @@ function Library:create_ui()
                 Circle.BorderSizePixel = 0
                 Circle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
                 Circle.Parent = Fill
+                Circle.ZIndex = 3
                 
                 local UICorner = Instance.new('UICorner')
                 UICorner.CornerRadius = UDim.new(1, 0)
@@ -2031,7 +2084,13 @@ function Library:create_ui()
                     local number_threshold = math.clamp(rounded_number, settings.minimum_value, settings.maximum_value)
     
                     Library._config._flags[settings.flag] = number_threshold
-                    Value.Text = number_threshold
+                    
+                    -- Add prefix support
+                    local display_text = tostring(number_threshold)
+                    if settings.prefix then
+                        display_text = settings.prefix .. display_text
+                    end
+                    Value.Text = display_text
     
                     TweenService:Create(Fill, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
                         Size = UDim2.fromOffset(slider_size, Drag.Size.Y.Offset)
@@ -2496,7 +2555,7 @@ function Library:create_ui()
                     self._size = 11
                 end
 
-                self._size += 26
+                self._size += 22
 
                 if ModuleManager._state then
                     Module.Size = UDim2.fromOffset(241, 93 + self._size)
