@@ -1966,8 +1966,8 @@ function Library:create_ui()
                 -- Create 5 clickable segments as small vertical lines
                 local Segments = Instance.new('Frame')
                 Segments.Name = 'Segments'
-                Segments.Size = UDim2.new(1, 0, 1, 8)
-                Segments.Position = UDim2.new(0, 0, 0, -4)
+                Segments.Size = UDim2.new(1, 0, 1, 6)
+                Segments.Position = UDim2.new(0, 0, 0, -3)
                 Segments.BackgroundTransparency = 1
                 Segments.ZIndex = 5
                 Segments.Parent = Drag
@@ -1975,11 +1975,11 @@ function Library:create_ui()
                 for i = 1, 5 do
                     local SegmentLine = Instance.new('Frame')
                     SegmentLine.Name = 'SegmentLine' .. i
-                    SegmentLine.Size = UDim2.new(0, 2, 0, 12)
-                    SegmentLine.Position = UDim2.new((i-1) * 0.25, -1, 0.5, -6)
+                    SegmentLine.Size = UDim2.new(0, 1, 0, 10)
+                    SegmentLine.Position = UDim2.new((i-1) * 0.25, -0.5, 0.5, -5)
                     SegmentLine.AnchorPoint = Vector2.new(0.5, 0.5)
                     SegmentLine.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
-                    SegmentLine.BackgroundTransparency = 0.7
+                    SegmentLine.BackgroundTransparency = 0.8
                     SegmentLine.BorderSizePixel = 0
                     SegmentLine.ZIndex = 6
                     SegmentLine.Parent = Segments
@@ -1988,13 +1988,10 @@ function Library:create_ui()
                     SegmentCorner.CornerRadius = UDim.new(1, 0)
                     SegmentCorner.Parent = SegmentLine
 
-                    -- Acrylic blur effect for segments
-                    AcrylicBlur.new(SegmentLine)
-
                     -- Clickable area (larger than the visual line)
                     local ClickArea = Instance.new('TextButton')
                     ClickArea.Name = 'ClickArea' .. i
-                    ClickArea.Size = UDim2.new(0, 12, 1, 0)
+                    ClickArea.Size = UDim2.new(0, 8, 1, 2)
                     ClickArea.Position = UDim2.new(0.5, 0, 0.5, 0)
                     ClickArea.AnchorPoint = Vector2.new(0.5, 0.5)
                     ClickArea.BackgroundTransparency = 1
@@ -2005,16 +2002,16 @@ function Library:create_ui()
 
                     -- Hover effects
                     ClickArea.MouseEnter:Connect(function()
-                        TweenService:Create(SegmentLine, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                            BackgroundTransparency = 0.3,
-                            Size = UDim2.new(0, 3, 0, 14)
+                        TweenService:Create(SegmentLine, TweenInfo.new(0.15, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                            BackgroundTransparency = 0.4,
+                            Size = UDim2.new(0, 2, 0, 12)
                         }):Play()
                     end)
 
                     ClickArea.MouseLeave:Connect(function()
-                        TweenService:Create(SegmentLine, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                            BackgroundTransparency = 0.7,
-                            Size = UDim2.new(0, 2, 0, 12)
+                        TweenService:Create(SegmentLine, TweenInfo.new(0.15, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                            BackgroundTransparency = 0.8,
+                            Size = UDim2.new(0, 1, 0, 10)
                         }):Play()
                     end)
 
@@ -2025,14 +2022,16 @@ function Library:create_ui()
                         SliderManager:set_percentage(value)
                         
                         -- Visual feedback
-                        TweenService:Create(SegmentLine, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                            BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                        TweenService:Create(SegmentLine, TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                            BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                            BackgroundTransparency = 0.2
                         }):Play()
                         
-                        task.wait(0.1)
+                        task.wait(0.08)
                         
-                        TweenService:Create(SegmentLine, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                            BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                        TweenService:Create(SegmentLine, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                            BackgroundColor3 = Color3.fromRGB(152, 181, 255),
+                            BackgroundTransparency = 0.8
                         }):Play()
                         
                         if not settings.ignoresaved then
@@ -2112,10 +2111,10 @@ function Library:create_ui()
     
                     Library._config._flags[settings.flag] = number_threshold
                     
-                    -- Add prefix support
+                    -- Add suffix support (prefix after value)
                     local display_text = tostring(number_threshold)
                     if settings.prefix then
-                        display_text = settings.prefix .. display_text
+                        display_text = display_text .. settings.prefix
                     end
                     Value.Text = display_text
     
