@@ -1115,7 +1115,7 @@ function Library:create_ui()
             local Keybind = Instance.new('Frame')
             Keybind.Name = 'Keybind'
             Keybind.BackgroundTransparency = 0.699999988079071
-            Keybind.Position = UDim2.new(0.65, 0, 0.7450000143051147, 0)
+            Keybind.Position = UDim2.new(0.45, 0, 0.7450000143051147, 0)
             Keybind.BorderColor3 = Color3.fromRGB(0, 0, 0)
             Keybind.Size = UDim2.new(0, 28, 0, 13)
             Keybind.BorderSizePixel = 0
@@ -1254,12 +1254,12 @@ function Library:create_ui()
                     local new_width = math.max(base_width, font_size.X + 8)
                     
                     Keybind.Size = UDim2.fromOffset(new_width, 13) -- Высота остается 13
-                    Keybind.Position = UDim2.new(0.65, 0, 0.7450000143051147, 0)
+                    Keybind.Position = UDim2.new(0.45, 0, 0.7450000143051147, 0)
                     TextLabel.Size = UDim2.fromOffset(new_width - 8, 13) -- Высота остается 13
                     TextLabel.TextXAlignment = Enum.TextXAlignment.Center
                 else
                     Keybind.Size = UDim2.fromOffset(20, 13) -- Высота остается 13
-                    Keybind.Position = UDim2.new(0.65, 0, 0.7450000143051147, 0)
+                    Keybind.Position = UDim2.new(0.45, 0, 0.7450000143051147, 0)
                     TextLabel.Size = UDim2.fromOffset(12, 13) -- Высота остается 13
                     TextLabel.TextXAlignment = Enum.TextXAlignment.Center
                 end
@@ -2819,7 +2819,7 @@ function Library:create_ui()
                 if not Library._config._flags[settings.flag] then
                     Library._config._flags[settings.flag] = {
                         checked = false,
-                        BIND = settings.default or "Unknown"
+                        BIND = settings.default or "N/A"
                     }
                 end
             
@@ -2827,7 +2827,7 @@ function Library:create_ui()
                 KeybindBox.Text = Library._config._flags[settings.flag].BIND
 
                 if KeybindBox.Text == "Unknown" then
-                    KeybindBox.Text = "...";
+                    KeybindBox.Text = "N/A";
                 end;
 
                 local UseF_Var = nil;
@@ -2885,8 +2885,8 @@ function Library:create_ui()
                             Config:save(game.GameId, Library._config) -- Save new keybind
                             inputConnection:Disconnect()
                         elseif input.UserInputType == Enum.UserInputType.MouseButton3 then
-                            Library._config._flags[settings.flag].BIND = "Unknown"
-                            KeybindBox.Text = "..."
+                            Library._config._flags[settings.flag].BIND = "N/A"
+                            KeybindBox.Text = "N/A"
                             Config:save(game.GameId, Library._config)
                             inputConnection:Disconnect()
                         end
