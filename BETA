@@ -1249,16 +1249,18 @@ function Library:create_ui()
                     font_params.Width = 10000
             
                     local font_size = TextService:GetTextBoundsAsync(font_params)
-                    local new_width = math.max(28, font_size.X + 8)
+                    -- Для одиночных букв используем меньший базовый размер
+                    local base_width = string.len(keybind_string) == 1 and 20 or 28
+                    local new_width = math.max(base_width, font_size.X + 8)
                     
                     Keybind.Size = UDim2.fromOffset(new_width, 13)
-                    Keybind.Position = UDim2.new(0.15000000596046448, 0, 0.7350000143051147, 0) -- Расширяется вправо
+                    Keybind.Position = UDim2.new(0.15000000596046448, 0, 0.7350000143051147, 0)
                     TextLabel.Size = UDim2.fromOffset(new_width - 8, 13)
                     TextLabel.TextXAlignment = Enum.TextXAlignment.Center
                 else
-                    Keybind.Size = UDim2.fromOffset(28, 13)
+                    Keybind.Size = UDim2.fromOffset(20, 13) -- Уменьшенный базовый размер
                     Keybind.Position = UDim2.new(0.15000000596046448, 0, 0.7350000143051147, 0)
-                    TextLabel.Size = UDim2.fromOffset(20, 13)
+                    TextLabel.Size = UDim2.fromOffset(12, 13)
                     TextLabel.TextXAlignment = Enum.TextXAlignment.Center
                 end
             end
@@ -1375,64 +1377,106 @@ function Library:create_ui()
                 -- Container Frame
                 local Paragraph = Instance.new('Frame')
                 Paragraph.BackgroundColor3 = Color3.fromRGB(32, 38, 51)
-                Paragraph.BackgroundTransparency = 0.1
-                Paragraph.Size = UDim2.new(0, 207, 0, 30) -- Initial size, auto-resized later
+                Paragraph.BackgroundTransparency = 0.05
+                Paragraph.Size = UDim2.new(0, 207, 0, 30)
                 Paragraph.BorderSizePixel = 0
                 Paragraph.Name = "Paragraph"
-                Paragraph.AutomaticSize = Enum.AutomaticSize.Y -- Support auto-resizing height
+                Paragraph.AutomaticSize = Enum.AutomaticSize.Y
                 Paragraph.Parent = Options
                 Paragraph.LayoutOrder = LayoutOrderModule;
             
                 local UICorner = Instance.new('UICorner')
-                UICorner.CornerRadius = UDim.new(0, 4)
+                UICorner.CornerRadius = UDim.new(0, 6)
                 UICorner.Parent = Paragraph
+
+                local UIStroke = Instance.new('UIStroke')
+                UIStroke.Color = Color3.fromRGB(152, 181, 255)
+                UIStroke.Transparency = 0.8
+                UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+                UIStroke.Parent = Paragraph
+
+                -- Acrylic blur effect
+                AcrylicBlur.new(Paragraph)
+
+                -- Icon (info symbol)
+                local InfoIcon = Instance.new('Frame')
+                InfoIcon.Size = UDim2.fromOffset(4, 4)
+                InfoIcon.Position = UDim2.new(0, 8, 0, 8)
+                InfoIcon.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                InfoIcon.BorderSizePixel = 0
+                InfoIcon.Parent = Paragraph
+
+                local IconCorner = Instance.new('UICorner')
+                IconCorner.CornerRadius = UDim.new(1, 0)
+                IconCorner.Parent = InfoIcon
             
                 -- Title Label
                 local Title = Instance.new('TextLabel')
                 Title.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
-                Title.TextColor3 = Color3.fromRGB(210, 210, 210)
-                Title.Text = settings.title or "Title"
-                Title.Size = UDim2.new(1, -10, 0, 20)
-                Title.Position = UDim2.new(0, 5, 0, 5)
+                Title.TextColor3 = Color3.fromRGB(152, 181, 255)
+                Title.TextTransparency = 0.2
+                Title.Text = settings.title or "Info"
+                Title.Size = UDim2.new(1, -20, 0, 16)
+                Title.Position = UDim2.new(0, 16, 0, 4)
                 Title.BackgroundTransparency = 1
                 Title.TextXAlignment = Enum.TextXAlignment.Left
                 Title.TextYAlignment = Enum.TextYAlignment.Center
-                Title.TextSize = 12
-                Title.AutomaticSize = Enum.AutomaticSize.XY
+                Title.TextSize = 11
                 Title.Parent = Paragraph
             
                 -- Body Text
                 local Body = Instance.new('TextLabel')
                 Body.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-                Body.TextColor3 = Color3.fromRGB(180, 180, 180)
+                Body.TextColor3 = Color3.fromRGB(200, 200, 200)
+                Body.TextTransparency = 0.3
                 
                 if not settings.rich then
-                    Body.Text = settings.text or "Skibidi"
+                    Body.Text = settings.text or "Information text"
                 else
                     Body.RichText = true
-                    Body.Text = settings.richtext or "<font color='rgb(255,0,0)'>March</font> user"
+                    Body.Text = settings.richtext or "<font color='rgb(152,181,255)'>Info</font> text"
                 end
                 
-                Body.Size = UDim2.new(1, -10, 0, 20)
-                Body.Position = UDim2.new(0, 5, 0, 30)
+                Body.Size = UDim2.new(1, -16, 0, 20)
+                Body.Position = UDim2.new(0, 8, 0, 20)
                 Body.BackgroundTransparency = 1
                 Body.TextXAlignment = Enum.TextXAlignment.Left
                 Body.TextYAlignment = Enum.TextYAlignment.Top
-                Body.TextSize = 11
+                Body.TextSize = 10
                 Body.TextWrapped = true
-                Body.AutomaticSize = Enum.AutomaticSize.XY
+                Body.AutomaticSize = Enum.AutomaticSize.Y
                 Body.Parent = Paragraph
+
+                -- Subtle shadow
+                local Shadow = Instance.new('Frame')
+                Shadow.Name = 'Shadow'
+                Shadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+                Shadow.BackgroundTransparency = 0.97
+                Shadow.Size = UDim2.new(1, 2, 1, 2)
+                Shadow.Position = UDim2.new(0, -1, 0, 1)
+                Shadow.ZIndex = Paragraph.ZIndex - 1
+                Shadow.Parent = Paragraph
+
+                local ShadowCorner = Instance.new('UICorner')
+                ShadowCorner.CornerRadius = UDim.new(0, 6)
+                ShadowCorner.Parent = Shadow
             
-                -- Hover effect for Paragraph (optional)
+                -- Hover effect
                 Paragraph.MouseEnter:Connect(function()
-                    TweenService:Create(Paragraph, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        BackgroundColor3 = Color3.fromRGB(42, 50, 66)
+                    TweenService:Create(Paragraph, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        BackgroundTransparency = 0.02
+                    }):Play()
+                    TweenService:Create(UIStroke, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        Transparency = 0.6
                     }):Play()
                 end)
             
                 Paragraph.MouseLeave:Connect(function()
-                    TweenService:Create(Paragraph, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        BackgroundColor3 = Color3.fromRGB(32, 38, 51)
+                    TweenService:Create(Paragraph, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        BackgroundTransparency = 0.05
+                    }):Play()
+                    TweenService:Create(UIStroke, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        Transparency = 0.8
                     }):Play()
                 end)
 
@@ -1729,16 +1773,18 @@ function Library:create_ui()
                         font_params.Width = 10000
                 
                         local font_size = TextService:GetTextBoundsAsync(font_params)
-                        local new_width = math.max(28, font_size.X + 8)
-                        local width_diff = new_width - 28 -- Calculate difference from base size
+                        -- Для одиночных букв используем меньший базовый размер
+                        local base_width = string.len(keybind_string) == 1 and 20 or 28
+                        local new_width = math.max(base_width, font_size.X + 8)
+                        local width_diff = new_width - base_width
                         
                         KeybindBox.Size = UDim2.fromOffset(new_width, 13)
                         KeybindBox.Position = UDim2.new(1, -50 - width_diff, 0.5, 0)
                         KeybindLabel.Size = UDim2.fromOffset(new_width - 8, 13)
                     else
-                        KeybindBox.Size = UDim2.fromOffset(28, 13)
+                        KeybindBox.Size = UDim2.fromOffset(20, 13) -- Уменьшенный базовый размер
                         KeybindBox.Position = UDim2.new(1, -50, 0.5, 0)
-                        KeybindLabel.Size = UDim2.fromOffset(20, 13)
+                        KeybindLabel.Size = UDim2.fromOffset(12, 13)
                     end
                 end
 
@@ -2321,16 +2367,23 @@ function Library:create_ui()
                         -- Update the transparent effect of each option
                         for _, object in Options:GetChildren() do
                             if object.Name == "Option" then
-                                table.insert(OptionsChild, object.Text)
-                                if table.find(selected, object.Text) then
+                                local optionText = string.gsub(object.Text, "^%s*", "") -- Remove leading spaces
+                                table.insert(OptionsChild, optionText)
+                                if table.find(selected, optionText) then
                                     object.TextTransparency = 0.2
+                                    if object:FindFirstChild("Dot") then
+                                        object.Dot.BackgroundTransparency = 0.1
+                                    end
                                 else
                                     object.TextTransparency = 0.6
+                                    if object:FindFirstChild("Dot") then
+                                        object.Dot.BackgroundTransparency = 0.3
+                                    end
                                 end
                             end
                         end
 
-                        CurrentTargetValue = convertStringToTable(CurrentOption.Text);
+                        CurrentOption.Text = convertStringToTable(CurrentOption.Text);
 
                         for _, v in CurrentTargetValue do
                             if not table.find(OptionsChild, v) and table.find(selected, v) then
@@ -2347,10 +2400,17 @@ function Library:create_ui()
                         for _, object in Options:GetChildren() do
                             if object.Name == "Option" then
                                 -- Only update transparency for actual option text buttons
-                                if object.Text == CurrentOption.Text then
+                                local optionText = string.gsub(object.Text, "^%s*", "") -- Remove leading spaces
+                                if optionText == CurrentOption.Text then
                                     object.TextTransparency = 0.2
+                                    if object:FindFirstChild("Dot") then
+                                        object.Dot.BackgroundTransparency = 0.1
+                                    end
                                 else
                                     object.TextTransparency = 0.6
+                                    if object:FindFirstChild("Dot") then
+                                        object.Dot.BackgroundTransparency = 0.3
+                                    end
                                 end
                             end
                         end
@@ -2433,7 +2493,7 @@ function Library:create_ui()
                         Option.Size = UDim2.new(0, 186, 0, 16)
                         Option.TextColor3 = Color3.fromRGB(255, 255, 255)
                         Option.BorderColor3 = Color3.fromRGB(0, 0, 0)
-                        Option.Text = (typeof(value) == "string" and value) or value.Name;
+                        Option.Text = "  " .. ((typeof(value) == "string" and value) or value.Name)
                         Option.AutoButtonColor = false
                         Option.Name = 'Option'
                         Option.BackgroundTransparency = 1
@@ -2453,6 +2513,20 @@ function Library:create_ui()
                         }
                         UIGradient.Parent = Option
 
+                        local Dot = Instance.new('Frame')
+                        Dot.Name = 'Dot'
+                        Dot.Size = UDim2.fromOffset(3, 3)
+                        Dot.Position = UDim2.new(0, 2, 0.5, 0)
+                        Dot.AnchorPoint = Vector2.new(0, 0.5)
+                        Dot.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                        Dot.BackgroundTransparency = 0.3
+                        Dot.BorderSizePixel = 0
+                        Dot.Parent = Option
+
+                        local DotCorner = Instance.new('UICorner')
+                        DotCorner.CornerRadius = UDim.new(1, 0)
+                        DotCorner.Parent = Dot
+
                         Option.MouseButton1Click:Connect(function()
                             if not Library._config._flags[settings.flag] then
                                 Library._config._flags[settings.flag] = {};
@@ -2463,6 +2537,18 @@ function Library:create_ui()
                                     Library:remove_table_value(Library._config._flags[settings.flag], value)
                                 else
                                     table.insert(Library._config._flags[settings.flag], value)
+                                end
+                            else
+                                -- For single dropdown with only one option, allow cancellation
+                                if #settings.options == 1 then
+                                    if CurrentOption.Text == ((typeof(value) == "string" and value) or value.Name) then
+                                        -- Cancel selection - set to empty/none
+                                        CurrentOption.Text = "None"
+                                        Library._config._flags[settings.flag] = nil
+                                        Config:save(game.GameId, Library._config)
+                                        settings.callback(nil)
+                                        return
+                                    end
                                 end
                             end
 
@@ -2518,11 +2604,10 @@ function Library:create_ui()
                 local Button = Instance.new('TextButton')
                 Button.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
                 Button.TextColor3 = Color3.fromRGB(210, 210, 210)
-                Button.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Button.Text = settings.title or "Button"
                 Button.AutoButtonColor = false
-                Button.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
-                Button.BackgroundTransparency = 0.3
+                Button.BackgroundColor3 = Color3.fromRGB(32, 38, 51)
+                Button.BackgroundTransparency = 0.1
                 Button.Name = 'Button'
                 Button.Size = UDim2.new(0, 207, 0, 22)
                 Button.BorderSizePixel = 0
@@ -2531,69 +2616,38 @@ function Library:create_ui()
                 Button.LayoutOrder = LayoutOrderModule
 
                 local UICorner = Instance.new('UICorner')
-                UICorner.CornerRadius = UDim.new(0, 6)
+                UICorner.CornerRadius = UDim.new(0, 4)
                 UICorner.Parent = Button
 
-                local UIStroke = Instance.new('UIStroke')
-                UIStroke.Color = Color3.fromRGB(52, 66, 89)
-                UIStroke.Transparency = 0.7
-                UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-                UIStroke.Parent = Button
-
-                local Shadow = Instance.new('Frame')
-                Shadow.Name = 'Shadow'
-                Shadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-                Shadow.BackgroundTransparency = 0.95
-                Shadow.Size = UDim2.new(1, 2, 1, 2)
-                Shadow.Position = UDim2.new(0, -1, 0, 1)
-                Shadow.ZIndex = Button.ZIndex - 1
-                Shadow.Parent = Button
-
-                local ShadowCorner = Instance.new('UICorner')
-                ShadowCorner.CornerRadius = UDim.new(0, 6)
-                ShadowCorner.Parent = Shadow
-
                 Button.MouseEnter:Connect(function()
-                    TweenService:Create(Button, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        BackgroundColor3 = Color3.fromRGB(32, 38, 51),
-                        BackgroundTransparency = 0.1
-                    }):Play()
-                    TweenService:Create(UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        Transparency = 0.4
-                    }):Play()
-                    TweenService:Create(Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        BackgroundTransparency = 0.9
+                    TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        BackgroundTransparency = 0.05
                     }):Play()
                 end)
 
                 Button.MouseLeave:Connect(function()
-                    TweenService:Create(Button, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        BackgroundColor3 = Color3.fromRGB(22, 28, 38),
-                        BackgroundTransparency = 0.3
-                    }):Play()
-                    TweenService:Create(UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        Transparency = 0.7
-                    }):Play()
-                    TweenService:Create(Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        BackgroundTransparency = 0.95
+                    TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        BackgroundTransparency = 0.1
                     }):Play()
                 end)
 
                 Button.MouseButton1Click:Connect(function()
-                    TweenService:Create(Button, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {
-                        BackgroundColor3 = Color3.fromRGB(152, 181, 255),
-                        TextColor3 = Color3.fromRGB(255, 255, 255)
+                    TweenService:Create(Button, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {
+                        BackgroundColor3 = Color3.fromRGB(152, 181, 255)
                     }):Play()
                     
-                    task.wait(0.15)
+                    task.wait(0.1)
                     
-                    TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                        BackgroundColor3 = Color3.fromRGB(32, 38, 51),
-                        TextColor3 = Color3.fromRGB(210, 210, 210)
+                    TweenService:Create(Button, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                        BackgroundColor3 = Color3.fromRGB(32, 38, 51)
                     }):Play()
                     
                     if settings.callback then
                         settings.callback()
+                    end
+                end)
+
+                return ButtonManager
                     end
                 end)
 
@@ -2639,8 +2693,8 @@ function Library:create_ui()
 
                 local KeybindBox = Instance.new('Frame')
                 KeybindBox.Name = 'KeybindBox'
-                KeybindBox.Size = UDim2.fromOffset(28, 13)
-                KeybindBox.Position = UDim2.new(1, -28, 0.5, 0)
+                KeybindBox.Size = UDim2.fromOffset(20, 13) -- Уменьшенный базовый размер
+                KeybindBox.Position = UDim2.new(1, -20, 0.5, 0) -- Позиция справа
                 KeybindBox.AnchorPoint = Vector2.new(1, 0.5)
                 KeybindBox.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
                 KeybindBox.BackgroundTransparency = 0.699999988079071
@@ -2653,7 +2707,7 @@ function Library:create_ui()
 
                 local KeybindLabel = Instance.new('TextLabel')
                 KeybindLabel.Name = 'KeybindLabel'
-                KeybindLabel.Size = UDim2.new(0, 20, 0, 13)
+                KeybindLabel.Size = UDim2.new(0, 12, 0, 13)
                 KeybindLabel.AnchorPoint = Vector2.new(0.5, 0.5)
                 KeybindLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
                 KeybindLabel.BackgroundTransparency = 1
@@ -2675,16 +2729,18 @@ function Library:create_ui()
                         font_params.Width = 10000
                 
                         local font_size = TextService:GetTextBoundsAsync(font_params)
-                        local new_width = math.max(28, font_size.X + 8)
-                        local width_diff = new_width - 28
+                        -- Для одиночных букв используем меньший базовый размер
+                        local base_width = string.len(keybind_string) == 1 and 20 or 28
+                        local new_width = math.max(base_width, font_size.X + 8)
                         
+                        -- ТОЛЬКО расширяется влево, позиция не меняется
                         KeybindBox.Size = UDim2.fromOffset(new_width, 13)
-                        KeybindBox.Position = UDim2.new(1, -28 - width_diff, 0.5, 0)
+                        KeybindBox.Position = UDim2.new(1, -new_width, 0.5, 0) -- Фиксированная правая граница
                         KeybindLabel.Size = UDim2.fromOffset(new_width - 8, 13)
                     else
-                        KeybindBox.Size = UDim2.fromOffset(28, 13)
-                        KeybindBox.Position = UDim2.new(1, -28, 0.5, 0)
-                        KeybindLabel.Size = UDim2.fromOffset(20, 13)
+                        KeybindBox.Size = UDim2.fromOffset(20, 13)
+                        KeybindBox.Position = UDim2.new(1, -20, 0.5, 0) -- Фиксированная правая граница
+                        KeybindLabel.Size = UDim2.fromOffset(12, 13)
                     end
                 end
 
