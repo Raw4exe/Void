@@ -2648,10 +2648,6 @@ function Library:create_ui()
                 end)
 
                 return ButtonManager
-                    end
-                end)
-
-                return ButtonManager
             end
 
             function ModuleManager:create_keybind(settings: any)
