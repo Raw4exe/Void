@@ -1115,7 +1115,7 @@ function Library:create_ui()
             local Keybind = Instance.new('Frame')
             Keybind.Name = 'Keybind'
             Keybind.BackgroundTransparency = 0.699999988079071
-            Keybind.Position = UDim2.new(0.15000000596046448, 0, 0.7350000143051147, 0)
+            Keybind.Position = UDim2.new(0.15000000596046448, 0, 0.7650000143051147, 0)
             Keybind.BorderColor3 = Color3.fromRGB(0, 0, 0)
             Keybind.Size = UDim2.new(0, 28, 0, 13)
             Keybind.BorderSizePixel = 0
@@ -1254,12 +1254,12 @@ function Library:create_ui()
                     local new_width = math.max(base_width, font_size.X + 8)
                     
                     Keybind.Size = UDim2.fromOffset(new_width, 13) -- Высота остается 13
-                    Keybind.Position = UDim2.new(0.15000000596046448, 0, 0.7350000143051147, 0)
+                    Keybind.Position = UDim2.new(0.15000000596046448, 0, 0.7650000143051147, 0)
                     TextLabel.Size = UDim2.fromOffset(new_width - 8, 13) -- Высота остается 13
                     TextLabel.TextXAlignment = Enum.TextXAlignment.Center
                 else
                     Keybind.Size = UDim2.fromOffset(20, 13) -- Высота остается 13
-                    Keybind.Position = UDim2.new(0.15000000596046448, 0, 0.7350000143051147, 0)
+                    Keybind.Position = UDim2.new(0.15000000596046448, 0, 0.7650000143051147, 0)
                     TextLabel.Size = UDim2.fromOffset(12, 13) -- Высота остается 13
                     TextLabel.TextXAlignment = Enum.TextXAlignment.Center
                 end
@@ -1306,7 +1306,7 @@ function Library:create_ui()
                         return
                     end
 
-                    if input.KeyCode == Enum.KeyCode.Backspace then
+                    if input.KeyCode == Enum.KeyCode.Backspace or input.KeyCode == Enum.KeyCode.Delete then
                         ModuleManager:scale_keybind(true)
 
                         Library._config._keybinds[settings.flag] = nil
@@ -1719,14 +1719,14 @@ function Library:create_ui()
                         -- Для одиночных букв используем меньший базовый размер
                         local base_width = string.len(keybind_string) == 1 and 20 or 28
                         local new_width = math.max(base_width, font_size.X + 8)
-                        local width_diff = new_width - base_width
                         
+                        -- Фиксированная правая граница - расширяется только влево
                         KeybindBox.Size = UDim2.fromOffset(new_width, 13) -- Высота остается 13
-                        KeybindBox.Position = UDim2.new(1, -50 - width_diff, 0.5, 0)
+                        KeybindBox.Position = UDim2.new(1, -new_width - 5, 0.5, 0) -- Фиксированная правая граница
                         KeybindLabel.Size = UDim2.fromOffset(new_width - 8, 13) -- Высота остается 13
                     else
                         KeybindBox.Size = UDim2.fromOffset(20, 13) -- Высота остается 13
-                        KeybindBox.Position = UDim2.new(1, -50, 0.5, 0)
+                        KeybindBox.Position = UDim2.new(1, -25, 0.5, 0) -- Фиксированная правая граница
                         KeybindLabel.Size = UDim2.fromOffset(12, 13) -- Высота остается 13
                     end
                 end
@@ -1774,7 +1774,7 @@ function Library:create_ui()
                         if keyInput.UserInputType ~= Enum.UserInputType.Keyboard then return end
                         if keyInput.KeyCode == Enum.KeyCode.Unknown then return end
             
-                        if keyInput.KeyCode == Enum.KeyCode.Backspace then
+                        if keyInput.KeyCode == Enum.KeyCode.Backspace or keyInput.KeyCode == Enum.KeyCode.Delete then
                             CheckboxManager:scale_keybind(true)
                             Library._config._keybinds[settings.flag] = nil
                             Config:save(game.GameId, Library._config)
@@ -2460,7 +2460,7 @@ function Library:create_ui()
                         local Dot = Instance.new('TextLabel')
                         Dot.Name = 'Dot'
                         Dot.Size = UDim2.fromOffset(8, 16)
-                        Dot.Position = UDim2.new(0, -2, 0.5, 0) -- Подвинули левее
+                        Dot.Position = UDim2.new(0, -6, 0.5, 0) -- Сдвинули еще левее
                         Dot.AnchorPoint = Vector2.new(0, 0.5)
                         Dot.BackgroundTransparency = 1
                         Dot.Text = "·"
@@ -2485,7 +2485,7 @@ function Library:create_ui()
                                     table.insert(Library._config._flags[settings.flag], value)
                                 end
                             else
-                                -- For single dropdown with only one option, allow cancellation
+                                -- For single dropdown, allow cancellation if only one option exists
                                 if #settings.options == 1 then
                                     local optionText = (typeof(value) == "string" and value) or value.Name
                                     if CurrentOption.Text == optionText then
@@ -2743,7 +2743,7 @@ function Library:create_ui()
                         if keyInput.UserInputType ~= Enum.UserInputType.Keyboard then return end
                         if keyInput.KeyCode == Enum.KeyCode.Unknown then return end
 
-                        if keyInput.KeyCode == Enum.KeyCode.Backspace then
+                        if keyInput.KeyCode == Enum.KeyCode.Backspace or keyInput.KeyCode == Enum.KeyCode.Delete then
                             KeybindManager:scale_keybind(true)
                             Library._config._keybinds[settings.flag] = nil
                             Config:save(game.GameId, Library._config)
