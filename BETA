@@ -2450,7 +2450,7 @@ function Library:create_ui()
                     self._size = 11
                 end
 
-                self._size += 32
+                self._size += 26
 
                 if ModuleManager._state then
                     Module.Size = UDim2.fromOffset(241, 93 + self._size)
@@ -2467,9 +2467,9 @@ function Library:create_ui()
                 Button.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
                 Button.BackgroundTransparency = 0.3
                 Button.Name = 'Button'
-                Button.Size = UDim2.new(0, 207, 0, 28)
+                Button.Size = UDim2.new(0, 207, 0, 22)
                 Button.BorderSizePixel = 0
-                Button.TextSize = 11
+                Button.TextSize = 10
                 Button.Parent = Options
                 Button.LayoutOrder = LayoutOrderModule
 
@@ -2486,9 +2486,9 @@ function Library:create_ui()
                 local Shadow = Instance.new('Frame')
                 Shadow.Name = 'Shadow'
                 Shadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-                Shadow.BackgroundTransparency = 0.8
-                Shadow.Size = UDim2.new(1, 4, 1, 4)
-                Shadow.Position = UDim2.new(0, -2, 0, 2)
+                Shadow.BackgroundTransparency = 0.95
+                Shadow.Size = UDim2.new(1, 2, 1, 2)
+                Shadow.Position = UDim2.new(0, -1, 0, 1)
                 Shadow.ZIndex = Button.ZIndex - 1
                 Shadow.Parent = Button
 
@@ -2505,7 +2505,7 @@ function Library:create_ui()
                         Transparency = 0.4
                     }):Play()
                     TweenService:Create(Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        BackgroundTransparency = 0.6
+                        BackgroundTransparency = 0.9
                     }):Play()
                 end)
 
@@ -2518,17 +2518,21 @@ function Library:create_ui()
                         Transparency = 0.7
                     }):Play()
                     TweenService:Create(Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        BackgroundTransparency = 0.8
+                        BackgroundTransparency = 0.95
                     }):Play()
                 end)
 
                 Button.MouseButton1Click:Connect(function()
-                    TweenService:Create(Button, TweenInfo.new(0.1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        Size = UDim2.new(0, 205, 0, 26)
+                    TweenService:Create(Button, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {
+                        BackgroundColor3 = Color3.fromRGB(152, 181, 255),
+                        TextColor3 = Color3.fromRGB(255, 255, 255)
                     }):Play()
-                    task.wait(0.1)
-                    TweenService:Create(Button, TweenInfo.new(0.1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        Size = UDim2.new(0, 207, 0, 28)
+                    
+                    task.wait(0.15)
+                    
+                    TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                        BackgroundColor3 = Color3.fromRGB(32, 38, 51),
+                        TextColor3 = Color3.fromRGB(210, 210, 210)
                     }):Play()
                     
                     if settings.callback then
