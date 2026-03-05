@@ -25,7 +25,7 @@ function convertStringToTable(inputString)
     local result = {}
     for value in string.gmatch(inputString, "([^,]+)") do
         local trimmedValue = value:match("^%s*(.-)%s*$")
-        tablein(result, trimmedValue)
+        table.insert(result, trimmedValue)
     end
 
     return result
@@ -658,92 +658,6 @@ function Library:create_ui()
     Minimize.TextSize = 14
     Minimize.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Minimize.Parent = Handler
-    
-    -- Stylish Acrylic Button
-    local StylishButton = Instance.new('TextButton')
-    StylishButton.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
-    StylishButton.TextColor3 = Color3.fromRGB(210, 210, 210)
-    StylishButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    StylishButton.Text = '✨'
-    StylishButton.AutoButtonColor = false
-    StylishButton.Name = 'StylishButton'
-    StylishButton.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
-    StylishButton.BackgroundTransparency = 0.2
-    StylishButton.Position = UDim2.new(0.92, 0, 0.025, 0)
-    StylishButton.Size = UDim2.new(0, 32, 0, 20)
-    StylishButton.BorderSizePixel = 0
-    StylishButton.TextSize = 12
-    StylishButton.Parent = Handler
-    
-    local ButtonCorner = Instance.new('UICorner')
-    ButtonCorner.CornerRadius = UDim.new(0, 6)
-    ButtonCorner.Parent = StylishButton
-    
-    local ButtonStroke = Instance.new('UIStroke')
-    ButtonStroke.Color = Color3.fromRGB(152, 181, 255)
-    ButtonStroke.Transparency = 0.6
-    ButtonStroke.Thickness = 1
-    ButtonStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-    ButtonStroke.Parent = StylishButton
-    
-    local ButtonGradient = Instance.new('UIGradient')
-    ButtonGradient.Color = ColorSequence.new{
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(32, 38, 51)),
-        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(22, 28, 38)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(18, 22, 30))
-    }
-    ButtonGradient.Rotation = 45
-    ButtonGradient.Parent = StylishButton
-    
-    -- Acrylic blur effect for the button
-    AcrylicBlur.new(StylishButton)
-    
-    -- Button hover effects
-    StylishButton.MouseEnter:Connect(function()
-        TweenService:Create(StylishButton, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-            BackgroundTransparency = 0.1,
-            Size = UDim2.new(0, 34, 0, 22)
-        }):Play()
-        TweenService:Create(ButtonStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-            Transparency = 0.3
-        }):Play()
-        TweenService:Create(StylishButton, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-            TextColor3 = Color3.fromRGB(255, 255, 255)
-        }):Play()
-    end)
-    
-    StylishButton.MouseLeave:Connect(function()
-        TweenService:Create(StylishButton, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-            BackgroundTransparency = 0.2,
-            Size = UDim2.new(0, 32, 0, 20)
-        }):Play()
-        TweenService:Create(ButtonStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-            Transparency = 0.6
-        }):Play()
-        TweenService:Create(StylishButton, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-            TextColor3 = Color3.fromRGB(210, 210, 210)
-        }):Play()
-    end)
-    
-    StylishButton.MouseButton1Click:Connect(function()
-        -- Button click animation
-        TweenService:Create(StylishButton, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {
-            Size = UDim2.new(0, 30, 0, 18)
-        }):Play()
-        
-        task.wait(0.1)
-        
-        TweenService:Create(StylishButton, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-            Size = UDim2.new(0, 34, 0, 22)
-        }):Play()
-        
-        -- Add your custom functionality here
-        Library.SendNotification({
-            title = "Stylish Button", 
-            text = "Button clicked! ✨", 
-            duration = 2
-        })
-    end)
     
     local UIScale = Instance.new('UIScale')
     UIScale.Parent = Container    
@@ -2527,188 +2441,89 @@ function Library:create_ui()
                 return DropdownManager
             end
 
-            function ModuleManager:create_feature(settings)
-
-                local checked = false;
-                
+            function ModuleManager:create_button(settings: any)
                 LayoutOrderModule = LayoutOrderModule + 1
-            
+
+                local ButtonManager = {}
+
                 if self._size == 0 then
                     self._size = 11
                 end
-            
-                self._size += 20
-            
+
+                self._size += 22
+
                 if ModuleManager._state then
-                    Module.Size = UDim2.fromOffset(241, 93 + self._size);
+                    Module.Size = UDim2.fromOffset(241, 93 + self._size)
                 end
-            
-                Options.Size = UDim2.fromOffset(241, self._size);
-            
-                local FeatureContainer = Instance.new("Frame")
-                FeatureContainer.Size = UDim2.new(0, 207, 0, 16)
-                FeatureContainer.BackgroundTransparency = 1
-                FeatureContainer.Parent = Options
-                FeatureContainer.LayoutOrder = LayoutOrderModule
-            
-                local UIListLayout = Instance.new("UIListLayout")
-                UIListLayout.FillDirection = Enum.FillDirection.Horizontal
-                UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-                UIListLayout.Parent = FeatureContainer
-            
-                local FeatureButton = Instance.new("TextButton")
-                FeatureButton.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
-                FeatureButton.TextSize = 11;
-                FeatureButton.Size = UDim2.new(1, -35, 0, 16)
-                FeatureButton.BackgroundColor3 = Color3.fromRGB(32, 38, 51)
-                FeatureButton.TextColor3 = Color3.fromRGB(210, 210, 210)
-                FeatureButton.Text = "    " .. settings.title or "    " .. "Feature"
-                FeatureButton.AutoButtonColor = false
-                FeatureButton.TextXAlignment = Enum.TextXAlignment.Left
-                FeatureButton.TextTransparency = 0.2
-                FeatureButton.Parent = FeatureContainer
-            
-                local RightContainer = Instance.new("Frame")
-                RightContainer.Size = UDim2.new(0, 45, 0, 16)
-                RightContainer.BackgroundTransparency = 1
-                RightContainer.Parent = FeatureContainer
-            
-                local RightLayout = Instance.new("UIListLayout")
-                RightLayout.Padding = UDim.new(0.1, 0)
-                RightLayout.FillDirection = Enum.FillDirection.Horizontal
-                RightLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
-                RightLayout.SortOrder = Enum.SortOrder.LayoutOrder
-                RightLayout.Parent = RightContainer
-            
-                local KeybindBox = Instance.new("TextLabel")
-                KeybindBox.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
-                KeybindBox.Size = UDim2.new(0, 15, 0, 15)
-                KeybindBox.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
-                KeybindBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-                KeybindBox.TextSize = 11
-                KeybindBox.BackgroundTransparency = 1
-                KeybindBox.LayoutOrder = 2;
-                KeybindBox.Parent = RightContainer
-            
-                local KeybindButton = Instance.new("TextButton")
-                KeybindButton.Size = UDim2.new(1, 0, 1, 0)
-                KeybindButton.BackgroundTransparency = 1
-                KeybindButton.TextTransparency = 1
-                KeybindButton.Parent = KeybindBox
 
-                local CheckboxCorner = Instance.new("UICorner", KeybindBox)
-                CheckboxCorner.CornerRadius = UDim.new(0, 3)
+                Options.Size = UDim2.fromOffset(241, self._size)
 
-                local UIStroke = Instance.new("UIStroke", KeybindBox)
-                UIStroke.Color = Color3.fromRGB(152, 181, 255)
-                UIStroke.Thickness = 1
+                local Button = Instance.new('TextButton')
+                Button.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+                Button.TextColor3 = Color3.fromRGB(210, 210, 210)
+                Button.BorderColor3 = Color3.fromRGB(0, 0, 0)
+                Button.Text = settings.title or "Button"
+                Button.AutoButtonColor = false
+                Button.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
+                Button.BackgroundTransparency = 0.3
+                Button.Name = 'Button'
+                Button.Size = UDim2.new(0, 207, 0, 18)
+                Button.BorderSizePixel = 0
+                Button.TextSize = 10
+                Button.Parent = Options
+                Button.LayoutOrder = LayoutOrderModule
+
+                local UICorner = Instance.new('UICorner')
+                UICorner.CornerRadius = UDim.new(0, 6)
+                UICorner.Parent = Button
+
+                local UIStroke = Instance.new('UIStroke')
+                UIStroke.Color = Color3.fromRGB(52, 66, 89)
+                UIStroke.Transparency = 0.7
                 UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-            
-                if not Library._config._flags then
-                    Library._config._flags = {}
-                end
-            
-                if not Library._config._flags[settings.flag] then
-                    Library._config._flags[settings.flag] = {
-                        checked = false,
-                        BIND = settings.default or "Unknown"
-                    }
-                end
-            
-                checked = Library._config._flags[settings.flag].checked
-                KeybindBox.Text = Library._config._flags[settings.flag].BIND
+                UIStroke.Parent = Button
 
-                if KeybindBox.Text == "Unknown" then
-                    KeybindBox.Text = "...";
-                end;
+                -- Acrylic blur effect for the button
+                AcrylicBlur.new(Button)
 
-                local UseF_Var = nil;
-            
-                if not settings.disablecheck then
-                    local Checkbox = Instance.new("TextButton")
-                    Checkbox.Size = UDim2.new(0, 15, 0, 15)
-                    Checkbox.BackgroundColor3 = checked and Color3.fromRGB(152, 181, 255) or Color3.fromRGB(32, 38, 51)
-                    Checkbox.Text = ""
-                    Checkbox.Parent = RightContainer
-                    Checkbox.LayoutOrder = 1;
-
-                    local UIStroke = Instance.new("UIStroke", Checkbox)
-                    UIStroke.Color = Color3.fromRGB(152, 181, 255)
-                    UIStroke.Thickness = 1
-                    UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-                
-                    local CheckboxCorner = Instance.new("UICorner")
-                    CheckboxCorner.CornerRadius = UDim.new(0, 3)
-                    CheckboxCorner.Parent = Checkbox
-            
-                    local function toggleState()
-                        checked = not checked
-                        Checkbox.BackgroundColor3 = checked and Color3.fromRGB(152, 181, 255) or Color3.fromRGB(32, 38, 51)
-                        Library._config._flags[settings.flag].checked = checked
-                        Config:save(game.GameId, Library._config)
-                        if settings.callback then
-                            settings.callback(checked)
-                        end
-                    end
-
-                    UseF_Var = toggleState
-                
-                    Checkbox.MouseButton1Click:Connect(toggleState)
-
-                else
-
-                    UseF_Var = function()
-                        settings.button_callback();
-                    end;
-
-                end;
-            
-                KeybindButton.MouseButton1Click:Connect(function()
-                    KeybindBox.Text = "..."
-                    local inputConnection
-                    inputConnection = game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
-                        if gameProcessed then return end
-                        if input.UserInputType == Enum.UserInputType.Keyboard then
-                            local newKey = input.KeyCode.Name
-                            Library._config._flags[settings.flag].BIND = newKey
-                            if newKey ~= "Unknown" then
-                                KeybindBox.Text = newKey;
-                            end;
-                            Config:save(game.GameId, Library._config) -- Save new keybind
-                            inputConnection:Disconnect()
-                        elseif input.UserInputType == Enum.UserInputType.MouseButton3 then
-                            Library._config._flags[settings.flag].BIND = "Unknown"
-                            KeybindBox.Text = "..."
-                            Config:save(game.GameId, Library._config)
-                            inputConnection:Disconnect()
-                        end
-                    end)
-                    Connections["keybind_input_" .. settings.flag] = inputConnection
-                end)
-            
-                local keyPressConnection
-                keyPressConnection = game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
-                    if gameProcessed then return end
-                    if input.UserInputType == Enum.UserInputType.Keyboard then
-                        if input.KeyCode.Name == Library._config._flags[settings.flag].BIND then
-                            UseF_Var();
-                        end
-                    end
-                end)
-                Connections["keybind_press_" .. settings.flag] = keyPressConnection
-            
-                FeatureButton.MouseButton1Click:Connect(function()
-                    if settings.button_callback then
-                        settings.button_callback()
-                    end
+                Button.MouseEnter:Connect(function()
+                    TweenService:Create(Button, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        BackgroundColor3 = Color3.fromRGB(32, 38, 51),
+                        BackgroundTransparency = 0.1
+                    }):Play()
+                    TweenService:Create(UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        Transparency = 0.4
+                    }):Play()
                 end)
 
-                if not settings.disablecheck then
-                    settings.callback(checked);
-                end;
-            
-                return FeatureContainer
-            end                    
+                Button.MouseLeave:Connect(function()
+                    TweenService:Create(Button, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        BackgroundColor3 = Color3.fromRGB(22, 28, 38),
+                        BackgroundTransparency = 0.3
+                    }):Play()
+                    TweenService:Create(UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        Transparency = 0.7
+                    }):Play()
+                end)
+
+                Button.MouseButton1Click:Connect(function()
+                    TweenService:Create(Button, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {
+                        BackgroundColor3 = Color3.fromRGB(152, 181, 255),
+                        BackgroundTransparency = 0.2
+                    }):Play()
+                    
+                    task.wait(0.15)
+                    
+                    TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+                        BackgroundColor3 = Color3.fromRGB(32, 38, 51),
+                        BackgroundTransparency = 0.1
+                    }):Play()
+                    
+                    settings.callback()
+                end)
+
+                return ButtonManager
+            end
 
             return ModuleManager
         end
