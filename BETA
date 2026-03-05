@@ -1281,7 +1281,7 @@ function Library:create_ui()
                 ModuleManager:scale_keybind()
             end
 
-            Connections[settings.flag..'_input_began'] = Keybind.InputBegan:Connect(function(input: InputObject)
+            Connections[settings.flag..'_input_began'] = Keybind.InputBegan:Connect(function(input: InputObject, gameProcessed: boolean)
                 if Library._choosing_keybind then
                     return
                 end
@@ -1348,6 +1348,11 @@ function Library:create_ui()
             end)
 
             Header.MouseButton1Click:Connect(function()
+                -- Don't toggle module if we're choosing a keybind
+                if Library._choosing_keybind then
+                    return
+                end
+                
                 ModuleManager:change_state(not ModuleManager._state)
             end)
 
@@ -1962,84 +1967,8 @@ function Library:create_ui()
                 local UICorner = Instance.new('UICorner')
                 UICorner.CornerRadius = UDim.new(1, 0)
                 UICorner.Parent = Drag
-
-                -- Create 5 clickable segments as small vertical lines
-                local Segments = Instance.new('Frame')
-                Segments.Name = 'Segments'
-                Segments.Size = UDim2.new(1, 0, 1, 6)
-                Segments.Position = UDim2.new(0, 0, 0, -3)
-                Segments.BackgroundTransparency = 1
-                Segments.ZIndex = 5
-                Segments.Parent = Drag
-
-                for i = 1, 5 do
-                    local SegmentLine = Instance.new('Frame')
-                    SegmentLine.Name = 'SegmentLine' .. i
-                    SegmentLine.Size = UDim2.new(0, 1, 0, 10)
-                    SegmentLine.Position = UDim2.new((i-1) * 0.25, -0.5, 0.5, -5)
-                    SegmentLine.AnchorPoint = Vector2.new(0.5, 0.5)
-                    SegmentLine.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
-                    SegmentLine.BackgroundTransparency = 0.8
-                    SegmentLine.BorderSizePixel = 0
-                    SegmentLine.ZIndex = 6
-                    SegmentLine.Parent = Segments
-
-                    local SegmentCorner = Instance.new('UICorner')
-                    SegmentCorner.CornerRadius = UDim.new(1, 0)
-                    SegmentCorner.Parent = SegmentLine
-
-                    -- Clickable area (larger than the visual line)
-                    local ClickArea = Instance.new('TextButton')
-                    ClickArea.Name = 'ClickArea' .. i
-                    ClickArea.Size = UDim2.new(0, 8, 1, 2)
-                    ClickArea.Position = UDim2.new(0.5, 0, 0.5, 0)
-                    ClickArea.AnchorPoint = Vector2.new(0.5, 0.5)
-                    ClickArea.BackgroundTransparency = 1
-                    ClickArea.Text = ''
-                    ClickArea.AutoButtonColor = false
-                    ClickArea.ZIndex = 7
-                    ClickArea.Parent = SegmentLine
-
-                    -- Hover effects
-                    ClickArea.MouseEnter:Connect(function()
-                        TweenService:Create(SegmentLine, TweenInfo.new(0.15, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                            BackgroundTransparency = 0.4,
-                            Size = UDim2.new(0, 2, 0, 12)
-                        }):Play()
-                    end)
-
-                    ClickArea.MouseLeave:Connect(function()
-                        TweenService:Create(SegmentLine, TweenInfo.new(0.15, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                            BackgroundTransparency = 0.8,
-                            Size = UDim2.new(0, 1, 0, 10)
-                        }):Play()
-                    end)
-
-                    -- Click functionality
-                    ClickArea.MouseButton1Click:Connect(function()
-                        local segment_percentage = (i - 1) / 4 -- 0, 0.25, 0.5, 0.75, 1
-                        local value = settings.minimum_value + (settings.maximum_value - settings.minimum_value) * segment_percentage
-                        SliderManager:set_percentage(value)
-                        
-                        -- Visual feedback
-                        TweenService:Create(SegmentLine, TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                            BackgroundColor3 = Color3.fromRGB(255, 255, 255),
-                            BackgroundTransparency = 0.2
-                        }):Play()
-                        
-                        task.wait(0.08)
-                        
-                        TweenService:Create(SegmentLine, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                            BackgroundColor3 = Color3.fromRGB(152, 181, 255),
-                            BackgroundTransparency = 0.8
-                        }):Play()
-                        
-                        if not settings.ignoresaved then
-                            Config:save(game.GameId, Library._config)
-                        end
-                    end)
-                end
                 
+                local Fill = Instance.new('Frame')
                 local Fill = Instance.new('Frame')
                 Fill.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Fill.AnchorPoint = Vector2.new(0, 0.5)
@@ -2050,7 +1979,6 @@ function Library:create_ui()
                 Fill.BorderSizePixel = 0
                 Fill.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
                 Fill.Parent = Drag
-                Fill.ZIndex = 2
                 
                 local UICorner = Instance.new('UICorner')
                 UICorner.CornerRadius = UDim.new(0, 3)
@@ -2072,7 +2000,6 @@ function Library:create_ui()
                 Circle.BorderSizePixel = 0
                 Circle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
                 Circle.Parent = Fill
-                Circle.ZIndex = 3
                 
                 local UICorner = Instance.new('UICorner')
                 UICorner.CornerRadius = UDim.new(1, 0)
