@@ -2480,7 +2480,7 @@ function Library:create_ui()
                     self._size = 11
                 end
 
-                self._size += 22
+                self._size += 30 -- Увеличили размер модуля для кнопки
 
                 if ModuleManager._state then
                     Module.Size = UDim2.fromOffset(241, 93 + self._size)
@@ -2496,7 +2496,7 @@ function Library:create_ui()
                 Button.BackgroundColor3 = Color3.fromRGB(32, 38, 51)
                 Button.BackgroundTransparency = 0.1
                 Button.Name = 'Button'
-                Button.Size = UDim2.new(0, 207, 0, 22)
+                Button.Size = UDim2.new(0, 180, 0, 18) -- Сделали кнопку меньше
                 Button.BorderSizePixel = 0
                 Button.TextSize = 10
                 Button.Parent = Options
@@ -2598,7 +2598,7 @@ function Library:create_ui()
                 KeybindLabel.TextSize = 10
                 KeybindLabel.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
                 KeybindLabel.TextXAlignment = Enum.TextXAlignment.Center
-                KeybindLabel.Text = settings.default or "None"
+                KeybindLabel.Text = settings.default or "N/A"
                 KeybindLabel.Parent = KeybindBox
 
                 function KeybindManager:scale_keybind(empty: boolean)
