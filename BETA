@@ -1250,10 +1250,9 @@ function Library:create_ui()
             
                     local font_size = TextService:GetTextBoundsAsync(font_params)
                     local new_width = math.max(28, font_size.X + 8)
-                    local width_diff = new_width - 28 -- Calculate difference from base size
                     
                     Keybind.Size = UDim2.fromOffset(new_width, 13)
-                    Keybind.Position = UDim2.new(0.15000000596046448, -width_diff, 0.7350000143051147, 0)
+                    Keybind.Position = UDim2.new(0.15000000596046448, 0, 0.7350000143051147, 0) -- Расширяется вправо
                     TextLabel.Size = UDim2.fromOffset(new_width - 8, 13)
                     TextLabel.TextXAlignment = Enum.TextXAlignment.Center
                 else
