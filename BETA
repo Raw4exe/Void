@@ -1115,7 +1115,7 @@ function Library:create_ui()
             local Keybind = Instance.new('Frame')
             Keybind.Name = 'Keybind'
             Keybind.BackgroundTransparency = 0.699999988079071
-            Keybind.Position = UDim2.new(0.85, 0, 0.7450000143051147, 0)
+            Keybind.Position = UDim2.new(0.65, 0, 0.7450000143051147, 0)
             Keybind.BorderColor3 = Color3.fromRGB(0, 0, 0)
             Keybind.Size = UDim2.new(0, 28, 0, 13)
             Keybind.BorderSizePixel = 0
@@ -1254,12 +1254,12 @@ function Library:create_ui()
                     local new_width = math.max(base_width, font_size.X + 8)
                     
                     Keybind.Size = UDim2.fromOffset(new_width, 13) -- Высота остается 13
-                    Keybind.Position = UDim2.new(0.85, 0, 0.7450000143051147, 0)
+                    Keybind.Position = UDim2.new(0.65, 0, 0.7450000143051147, 0)
                     TextLabel.Size = UDim2.fromOffset(new_width - 8, 13) -- Высота остается 13
                     TextLabel.TextXAlignment = Enum.TextXAlignment.Center
                 else
                     Keybind.Size = UDim2.fromOffset(20, 13) -- Высота остается 13
-                    Keybind.Position = UDim2.new(0.85, 0, 0.7450000143051147, 0)
+                    Keybind.Position = UDim2.new(0.65, 0, 0.7450000143051147, 0)
                     TextLabel.Size = UDim2.fromOffset(12, 13) -- Высота остается 13
                     TextLabel.TextXAlignment = Enum.TextXAlignment.Center
                 end
@@ -2409,16 +2409,32 @@ function Library:create_ui()
                                 Library._config._flags[settings.flag] = {};
                             end;
 
-                            if settings.multi_dropdown then
-                                if table.find(Library._config._flags[settings.flag], value) then
-                                    Library:remove_table_value(Library._config._flags[settings.flag], value)
+                            -- Allow cancellation if only one option exists (for both multi and single dropdowns)
+                            if #settings.options == 1 then
+                                local optionText = (typeof(value) == "string" and value) or value.Name
+                                if settings.multi_dropdown then
+                                    -- For multi dropdown with one option
+                                    if table.find(Library._config._flags[settings.flag], value) then
+                                        -- Cancel selection - remove from array
+                                        Library:remove_table_value(Library._config._flags[settings.flag], value)
+                                        CurrentOption.Text = "N/A"
+                                        Config:save(game.GameId, Library._config)
+                                        settings.callback(Library._config._flags[settings.flag])
+                                        -- Update visual state
+                                        for _, obj in Options:GetChildren() do
+                                            if obj.Name == "Option" then
+                                                obj.TextTransparency = 0.6
+                                                if obj:FindFirstChild("Dot") then
+                                                    obj.Dot.TextTransparency = 0.3
+                                                end
+                                            end
+                                        end
+                                        return
+                                    else
+                                        table.insert(Library._config._flags[settings.flag], value)
+                                    end
                                 else
-                                    table.insert(Library._config._flags[settings.flag], value)
-                                end
-                            else
-                                -- For single dropdown, allow cancellation if only one option exists
-                                if #settings.options == 1 then
-                                    local optionText = (typeof(value) == "string" and value) or value.Name
+                                    -- For single dropdown with one option
                                     if CurrentOption.Text == optionText then
                                         -- Cancel selection - set to empty/none
                                         CurrentOption.Text = "N/A"
@@ -2435,6 +2451,15 @@ function Library:create_ui()
                                             end
                                         end
                                         return
+                                    end
+                                end
+                            else
+                                -- Normal behavior for multiple options
+                                if settings.multi_dropdown then
+                                    if table.find(Library._config._flags[settings.flag], value) then
+                                        Library:remove_table_value(Library._config._flags[settings.flag], value)
+                                    else
+                                        table.insert(Library._config._flags[settings.flag], value)
                                     end
                                 end
                             end
@@ -2496,7 +2521,7 @@ function Library:create_ui()
                 Button.BackgroundColor3 = Color3.fromRGB(32, 38, 51)
                 Button.BackgroundTransparency = 0.1
                 Button.Name = 'Button'
-                Button.Size = UDim2.new(0, 180, 0, 18) -- Сделали кнопку меньше
+                Button.Size = UDim2.new(0, 207, 0, 18) -- Вернули ширину как была
                 Button.BorderSizePixel = 0
                 Button.TextSize = 10
                 Button.Parent = Options
@@ -2619,12 +2644,12 @@ function Library:create_ui()
                         -- ЖЕЛЕЗНО фиксированная правая граница - ТОЛЬКО расширяется влево
                         KeybindBox.Size = UDim2.fromOffset(new_width, 13) -- Высота остается 13
                         -- Позиция ЖЕЛЕЗНО не меняется - всегда одна и та же правая граница
-                        KeybindBox.Position = UDim2.new(1, -10, 0.5, 0) -- ЖЕЛЕЗНО фиксированная позиция (подвинули правее)
+                        KeybindBox.Position = UDim2.new(1, -5, 0.5, 0) -- ЖЕЛЕЗНО фиксированная позиция (ещё правее)
                         KeybindBox.AnchorPoint = Vector2.new(1, 0.5) -- Якорь справа
                         KeybindLabel.Size = UDim2.fromOffset(new_width - 8, 13) -- Высота остается 13
                     else
                         KeybindBox.Size = UDim2.fromOffset(20, 13) -- Высота остается 13
-                        KeybindBox.Position = UDim2.new(1, -10, 0.5, 0) -- ЖЕЛЕЗНО фиксированная позиция (подвинули правее)
+                        KeybindBox.Position = UDim2.new(1, -5, 0.5, 0) -- ЖЕЛЕЗНО фиксированная позиция (ещё правее)
                         KeybindBox.AnchorPoint = Vector2.new(1, 0.5) -- Якорь справа
                         KeybindLabel.Size = UDim2.fromOffset(12, 13) -- Высота остается 13
                     end
