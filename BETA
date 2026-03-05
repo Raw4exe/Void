@@ -1115,7 +1115,7 @@ function Library:create_ui()
             local Keybind = Instance.new('Frame')
             Keybind.Name = 'Keybind'
             Keybind.BackgroundTransparency = 0.699999988079071
-            Keybind.Position = UDim2.new(0.88, 0, 0.7450000143051147, 0)
+            Keybind.Position = UDim2.new(0.85, 0, 0.7450000143051147, 0)
             Keybind.BorderColor3 = Color3.fromRGB(0, 0, 0)
             Keybind.Size = UDim2.new(0, 28, 0, 13)
             Keybind.BorderSizePixel = 0
@@ -1254,12 +1254,12 @@ function Library:create_ui()
                     local new_width = math.max(base_width, font_size.X + 8)
                     
                     Keybind.Size = UDim2.fromOffset(new_width, 13) -- Высота остается 13
-                    Keybind.Position = UDim2.new(0.88, 0, 0.7450000143051147, 0)
+                    Keybind.Position = UDim2.new(0.85, 0, 0.7450000143051147, 0)
                     TextLabel.Size = UDim2.fromOffset(new_width - 8, 13) -- Высота остается 13
                     TextLabel.TextXAlignment = Enum.TextXAlignment.Center
                 else
                     Keybind.Size = UDim2.fromOffset(20, 13) -- Высота остается 13
-                    Keybind.Position = UDim2.new(0.88, 0, 0.7450000143051147, 0)
+                    Keybind.Position = UDim2.new(0.85, 0, 0.7450000143051147, 0)
                     TextLabel.Size = UDim2.fromOffset(12, 13) -- Высота остается 13
                     TextLabel.TextXAlignment = Enum.TextXAlignment.Center
                 end
@@ -1356,67 +1356,6 @@ function Library:create_ui()
                 
                 ModuleManager:change_state(not ModuleManager._state)
             end)
-
-            function ModuleManager:create_paragraph(settings: any)
-                LayoutOrderModule = LayoutOrderModule + 1;
-
-                local ParagraphManager = {}
-                
-                if self._size == 0 then
-                    self._size = 11
-                end
-            
-                self._size += settings.customScale or 32 -- Стандартный размер как у других элементов
-            
-                if ModuleManager._state then
-                    Module.Size = UDim2.fromOffset(241, 93 + self._size)
-                end
-            
-                Options.Size = UDim2.fromOffset(241, self._size)
-            
-                -- Контейнер в стиле других элементов
-                local Paragraph = Instance.new('Frame')
-                Paragraph.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
-                Paragraph.BackgroundTransparency = 0.8999999761581421 -- Как у других элементов
-                Paragraph.Size = UDim2.new(0, 207, 0, 22) -- Стандартная высота
-                Paragraph.BorderSizePixel = 0
-                Paragraph.Name = "Paragraph"
-                Paragraph.AutomaticSize = Enum.AutomaticSize.Y
-                Paragraph.Parent = Options
-                Paragraph.LayoutOrder = LayoutOrderModule;
-            
-                local UICorner = Instance.new('UICorner')
-                UICorner.CornerRadius = UDim.new(0, 4) -- Стандартный радиус
-                UICorner.Parent = Paragraph
-
-                -- Убрали границу для соответствия стилю
-            
-                -- Текст в стиле других элементов
-                local Body = Instance.new('TextLabel')
-                Body.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
-                Body.TextColor3 = Color3.fromRGB(255, 255, 255)
-                Body.TextTransparency = 0.20000000298023224 -- Как у других элементов
-                
-                if not settings.rich then
-                    Body.Text = settings.text or "Information text"
-                else
-                    Body.RichText = true
-                    Body.Text = settings.richtext or "<font color='rgb(152,181,255)'>Info</font> text"
-                end
-                
-                Body.Size = UDim2.new(1, -16, 0, 13)
-                Body.Position = UDim2.new(0, 8, 0.5, 0)
-                Body.AnchorPoint = Vector2.new(0, 0.5)
-                Body.BackgroundTransparency = 1
-                Body.TextXAlignment = Enum.TextXAlignment.Left
-                Body.TextYAlignment = Enum.TextYAlignment.Center
-                Body.TextSize = 10
-                Body.TextWrapped = true
-                Body.AutomaticSize = Enum.AutomaticSize.Y
-                Body.Parent = Paragraph
-
-                return ParagraphManager
-            end
 
             function ModuleManager:create_text(settings: any)
                 LayoutOrderModule = LayoutOrderModule + 1
@@ -2482,7 +2421,7 @@ function Library:create_ui()
                                     local optionText = (typeof(value) == "string" and value) or value.Name
                                     if CurrentOption.Text == optionText then
                                         -- Cancel selection - set to empty/none
-                                        CurrentOption.Text = "None"
+                                        CurrentOption.Text = "N/A"
                                         Library._config._flags[settings.flag] = nil
                                         Config:save(game.GameId, Library._config)
                                         settings.callback(nil)
@@ -2680,12 +2619,12 @@ function Library:create_ui()
                         -- ЖЕЛЕЗНО фиксированная правая граница - ТОЛЬКО расширяется влево
                         KeybindBox.Size = UDim2.fromOffset(new_width, 13) -- Высота остается 13
                         -- Позиция ЖЕЛЕЗНО не меняется - всегда одна и та же правая граница
-                        KeybindBox.Position = UDim2.new(1, -20, 0.5, 0) -- ЖЕЛЕЗНО фиксированная позиция
+                        KeybindBox.Position = UDim2.new(1, -10, 0.5, 0) -- ЖЕЛЕЗНО фиксированная позиция (подвинули правее)
                         KeybindBox.AnchorPoint = Vector2.new(1, 0.5) -- Якорь справа
                         KeybindLabel.Size = UDim2.fromOffset(new_width - 8, 13) -- Высота остается 13
                     else
                         KeybindBox.Size = UDim2.fromOffset(20, 13) -- Высота остается 13
-                        KeybindBox.Position = UDim2.new(1, -20, 0.5, 0) -- ЖЕЛЕЗНО фиксированная позиция
+                        KeybindBox.Position = UDim2.new(1, -10, 0.5, 0) -- ЖЕЛЕЗНО фиксированная позиция (подвинули правее)
                         KeybindBox.AnchorPoint = Vector2.new(1, 0.5) -- Якорь справа
                         KeybindLabel.Size = UDim2.fromOffset(12, 13) -- Высота остается 13
                     end
@@ -2742,7 +2681,7 @@ function Library:create_ui()
                             KeybindManager:scale_keybind(true)
                             Library._config._keybinds[settings.flag] = nil
                             Config:save(game.GameId, Library._config)
-                            KeybindLabel.Text = settings.default or "None"
+                            KeybindLabel.Text = settings.default or "N/A"
                             if Connections[settings.flag .. "_standalone_keybind"] then
                                 Connections[settings.flag .. "_standalone_keybind"]:Disconnect()
                                 Connections[settings.flag .. "_standalone_keybind"] = nil
