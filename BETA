@@ -1117,7 +1117,7 @@ function Library:create_ui()
             Keybind.BackgroundTransparency = 0.699999988079071
             Keybind.Position = UDim2.new(0.15000000596046448, 0, 0.7350000143051147, 0)
             Keybind.BorderColor3 = Color3.fromRGB(0, 0, 0)
-            Keybind.Size = UDim2.new(0, 33, 0, 15)
+            Keybind.Size = UDim2.new(0, 28, 0, 13)
             Keybind.BorderSizePixel = 0
             Keybind.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
             Keybind.Parent = Header
@@ -1249,17 +1249,17 @@ function Library:create_ui()
                     font_params.Width = 10000
             
                     local font_size = TextService:GetTextBoundsAsync(font_params)
-                    local new_width = math.max(33, font_size.X + 8)
+                    local new_width = math.max(28, font_size.X + 8)
                     local width_diff = new_width - Keybind.Size.X.Offset
                     
-                    Keybind.Size = UDim2.fromOffset(new_width, 15)
+                    Keybind.Size = UDim2.fromOffset(new_width, 13)
                     Keybind.Position = UDim2.new(0.15000000596046448, -width_diff, 0.7350000143051147, 0)
                     TextLabel.Size = UDim2.fromOffset(new_width - 8, 13)
                     TextLabel.TextXAlignment = Enum.TextXAlignment.Center
                 else
-                    Keybind.Size = UDim2.fromOffset(33, 15)
+                    Keybind.Size = UDim2.fromOffset(28, 13)
                     Keybind.Position = UDim2.new(0.15000000596046448, 0, 0.7350000143051147, 0)
-                    TextLabel.Size = UDim2.fromOffset(25, 13)
+                    TextLabel.Size = UDim2.fromOffset(20, 13)
                     TextLabel.TextXAlignment = Enum.TextXAlignment.Center
                 end
             end
@@ -1635,7 +1635,7 @@ function Library:create_ui()
 
                 local KeybindBox = Instance.new("Frame")
                 KeybindBox.Name = "KeybindBox"
-                KeybindBox.Size = UDim2.fromOffset(33, 15)
+                KeybindBox.Size = UDim2.fromOffset(28, 13)
                 KeybindBox.Position = UDim2.new(1, -50, 0.5, 0)
                 KeybindBox.AnchorPoint = Vector2.new(0, 0.5)
                 KeybindBox.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
@@ -1725,16 +1725,16 @@ function Library:create_ui()
                         font_params.Width = 10000
                 
                         local font_size = TextService:GetTextBoundsAsync(font_params)
-                        local new_width = math.max(33, font_size.X + 8)
+                        local new_width = math.max(28, font_size.X + 8)
                         local width_diff = new_width - KeybindBox.Size.X.Offset
                         
-                        KeybindBox.Size = UDim2.fromOffset(new_width, 15)
+                        KeybindBox.Size = UDim2.fromOffset(new_width, 13)
                         KeybindBox.Position = UDim2.new(1, -50 - width_diff, 0.5, 0)
                         KeybindLabel.Size = UDim2.fromOffset(new_width - 8, 13)
                     else
-                        KeybindBox.Size = UDim2.fromOffset(33, 15)
+                        KeybindBox.Size = UDim2.fromOffset(28, 13)
                         KeybindBox.Position = UDim2.new(1, -50, 0.5, 0)
-                        KeybindLabel.Size = UDim2.fromOffset(25, 13)
+                        KeybindLabel.Size = UDim2.fromOffset(20, 13)
                     end
                 end
 
@@ -1963,50 +1963,77 @@ function Library:create_ui()
                 UICorner.CornerRadius = UDim.new(1, 0)
                 UICorner.Parent = Drag
 
-                -- Create 5 clickable segments
+                -- Create 5 clickable segments as small vertical lines
                 local Segments = Instance.new('Frame')
                 Segments.Name = 'Segments'
-                Segments.Size = UDim2.new(1, 0, 1, 0)
+                Segments.Size = UDim2.new(1, 0, 1, 8)
+                Segments.Position = UDim2.new(0, 0, 0, -4)
                 Segments.BackgroundTransparency = 1
+                Segments.ZIndex = 5
                 Segments.Parent = Drag
 
                 for i = 1, 5 do
-                    local Segment = Instance.new('TextButton')
-                    Segment.Name = 'Segment' .. i
-                    Segment.Size = UDim2.new(0.2, -1, 1, 0)
-                    Segment.Position = UDim2.new((i-1) * 0.2, (i-1), 0, 0)
-                    Segment.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
-                    Segment.BackgroundTransparency = 0.95
-                    Segment.BorderSizePixel = 0
-                    Segment.Text = ''
-                    Segment.AutoButtonColor = false
-                    Segment.Parent = Segments
+                    local SegmentLine = Instance.new('Frame')
+                    SegmentLine.Name = 'SegmentLine' .. i
+                    SegmentLine.Size = UDim2.new(0, 2, 0, 12)
+                    SegmentLine.Position = UDim2.new((i-1) * 0.25, -1, 0.5, -6)
+                    SegmentLine.AnchorPoint = Vector2.new(0.5, 0.5)
+                    SegmentLine.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                    SegmentLine.BackgroundTransparency = 0.7
+                    SegmentLine.BorderSizePixel = 0
+                    SegmentLine.ZIndex = 6
+                    SegmentLine.Parent = Segments
 
                     local SegmentCorner = Instance.new('UICorner')
                     SegmentCorner.CornerRadius = UDim.new(1, 0)
-                    SegmentCorner.Parent = Segment
+                    SegmentCorner.Parent = SegmentLine
 
                     -- Acrylic blur effect for segments
-                    AcrylicBlur.new(Segment)
+                    AcrylicBlur.new(SegmentLine)
+
+                    -- Clickable area (larger than the visual line)
+                    local ClickArea = Instance.new('TextButton')
+                    ClickArea.Name = 'ClickArea' .. i
+                    ClickArea.Size = UDim2.new(0, 12, 1, 0)
+                    ClickArea.Position = UDim2.new(0.5, 0, 0.5, 0)
+                    ClickArea.AnchorPoint = Vector2.new(0.5, 0.5)
+                    ClickArea.BackgroundTransparency = 1
+                    ClickArea.Text = ''
+                    ClickArea.AutoButtonColor = false
+                    ClickArea.ZIndex = 7
+                    ClickArea.Parent = SegmentLine
 
                     -- Hover effects
-                    Segment.MouseEnter:Connect(function()
-                        TweenService:Create(Segment, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                            BackgroundTransparency = 0.8
+                    ClickArea.MouseEnter:Connect(function()
+                        TweenService:Create(SegmentLine, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                            BackgroundTransparency = 0.3,
+                            Size = UDim2.new(0, 3, 0, 14)
                         }):Play()
                     end)
 
-                    Segment.MouseLeave:Connect(function()
-                        TweenService:Create(Segment, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                            BackgroundTransparency = 0.95
+                    ClickArea.MouseLeave:Connect(function()
+                        TweenService:Create(SegmentLine, TweenInfo.new(0.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                            BackgroundTransparency = 0.7,
+                            Size = UDim2.new(0, 2, 0, 12)
                         }):Play()
                     end)
 
                     -- Click functionality
-                    Segment.MouseButton1Click:Connect(function()
+                    ClickArea.MouseButton1Click:Connect(function()
                         local segment_percentage = (i - 1) / 4 -- 0, 0.25, 0.5, 0.75, 1
                         local value = settings.minimum_value + (settings.maximum_value - settings.minimum_value) * segment_percentage
                         SliderManager:set_percentage(value)
+                        
+                        -- Visual feedback
+                        TweenService:Create(SegmentLine, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                            BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                        }):Play()
+                        
+                        task.wait(0.1)
+                        
+                        TweenService:Create(SegmentLine, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                            BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                        }):Play()
                         
                         if not settings.ignoresaved then
                             Config:save(game.GameId, Library._config)
