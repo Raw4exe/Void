@@ -25,7 +25,7 @@ function convertStringToTable(inputString)
     local result = {}
     for value in string.gmatch(inputString, "([^,]+)") do
         local trimmedValue = value:match("^%s*(.-)%s*$")
-        table.insert(result, trimmedValue)
+        tablein(result, trimmedValue)
     end
 
     return result
@@ -47,14 +47,14 @@ local CoreGui = cloneref(game:GetService('CoreGui'))
 local Debris = cloneref(game:GetService('Debris'))
 
 local mouse = Players.LocalPlayer:GetMouse()
-local old_Zen = CoreGui:FindFirstChild('Zen')
+local old_March = CoreGui:FindFirstChild('March')
 
-if old_Zen then
-    Debris:AddItem(old_Zen, 0)
+if old_March then
+    Debris:AddItem(old_March, 0)
 end
 
-if not isfolder("Zen") then
-    makefolder("Zen")
+if not isfolder("March") then
+    makefolder("March")
 end
 
 
@@ -283,7 +283,7 @@ local Config = setmetatable({
     save = function(self: any, file_name: any, config: any)
         local success_save, result = pcall(function()
             local flags = HttpService:JSONEncode(config)
-            writefile('Zen/'..file_name..'.json', flags)
+            writefile('March/'..file_name..'.json', flags)
         end)
     
         if not success_save then
@@ -292,13 +292,13 @@ local Config = setmetatable({
     end,
     load = function(self: any, file_name: any, config: any)
         local success_load, result = pcall(function()
-            if not isfile('Zen/'..file_name..'.json') then
+            if not isfile('March/'..file_name..'.json') then
                 self:save(file_name, config)
         
                 return
             end
         
-            local flags = readfile('Zen/'..file_name..'.json')
+            local flags = readfile('March/'..file_name..'.json')
         
             if not flags then
                 self:save(file_name, config)
@@ -523,7 +523,7 @@ function Library:create_ui()
 
     local March = Instance.new('ScreenGui')
     March.ResetOnSpawn = false
-    March.Name = 'Zen'
+    March.Name = 'March'
     March.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     March.Parent = CoreGui
     
@@ -583,7 +583,7 @@ function Library:create_ui()
     ClientName.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
     ClientName.TextColor3 = Color3.fromRGB(152, 181, 255)
     ClientName.TextTransparency = 0.20000000298023224
-    ClientName.Text = 'Zen'
+    ClientName.Text = 'March'
     ClientName.Name = 'ClientName'
     ClientName.Size = UDim2.new(0, 31, 0, 13)
     ClientName.AnchorPoint = Vector2.new(0, 0.5)
@@ -658,6 +658,92 @@ function Library:create_ui()
     Minimize.TextSize = 14
     Minimize.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Minimize.Parent = Handler
+    
+    -- Stylish Acrylic Button
+    local StylishButton = Instance.new('TextButton')
+    StylishButton.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+    StylishButton.TextColor3 = Color3.fromRGB(210, 210, 210)
+    StylishButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    StylishButton.Text = '✨'
+    StylishButton.AutoButtonColor = false
+    StylishButton.Name = 'StylishButton'
+    StylishButton.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
+    StylishButton.BackgroundTransparency = 0.2
+    StylishButton.Position = UDim2.new(0.92, 0, 0.025, 0)
+    StylishButton.Size = UDim2.new(0, 32, 0, 20)
+    StylishButton.BorderSizePixel = 0
+    StylishButton.TextSize = 12
+    StylishButton.Parent = Handler
+    
+    local ButtonCorner = Instance.new('UICorner')
+    ButtonCorner.CornerRadius = UDim.new(0, 6)
+    ButtonCorner.Parent = StylishButton
+    
+    local ButtonStroke = Instance.new('UIStroke')
+    ButtonStroke.Color = Color3.fromRGB(152, 181, 255)
+    ButtonStroke.Transparency = 0.6
+    ButtonStroke.Thickness = 1
+    ButtonStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    ButtonStroke.Parent = StylishButton
+    
+    local ButtonGradient = Instance.new('UIGradient')
+    ButtonGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(32, 38, 51)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(22, 28, 38)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(18, 22, 30))
+    }
+    ButtonGradient.Rotation = 45
+    ButtonGradient.Parent = StylishButton
+    
+    -- Acrylic blur effect for the button
+    AcrylicBlur.new(StylishButton)
+    
+    -- Button hover effects
+    StylishButton.MouseEnter:Connect(function()
+        TweenService:Create(StylishButton, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.1,
+            Size = UDim2.new(0, 34, 0, 22)
+        }):Play()
+        TweenService:Create(ButtonStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            Transparency = 0.3
+        }):Play()
+        TweenService:Create(StylishButton, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            TextColor3 = Color3.fromRGB(255, 255, 255)
+        }):Play()
+    end)
+    
+    StylishButton.MouseLeave:Connect(function()
+        TweenService:Create(StylishButton, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0.2,
+            Size = UDim2.new(0, 32, 0, 20)
+        }):Play()
+        TweenService:Create(ButtonStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            Transparency = 0.6
+        }):Play()
+        TweenService:Create(StylishButton, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+            TextColor3 = Color3.fromRGB(210, 210, 210)
+        }):Play()
+    end)
+    
+    StylishButton.MouseButton1Click:Connect(function()
+        -- Button click animation
+        TweenService:Create(StylishButton, TweenInfo.new(0.1, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {
+            Size = UDim2.new(0, 30, 0, 18)
+        }):Play()
+        
+        task.wait(0.1)
+        
+        TweenService:Create(StylishButton, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+            Size = UDim2.new(0, 34, 0, 22)
+        }):Play()
+        
+        -- Add your custom functionality here
+        Library.SendNotification({
+            title = "Stylish Button", 
+            text = "Button clicked! ✨", 
+            duration = 2
+        })
+    end)
     
     local UIScale = Instance.new('UIScale')
     UIScale.Parent = Container    
@@ -1115,9 +1201,9 @@ function Library:create_ui()
             local Keybind = Instance.new('Frame')
             Keybind.Name = 'Keybind'
             Keybind.BackgroundTransparency = 0.699999988079071
-            Keybind.Position = UDim2.new(0.45, 0, 0.7350000143051147, 0)
+            Keybind.Position = UDim2.new(0.15000000596046448, 0, 0.7350000143051147, 0)
             Keybind.BorderColor3 = Color3.fromRGB(0, 0, 0)
-            Keybind.Size = UDim2.new(0, 28, 0, 13)
+            Keybind.Size = UDim2.new(0, 33, 0, 15)
             Keybind.BorderSizePixel = 0
             Keybind.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
             Keybind.Parent = Header
@@ -1130,11 +1216,11 @@ function Library:create_ui()
             TextLabel.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
             TextLabel.TextColor3 = Color3.fromRGB(209, 222, 255)
             TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
-            TextLabel.Text = 'N/A'
+            TextLabel.Text = 'None'
             TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
             TextLabel.Size = UDim2.new(0, 25, 0, 13)
             TextLabel.BackgroundTransparency = 1
-            TextLabel.TextXAlignment = Enum.TextXAlignment.Center
+            TextLabel.TextXAlignment = Enum.TextXAlignment.Left
             TextLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
             TextLabel.BorderSizePixel = 0
             TextLabel.TextSize = 10
@@ -1244,22 +1330,17 @@ function Library:create_ui()
 
                     local font_params = Instance.new('GetTextBoundsParams')
                     font_params.Text = keybind_string
-                    font_params.Font = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold)
+                    font_params.Font = Font.new('rbxasset://fonts/families/Montserrat.json', Enum.FontWeight.Bold)
                     font_params.Size = 10
                     font_params.Width = 10000
             
                     local font_size = TextService:GetTextBoundsAsync(font_params)
-                    local new_width = math.max(28, font_size.X + 8)
                     
-                    Keybind.Size = UDim2.fromOffset(new_width, 13)
-                    Keybind.Position = UDim2.new(0.45, 0, 0.7350000143051147, 0) -- Much further left as requested
-                    TextLabel.Size = UDim2.fromOffset(new_width - 8, 13)
-                    TextLabel.TextXAlignment = Enum.TextXAlignment.Center
+                    Keybind.Size = UDim2.fromOffset(font_size.X + 6, 15)
+                    TextLabel.Size = UDim2.fromOffset(font_size.X, 13)
                 else
-                    Keybind.Size = UDim2.fromOffset(28, 13)
-                    Keybind.Position = UDim2.new(0.45, 0, 0.7350000143051147, 0)
-                    TextLabel.Size = UDim2.fromOffset(20, 13)
-                    TextLabel.TextXAlignment = Enum.TextXAlignment.Center
+                    Keybind.Size = UDim2.fromOffset(31, 15)
+                    TextLabel.Size = UDim2.fromOffset(25, 13)
                 end
             end
 
@@ -1280,12 +1361,12 @@ function Library:create_ui()
                 ModuleManager:scale_keybind()
             end
 
-            Connections[settings.flag..'_input_began'] = Keybind.InputBegan:Connect(function(input: InputObject, gameProcessed: boolean)
+            Connections[settings.flag..'_input_began'] = Header.InputBegan:Connect(function(input: InputObject)
                 if Library._choosing_keybind then
                     return
                 end
 
-                if input.UserInputType ~= Enum.UserInputType.MouseButton1 then
+                if input.UserInputType ~= Enum.UserInputType.MouseButton3 then
                     return
                 end
                 
@@ -1347,13 +1428,92 @@ function Library:create_ui()
             end)
 
             Header.MouseButton1Click:Connect(function()
-                -- Don't toggle module if we're choosing a keybind
-                if Library._choosing_keybind then
-                    return
-                end
-                
                 ModuleManager:change_state(not ModuleManager._state)
             end)
+
+            function ModuleManager:create_paragraph(settings: any)
+                LayoutOrderModule = LayoutOrderModule + 1;
+
+                local ParagraphManager = {}
+                
+                if self._size == 0 then
+                    self._size = 11
+                end
+            
+                self._size += settings.customScale or 70
+            
+                if ModuleManager._state then
+                    Module.Size = UDim2.fromOffset(241, 93 + self._size)
+                end
+            
+                Options.Size = UDim2.fromOffset(241, self._size)
+            
+                -- Container Frame
+                local Paragraph = Instance.new('Frame')
+                Paragraph.BackgroundColor3 = Color3.fromRGB(32, 38, 51)
+                Paragraph.BackgroundTransparency = 0.1
+                Paragraph.Size = UDim2.new(0, 207, 0, 30) -- Initial size, auto-resized later
+                Paragraph.BorderSizePixel = 0
+                Paragraph.Name = "Paragraph"
+                Paragraph.AutomaticSize = Enum.AutomaticSize.Y -- Support auto-resizing height
+                Paragraph.Parent = Options
+                Paragraph.LayoutOrder = LayoutOrderModule;
+            
+                local UICorner = Instance.new('UICorner')
+                UICorner.CornerRadius = UDim.new(0, 4)
+                UICorner.Parent = Paragraph
+            
+                -- Title Label
+                local Title = Instance.new('TextLabel')
+                Title.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
+                Title.TextColor3 = Color3.fromRGB(210, 210, 210)
+                Title.Text = settings.title or "Title"
+                Title.Size = UDim2.new(1, -10, 0, 20)
+                Title.Position = UDim2.new(0, 5, 0, 5)
+                Title.BackgroundTransparency = 1
+                Title.TextXAlignment = Enum.TextXAlignment.Left
+                Title.TextYAlignment = Enum.TextYAlignment.Center
+                Title.TextSize = 12
+                Title.AutomaticSize = Enum.AutomaticSize.XY
+                Title.Parent = Paragraph
+            
+                -- Body Text
+                local Body = Instance.new('TextLabel')
+                Body.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.Regular, Enum.FontStyle.Normal)
+                Body.TextColor3 = Color3.fromRGB(180, 180, 180)
+                
+                if not settings.rich then
+                    Body.Text = settings.text or "Skibidi"
+                else
+                    Body.RichText = true
+                    Body.Text = settings.richtext or "<font color='rgb(255,0,0)'>March</font> user"
+                end
+                
+                Body.Size = UDim2.new(1, -10, 0, 20)
+                Body.Position = UDim2.new(0, 5, 0, 30)
+                Body.BackgroundTransparency = 1
+                Body.TextXAlignment = Enum.TextXAlignment.Left
+                Body.TextYAlignment = Enum.TextYAlignment.Top
+                Body.TextSize = 11
+                Body.TextWrapped = true
+                Body.AutomaticSize = Enum.AutomaticSize.XY
+                Body.Parent = Paragraph
+            
+                -- Hover effect for Paragraph (optional)
+                Paragraph.MouseEnter:Connect(function()
+                    TweenService:Create(Paragraph, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        BackgroundColor3 = Color3.fromRGB(42, 50, 66)
+                    }):Play()
+                end)
+            
+                Paragraph.MouseLeave:Connect(function()
+                    TweenService:Create(Paragraph, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
+                        BackgroundColor3 = Color3.fromRGB(32, 38, 51)
+                    }):Play()
+                end)
+
+                return ParagraphManager
+            end
 
             function ModuleManager:create_text(settings: any)
                 LayoutOrderModule = LayoutOrderModule + 1
@@ -1555,32 +1715,28 @@ function Library:create_ui()
 
                 local KeybindBox = Instance.new("Frame")
                 KeybindBox.Name = "KeybindBox"
-                KeybindBox.Size = UDim2.fromOffset(28, 13)
-                KeybindBox.Position = UDim2.new(1, -5, 0.5, 0)
+                KeybindBox.Size = UDim2.fromOffset(14, 14)
+                KeybindBox.Position = UDim2.new(1, -35, 0.5, 0)
                 KeybindBox.AnchorPoint = Vector2.new(0, 0.5)
                 KeybindBox.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
-                KeybindBox.BackgroundTransparency = 0.699999988079071
                 KeybindBox.BorderSizePixel = 0
                 KeybindBox.Parent = Checkbox
             
                 local KeybindCorner = Instance.new("UICorner")
-                KeybindCorner.CornerRadius = UDim.new(0, 3)
+                KeybindCorner.CornerRadius = UDim.new(0, 4)
                 KeybindCorner.Parent = KeybindBox
             
                 local KeybindLabel = Instance.new("TextLabel")
                 KeybindLabel.Name = "KeybindLabel"
-                KeybindLabel.Size = UDim2.new(0, 25, 0, 13)
-                KeybindLabel.AnchorPoint = Vector2.new(0.5, 0.5)
-                KeybindLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
+                KeybindLabel.Size = UDim2.new(1, 0, 1, 0)
                 KeybindLabel.BackgroundTransparency = 1
-                KeybindLabel.TextColor3 = Color3.fromRGB(209, 222, 255)
+                KeybindLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
                 KeybindLabel.TextScaled = false
                 KeybindLabel.TextSize = 10
-                KeybindLabel.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
-                KeybindLabel.TextXAlignment = Enum.TextXAlignment.Center
+                KeybindLabel.Font = Enum.Font.SourceSans
                 KeybindLabel.Text = Library._config._keybinds[settings.flag] 
                     and string.gsub(tostring(Library._config._keybinds[settings.flag]), "Enum.KeyCode.", "") 
-                    or "N/A"
+                    or "..."
                 KeybindLabel.Parent = KeybindBox
             
                 local Box = Instance.new("Frame")
@@ -1633,65 +1789,18 @@ function Library:create_ui()
                     Config:save(game.GameId, Library._config)
                     settings.callback(self._state)
                 end
-
-                function CheckboxManager:scale_keybind(empty: boolean)
-                    if Library._config._keybinds[settings.flag] and not empty then
-                        local keybind_string = string.gsub(tostring(Library._config._keybinds[settings.flag]), 'Enum.KeyCode.', '')
-
-                        local font_params = Instance.new('GetTextBoundsParams')
-                        font_params.Text = keybind_string
-                        font_params.Font = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold)
-                        font_params.Size = 10
-                        font_params.Width = 10000
-                
-                        local font_size = TextService:GetTextBoundsAsync(font_params)
-                        local new_width = math.max(28, font_size.X + 8)
-                        local width_diff = new_width - 28 -- Calculate difference from base size
-                        
-                        KeybindBox.Size = UDim2.fromOffset(new_width, 13)
-                        KeybindBox.Position = UDim2.new(1, -5 - width_diff, 0.5, 0)
-                        KeybindLabel.Size = UDim2.fromOffset(new_width - 8, 13)
-                    else
-                        KeybindBox.Size = UDim2.fromOffset(28, 13)
-                        KeybindBox.Position = UDim2.new(1, -5, 0.5, 0)
-                        KeybindLabel.Size = UDim2.fromOffset(20, 13)
-                    end
-                end
-
-                function CheckboxManager:connect_keybind()
-                    if not Library._config._keybinds[settings.flag] then
-                        return
-                    end
-
-                    Connections[settings.flag..'_checkbox_keybind'] = UserInputService.InputBegan:Connect(function(input: InputObject, process: boolean)
-                        if process then
-                            return
-                        end
-                        
-                        if tostring(input.KeyCode) ~= Library._config._keybinds[settings.flag] then
-                            return
-                        end
-                        
-                        CheckboxManager:change_state(not CheckboxManager._state)
-                    end)
-                end
             
                 if Library:flag_type(settings.flag, "boolean") then
                     CheckboxManager:change_state(Library._config._flags[settings.flag])
-                end
-
-                if Library._config._keybinds[settings.flag] then
-                    CheckboxManager:connect_keybind()
-                    CheckboxManager:scale_keybind()
                 end
             
                 Checkbox.MouseButton1Click:Connect(function()
                     CheckboxManager:change_state(not CheckboxManager._state)
                 end)
             
-                KeybindBox.InputBegan:Connect(function(input, gameProcessed)
+                Checkbox.InputBegan:Connect(function(input, gameProcessed)
                     if gameProcessed then return end
-                    if input.UserInputType ~= Enum.UserInputType.MouseButton1 then return end
+                    if input.UserInputType ~= Enum.UserInputType.MouseButton3 then return end
                     if Library._choosing_keybind then return end
             
                     Library._choosing_keybind = true
@@ -1702,13 +1811,13 @@ function Library:create_ui()
                         if keyInput.KeyCode == Enum.KeyCode.Unknown then return end
             
                         if keyInput.KeyCode == Enum.KeyCode.Backspace then
-                            CheckboxManager:scale_keybind(true)
+                            ModuleManager:scale_keybind(true)
                             Library._config._keybinds[settings.flag] = nil
                             Config:save(game.GameId, Library._config)
-                            KeybindLabel.Text = "None"
-                            if Connections[settings.flag .. "_checkbox_keybind"] then
-                                Connections[settings.flag .. "_checkbox_keybind"]:Disconnect()
-                                Connections[settings.flag .. "_checkbox_keybind"] = nil
+                            KeybindLabel.Text = "..."
+                            if Connections[settings.flag .. "_keybind"] then
+                                Connections[settings.flag .. "_keybind"]:Disconnect()
+                                Connections[settings.flag .. "_keybind"] = nil
                             end
                             chooseConnection:Disconnect()
                             Library._choosing_keybind = false
@@ -1718,18 +1827,29 @@ function Library:create_ui()
                         chooseConnection:Disconnect()
                         Library._config._keybinds[settings.flag] = tostring(keyInput.KeyCode)
                         Config:save(game.GameId, Library._config)
-                        if Connections[settings.flag .. "_checkbox_keybind"] then
-                            Connections[settings.flag .. "_checkbox_keybind"]:Disconnect()
-                            Connections[settings.flag .. "_checkbox_keybind"] = nil
+                        if Connections[settings.flag .. "_keybind"] then
+                            Connections[settings.flag .. "_keybind"]:Disconnect()
+                            Connections[settings.flag .. "_keybind"] = nil
                         end
-                        CheckboxManager:connect_keybind()
-                        CheckboxManager:scale_keybind()
+                        ModuleManager:connect_keybind()
+                        ModuleManager:scale_keybind()
                         Library._choosing_keybind = false
             
                         local keybind_string = string.gsub(tostring(Library._config._keybinds[settings.flag]), "Enum.KeyCode.", "")
                         KeybindLabel.Text = keybind_string
                     end)
                 end)
+            
+                local keyPressConnection = UserInputService.InputBegan:Connect(function(input, gameProcessed)
+                    if gameProcessed then return end
+                    if input.UserInputType == Enum.UserInputType.Keyboard then
+                        local storedKey = Library._config._keybinds[settings.flag]
+                        if storedKey and tostring(input.KeyCode) == storedKey then
+                            CheckboxManager:change_state(not CheckboxManager._state)
+                        end
+                    end
+                end)
+                Connections[settings.flag .. "_keypress"] = keyPressConnection
             
                 return CheckboxManager
             end
@@ -1884,7 +2004,6 @@ function Library:create_ui()
                 UICorner.Parent = Drag
                 
                 local Fill = Instance.new('Frame')
-                local Fill = Instance.new('Frame')
                 Fill.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Fill.AnchorPoint = Vector2.new(0, 0.5)
                 Fill.BackgroundTransparency = 0.5
@@ -1952,13 +2071,7 @@ function Library:create_ui()
                     local number_threshold = math.clamp(rounded_number, settings.minimum_value, settings.maximum_value)
     
                     Library._config._flags[settings.flag] = number_threshold
-                    
-                    -- Add suffix support (prefix after value)
-                    local display_text = tostring(number_threshold)
-                    if settings.prefix then
-                        display_text = display_text .. settings.prefix
-                    end
-                    Value.Text = display_text
+                    Value.Text = number_threshold
     
                     TweenService:Create(Fill, TweenInfo.new(0.5, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
                         Size = UDim2.fromOffset(slider_size, Drag.Size.Y.Offset)
@@ -2414,277 +2527,188 @@ function Library:create_ui()
                 return DropdownManager
             end
 
-            function ModuleManager:create_button(settings: any)
-                LayoutOrderModule = LayoutOrderModule + 1
+            function ModuleManager:create_feature(settings)
 
-                local ButtonManager = {}
-
-                if self._size == 0 then
-                    self._size = 11
-                end
-
-                self._size += 22
-
-                if ModuleManager._state then
-                    Module.Size = UDim2.fromOffset(241, 93 + self._size)
-                end
-
-                Options.Size = UDim2.fromOffset(241, self._size)
-
-                local Button = Instance.new('TextButton')
-                Button.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
-                Button.TextColor3 = Color3.fromRGB(210, 210, 210)
-                Button.BorderColor3 = Color3.fromRGB(0, 0, 0)
-                Button.Text = settings.title or "Button"
-                Button.AutoButtonColor = false
-                Button.BackgroundColor3 = Color3.fromRGB(22, 28, 38)
-                Button.BackgroundTransparency = 0.3
-                Button.Name = 'Button'
-                Button.Size = UDim2.new(0, 207, 0, 22)
-                Button.BorderSizePixel = 0
-                Button.TextSize = 10
-                Button.Parent = Options
-                Button.LayoutOrder = LayoutOrderModule
-
-                local UICorner = Instance.new('UICorner')
-                UICorner.CornerRadius = UDim.new(0, 6)
-                UICorner.Parent = Button
-
-                local UIStroke = Instance.new('UIStroke')
-                UIStroke.Color = Color3.fromRGB(52, 66, 89)
-                UIStroke.Transparency = 0.7
-                UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-                UIStroke.Parent = Button
-
-                local Shadow = Instance.new('Frame')
-                Shadow.Name = 'Shadow'
-                Shadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-                Shadow.BackgroundTransparency = 0.95
-                Shadow.Size = UDim2.new(1, 2, 1, 2)
-                Shadow.Position = UDim2.new(0, -1, 0, 1)
-                Shadow.ZIndex = Button.ZIndex - 1
-                Shadow.Parent = Button
-
-                local ShadowCorner = Instance.new('UICorner')
-                ShadowCorner.CornerRadius = UDim.new(0, 6)
-                ShadowCorner.Parent = Shadow
-
-                Button.MouseEnter:Connect(function()
-                    TweenService:Create(Button, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        BackgroundColor3 = Color3.fromRGB(32, 38, 51),
-                        BackgroundTransparency = 0.1
-                    }):Play()
-                    TweenService:Create(UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        Transparency = 0.4
-                    }):Play()
-                    TweenService:Create(Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        BackgroundTransparency = 0.9
-                    }):Play()
-                end)
-
-                Button.MouseLeave:Connect(function()
-                    TweenService:Create(Button, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        BackgroundColor3 = Color3.fromRGB(22, 28, 38),
-                        BackgroundTransparency = 0.3
-                    }):Play()
-                    TweenService:Create(UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        Transparency = 0.7
-                    }):Play()
-                    TweenService:Create(Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {
-                        BackgroundTransparency = 0.95
-                    }):Play()
-                end)
-
-                Button.MouseButton1Click:Connect(function()
-                    TweenService:Create(Button, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut), {
-                        BackgroundColor3 = Color3.fromRGB(152, 181, 255),
-                        TextColor3 = Color3.fromRGB(255, 255, 255)
-                    }):Play()
-                    
-                    task.wait(0.15)
-                    
-                    TweenService:Create(Button, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-                        BackgroundColor3 = Color3.fromRGB(32, 38, 51),
-                        TextColor3 = Color3.fromRGB(210, 210, 210)
-                    }):Play()
-                    
-                    if settings.callback then
-                        settings.callback()
-                    end
-                end)
-
-                return ButtonManager
-            end
-
-            function ModuleManager:create_keybind(settings: any)
-                LayoutOrderModule = LayoutOrderModule + 1
-
-                local KeybindManager = {}
-
-                if self._size == 0 then
-                    self._size = 11
-                end
-
-                self._size += 20
-
-                if ModuleManager._state then
-                    Module.Size = UDim2.fromOffset(241, 93 + self._size)
-                end
-
-                Options.Size = UDim2.fromOffset(241, self._size)
-
-                local KeybindContainer = Instance.new('Frame')
-                KeybindContainer.Name = 'KeybindContainer'
-                KeybindContainer.Size = UDim2.new(0, 207, 0, 15)
-                KeybindContainer.BackgroundTransparency = 1
-                KeybindContainer.Parent = Options
-                KeybindContainer.LayoutOrder = LayoutOrderModule
-
-                local TitleLabel = Instance.new('TextLabel')
-                TitleLabel.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
-                TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-                TitleLabel.TextTransparency = 0.2
-                TitleLabel.Text = settings.title or "Keybind"
-                TitleLabel.Size = UDim2.new(0, 140, 0, 13)
-                TitleLabel.AnchorPoint = Vector2.new(0, 0.5)
-                TitleLabel.Position = UDim2.new(0, 0, 0.5, 0)
-                TitleLabel.BackgroundTransparency = 1
-                TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
-                TitleLabel.TextSize = 11
-                TitleLabel.Parent = KeybindContainer
-
-                local KeybindBox = Instance.new('Frame')
-                KeybindBox.Name = 'KeybindBox'
-                KeybindBox.Size = UDim2.fromOffset(28, 13)
-                KeybindBox.Position = UDim2.new(1, -28, 0.5, 0)
-                KeybindBox.AnchorPoint = Vector2.new(1, 0.5)
-                KeybindBox.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
-                KeybindBox.BackgroundTransparency = 0.699999988079071
-                KeybindBox.BorderSizePixel = 0
-                KeybindBox.Parent = KeybindContainer
-
-                local KeybindCorner = Instance.new('UICorner')
-                KeybindCorner.CornerRadius = UDim.new(0, 3)
-                KeybindCorner.Parent = KeybindBox
-
-                local KeybindLabel = Instance.new('TextLabel')
-                KeybindLabel.Name = 'KeybindLabel'
-                KeybindLabel.Size = UDim2.new(0, 20, 0, 13)
-                KeybindLabel.AnchorPoint = Vector2.new(0.5, 0.5)
-                KeybindLabel.Position = UDim2.new(0.5, 0, 0.5, 0)
-                KeybindLabel.BackgroundTransparency = 1
-                KeybindLabel.TextColor3 = Color3.fromRGB(209, 222, 255)
-                KeybindLabel.TextSize = 10
-                KeybindLabel.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal)
-                KeybindLabel.TextXAlignment = Enum.TextXAlignment.Center
-                KeybindLabel.Text = settings.default or "None"
-                KeybindLabel.Parent = KeybindBox
-
-                function KeybindManager:scale_keybind(empty: boolean)
-                    if Library._config._keybinds[settings.flag] and not empty then
-                        local keybind_string = string.gsub(tostring(Library._config._keybinds[settings.flag]), 'Enum.KeyCode.', '')
-
-                        local font_params = Instance.new('GetTextBoundsParams')
-                        font_params.Text = keybind_string
-                        font_params.Font = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold)
-                        font_params.Size = 10
-                        font_params.Width = 10000
+                local checked = false;
                 
-                        local font_size = TextService:GetTextBoundsAsync(font_params)
-                        local new_width = math.max(28, font_size.X + 8)
-                        local width_diff = new_width - 28
-                        
-                        KeybindBox.Size = UDim2.fromOffset(new_width, 13)
-                        KeybindBox.Position = UDim2.new(1, -28 - width_diff, 0.5, 0)
-                        KeybindLabel.Size = UDim2.fromOffset(new_width - 8, 13)
-                    else
-                        KeybindBox.Size = UDim2.fromOffset(28, 13)
-                        KeybindBox.Position = UDim2.new(1, -28, 0.5, 0)
-                        KeybindLabel.Size = UDim2.fromOffset(20, 13)
-                    end
+                LayoutOrderModule = LayoutOrderModule + 1
+            
+                if self._size == 0 then
+                    self._size = 11
                 end
-
-                function KeybindManager:connect_keybind()
-                    if not Library._config._keybinds[settings.flag] then
-                        return
-                    end
-
-                    Connections[settings.flag..'_standalone_keybind'] = UserInputService.InputBegan:Connect(function(input: InputObject, process: boolean)
-                        if process then
-                            return
-                        end
-                        
-                        if tostring(input.KeyCode) ~= Library._config._keybinds[settings.flag] then
-                            return
-                        end
-                        
-                        if settings.callback then
-                            settings.callback()
-                        end
-                    end)
+            
+                self._size += 20
+            
+                if ModuleManager._state then
+                    Module.Size = UDim2.fromOffset(241, 93 + self._size);
                 end
+            
+                Options.Size = UDim2.fromOffset(241, self._size);
+            
+                local FeatureContainer = Instance.new("Frame")
+                FeatureContainer.Size = UDim2.new(0, 207, 0, 16)
+                FeatureContainer.BackgroundTransparency = 1
+                FeatureContainer.Parent = Options
+                FeatureContainer.LayoutOrder = LayoutOrderModule
+            
+                local UIListLayout = Instance.new("UIListLayout")
+                UIListLayout.FillDirection = Enum.FillDirection.Horizontal
+                UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+                UIListLayout.Parent = FeatureContainer
+            
+                local FeatureButton = Instance.new("TextButton")
+                FeatureButton.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
+                FeatureButton.TextSize = 11;
+                FeatureButton.Size = UDim2.new(1, -35, 0, 16)
+                FeatureButton.BackgroundColor3 = Color3.fromRGB(32, 38, 51)
+                FeatureButton.TextColor3 = Color3.fromRGB(210, 210, 210)
+                FeatureButton.Text = "    " .. settings.title or "    " .. "Feature"
+                FeatureButton.AutoButtonColor = false
+                FeatureButton.TextXAlignment = Enum.TextXAlignment.Left
+                FeatureButton.TextTransparency = 0.2
+                FeatureButton.Parent = FeatureContainer
+            
+                local RightContainer = Instance.new("Frame")
+                RightContainer.Size = UDim2.new(0, 45, 0, 16)
+                RightContainer.BackgroundTransparency = 1
+                RightContainer.Parent = FeatureContainer
+            
+                local RightLayout = Instance.new("UIListLayout")
+                RightLayout.Padding = UDim.new(0.1, 0)
+                RightLayout.FillDirection = Enum.FillDirection.Horizontal
+                RightLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+                RightLayout.SortOrder = Enum.SortOrder.LayoutOrder
+                RightLayout.Parent = RightContainer
+            
+                local KeybindBox = Instance.new("TextLabel")
+                KeybindBox.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
+                KeybindBox.Size = UDim2.new(0, 15, 0, 15)
+                KeybindBox.BackgroundColor3 = Color3.fromRGB(152, 181, 255)
+                KeybindBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+                KeybindBox.TextSize = 11
+                KeybindBox.BackgroundTransparency = 1
+                KeybindBox.LayoutOrder = 2;
+                KeybindBox.Parent = RightContainer
+            
+                local KeybindButton = Instance.new("TextButton")
+                KeybindButton.Size = UDim2.new(1, 0, 1, 0)
+                KeybindButton.BackgroundTransparency = 1
+                KeybindButton.TextTransparency = 1
+                KeybindButton.Parent = KeybindBox
 
-                -- Initialize with default keybind if provided
-                if settings.default and settings.default ~= "None" then
-                    Library._config._keybinds[settings.flag] = "Enum.KeyCode." .. settings.default
-                    KeybindManager:connect_keybind()
-                    KeybindManager:scale_keybind()
+                local CheckboxCorner = Instance.new("UICorner", KeybindBox)
+                CheckboxCorner.CornerRadius = UDim.new(0, 3)
+
+                local UIStroke = Instance.new("UIStroke", KeybindBox)
+                UIStroke.Color = Color3.fromRGB(152, 181, 255)
+                UIStroke.Thickness = 1
+                UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+            
+                if not Library._config._flags then
+                    Library._config._flags = {}
                 end
-
-                -- Load saved keybind
-                if Library._config._keybinds[settings.flag] then
-                    local keybind_string = string.gsub(tostring(Library._config._keybinds[settings.flag]), 'Enum.KeyCode.', '')
-                    KeybindLabel.Text = keybind_string
-                    KeybindManager:connect_keybind()
-                    KeybindManager:scale_keybind()
+            
+                if not Library._config._flags[settings.flag] then
+                    Library._config._flags[settings.flag] = {
+                        checked = false,
+                        BIND = settings.default or "Unknown"
+                    }
                 end
+            
+                checked = Library._config._flags[settings.flag].checked
+                KeybindBox.Text = Library._config._flags[settings.flag].BIND
 
-                KeybindBox.InputBegan:Connect(function(input, gameProcessed)
-                    if gameProcessed then return end
-                    if input.UserInputType ~= Enum.UserInputType.MouseButton1 then return end
-                    if Library._choosing_keybind then return end
+                if KeybindBox.Text == "Unknown" then
+                    KeybindBox.Text = "...";
+                end;
 
-                    Library._choosing_keybind = true
-                    local chooseConnection
-                    chooseConnection = UserInputService.InputBegan:Connect(function(keyInput, processed)
-                        if processed then return end
-                        if keyInput.UserInputType ~= Enum.UserInputType.Keyboard then return end
-                        if keyInput.KeyCode == Enum.KeyCode.Unknown then return end
+                local UseF_Var = nil;
+            
+                if not settings.disablecheck then
+                    local Checkbox = Instance.new("TextButton")
+                    Checkbox.Size = UDim2.new(0, 15, 0, 15)
+                    Checkbox.BackgroundColor3 = checked and Color3.fromRGB(152, 181, 255) or Color3.fromRGB(32, 38, 51)
+                    Checkbox.Text = ""
+                    Checkbox.Parent = RightContainer
+                    Checkbox.LayoutOrder = 1;
 
-                        if keyInput.KeyCode == Enum.KeyCode.Backspace then
-                            KeybindManager:scale_keybind(true)
-                            Library._config._keybinds[settings.flag] = nil
-                            Config:save(game.GameId, Library._config)
-                            KeybindLabel.Text = settings.default or "None"
-                            if Connections[settings.flag .. "_standalone_keybind"] then
-                                Connections[settings.flag .. "_standalone_keybind"]:Disconnect()
-                                Connections[settings.flag .. "_standalone_keybind"] = nil
-                            end
-                            chooseConnection:Disconnect()
-                            Library._choosing_keybind = false
-                            return
-                        end
-
-                        chooseConnection:Disconnect()
-                        Library._config._keybinds[settings.flag] = tostring(keyInput.KeyCode)
+                    local UIStroke = Instance.new("UIStroke", Checkbox)
+                    UIStroke.Color = Color3.fromRGB(152, 181, 255)
+                    UIStroke.Thickness = 1
+                    UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+                
+                    local CheckboxCorner = Instance.new("UICorner")
+                    CheckboxCorner.CornerRadius = UDim.new(0, 3)
+                    CheckboxCorner.Parent = Checkbox
+            
+                    local function toggleState()
+                        checked = not checked
+                        Checkbox.BackgroundColor3 = checked and Color3.fromRGB(152, 181, 255) or Color3.fromRGB(32, 38, 51)
+                        Library._config._flags[settings.flag].checked = checked
                         Config:save(game.GameId, Library._config)
-                        if Connections[settings.flag .. "_standalone_keybind"] then
-                            Connections[settings.flag .. "_standalone_keybind"]:Disconnect()
-                            Connections[settings.flag .. "_standalone_keybind"] = nil
+                        if settings.callback then
+                            settings.callback(checked)
                         end
-                        KeybindManager:connect_keybind()
-                        KeybindManager:scale_keybind()
-                        Library._choosing_keybind = false
+                    end
 
-                        local keybind_string = string.gsub(tostring(Library._config._keybinds[settings.flag]), "Enum.KeyCode.", "")
-                        KeybindLabel.Text = keybind_string
+                    UseF_Var = toggleState
+                
+                    Checkbox.MouseButton1Click:Connect(toggleState)
+
+                else
+
+                    UseF_Var = function()
+                        settings.button_callback();
+                    end;
+
+                end;
+            
+                KeybindButton.MouseButton1Click:Connect(function()
+                    KeybindBox.Text = "..."
+                    local inputConnection
+                    inputConnection = game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
+                        if gameProcessed then return end
+                        if input.UserInputType == Enum.UserInputType.Keyboard then
+                            local newKey = input.KeyCode.Name
+                            Library._config._flags[settings.flag].BIND = newKey
+                            if newKey ~= "Unknown" then
+                                KeybindBox.Text = newKey;
+                            end;
+                            Config:save(game.GameId, Library._config) -- Save new keybind
+                            inputConnection:Disconnect()
+                        elseif input.UserInputType == Enum.UserInputType.MouseButton3 then
+                            Library._config._flags[settings.flag].BIND = "Unknown"
+                            KeybindBox.Text = "..."
+                            Config:save(game.GameId, Library._config)
+                            inputConnection:Disconnect()
+                        end
                     end)
+                    Connections["keybind_input_" .. settings.flag] = inputConnection
+                end)
+            
+                local keyPressConnection
+                keyPressConnection = game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
+                    if gameProcessed then return end
+                    if input.UserInputType == Enum.UserInputType.Keyboard then
+                        if input.KeyCode.Name == Library._config._flags[settings.flag].BIND then
+                            UseF_Var();
+                        end
+                    end
+                end)
+                Connections["keybind_press_" .. settings.flag] = keyPressConnection
+            
+                FeatureButton.MouseButton1Click:Connect(function()
+                    if settings.button_callback then
+                        settings.button_callback()
+                    end
                 end)
 
-                return KeybindManager
-            end
-
-                    
+                if not settings.disablecheck then
+                    settings.callback(checked);
+                end;
+            
+                return FeatureContainer
+            end                    
 
             return ModuleManager
         end
