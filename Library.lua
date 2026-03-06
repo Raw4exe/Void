@@ -434,11 +434,72 @@ function Library.SendNotification(settings)
     Body.AutomaticSize = Enum.AutomaticSize.Y  -- Allow the body text to resize based on content
     Body.Parent = InnerFrame
 
+    -- Buttons Container (if buttons are provided)
+    local buttons = settings.buttons or {}
+    local ButtonsContainer
+    
+    if #buttons > 0 then
+        ButtonsContainer = Instance.new("Frame")
+        ButtonsContainer.Size = UDim2.new(1, -10, 0, 30)
+        ButtonsContainer.Position = UDim2.new(0, 5, 1, -35)
+        ButtonsContainer.BackgroundTransparency = 1
+        ButtonsContainer.Parent = InnerFrame
+        ButtonsContainer.AnchorPoint = Vector2.new(0, 1)
+        
+        local ButtonLayout = Instance.new("UIListLayout")
+        ButtonLayout.FillDirection = Enum.FillDirection.Horizontal
+        ButtonLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
+        ButtonLayout.Padding = UDim.new(0, 5)
+        ButtonLayout.Parent = ButtonsContainer
+        
+        for i, buttonData in ipairs(buttons) do
+            if i > 2 then break end -- Maximum 2 buttons
+            
+            local Button = Instance.new("TextButton")
+            Button.Size = UDim2.new(0, 80, 0, 25)
+            Button.BackgroundColor3 = Color3.fromRGB(52, 66, 89)
+            Button.BorderSizePixel = 0
+            Button.Text = buttonData.text or "Button"
+            Button.TextColor3 = Color3.fromRGB(210, 210, 210)
+            Button.FontFace = Font.new('rbxasset://fonts/families/GothamSSm.json', Enum.FontWeight.Medium, Enum.FontStyle.Normal)
+            Button.TextSize = 12
+            Button.AutoButtonColor = false
+            Button.Parent = ButtonsContainer
+            
+            local ButtonCorner = Instance.new("UICorner")
+            ButtonCorner.CornerRadius = UDim.new(0, 4)
+            ButtonCorner.Parent = Button
+            
+            Button.MouseButton1Click:Connect(function()
+                if buttonData.callback then
+                    buttonData.callback()
+                end
+                -- Auto-close notification after button click
+                Notification:Destroy()
+            end)
+            
+            Button.MouseEnter:Connect(function()
+                TweenService:Create(Button, TweenInfo.new(0.2), {
+                    BackgroundColor3 = Color3.fromRGB(72, 86, 109)
+                }):Play()
+            end)
+            
+            Button.MouseLeave:Connect(function()
+                TweenService:Create(Button, TweenInfo.new(0.2), {
+                    BackgroundColor3 = Color3.fromRGB(52, 66, 89)
+                }):Play()
+            end)
+        end
+    end
+
     -- Force the size to adjust after the text is fully loaded and wrapped
     task.spawn(function()
         wait(0.1)  -- Allow text wrapping to finish
         -- Adjust inner frame size based on content
         local totalHeight = Title.TextBounds.Y + Body.TextBounds.Y + 10  -- Add padding
+        if #buttons > 0 then
+            totalHeight = totalHeight + 40  -- Add space for buttons
+        end
         InnerFrame.Size = UDim2.new(1, 0, 0, totalHeight)  -- Resize the inner frame
     end)
 
