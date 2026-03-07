@@ -22,6 +22,14 @@ getgenv().GG = {
 local SelectedLanguage = GG.Language
 
 function convertStringToTable(inputString)
+    if type(inputString) == "table" then
+        return inputString
+    end
+    
+    if type(inputString) ~= "string" then
+        return {}
+    end
+    
     local result = {}
     for value in string.gmatch(inputString, "([^,]+)") do
         local trimmedValue = value:match("^%s*(.-)%s*$")
@@ -32,6 +40,14 @@ function convertStringToTable(inputString)
 end
 
 function convertTableToString(inputTable)
+    if type(inputTable) == "string" then
+        return inputTable
+    end
+    
+    if type(inputTable) ~= "table" then
+        return ""
+    end
+    
     return table.concat(inputTable, ", ")
 end
 
@@ -2281,7 +2297,7 @@ function Library:create_ui()
 
                         local selected = {}
 
-                        if CurrentTargetValue then
+                        if CurrentTargetValue and type(CurrentTargetValue) == "string" then
                             for value in string.gmatch(CurrentTargetValue, "([^,]+)") do
                                 -- Trim spaces around the option using string.match
                                 local trimmedValue = value:match("^%s*(.-)%s*$")  -- Trim leading and trailing spaces
@@ -2292,13 +2308,15 @@ function Library:create_ui()
                                 end
                             end
                         else
-                            for value in string.gmatch(CurrentOption.Text, "([^,]+)") do
-                                -- Trim spaces around the option using string.match
-                                local trimmedValue = value:match("^%s*(.-)%s*$")  -- Trim leading and trailing spaces
-                                
-                                -- Exclude any unwanted labels (e.g. "Label")
-                                if trimmedValue ~= "Label" then
-                                    table.insert(selected, trimmedValue)
+                            if CurrentOption.Text and type(CurrentOption.Text) == "string" then
+                                for value in string.gmatch(CurrentOption.Text, "([^,]+)") do
+                                    -- Trim spaces around the option using string.match
+                                    local trimmedValue = value:match("^%s*(.-)%s*$")  -- Trim leading and trailing spaces
+                                    
+                                    -- Exclude any unwanted labels (e.g. "Label")
+                                    if trimmedValue ~= "Label" then
+                                        table.insert(selected, trimmedValue)
+                                    end
                                 end
                             end
                         end;
@@ -2336,11 +2354,18 @@ function Library:create_ui()
 
                         CurrentTargetValue = convertStringToTable(CurrentOption.Text);
 
-                        for _, v in CurrentTargetValue do
-                            if not table.find(OptionsChild, v) and table.find(selected, v) then
-                                table.remove(selected, _)
-                            end;
-                        end;
+                        if type(CurrentTargetValue) == "table" then
+                            for _, v in CurrentTargetValue do
+                                if not table.find(OptionsChild, v) and table.find(selected, v) then
+                                    for i, selectedItem in ipairs(selected) do
+                                        if selectedItem == v then
+                                            table.remove(selected, i)
+                                            break
+                                        end
+                                    end
+                                end
+                            end
+                        end
 
                         CurrentOption.Text = table.concat(selected, ", ");
                 
