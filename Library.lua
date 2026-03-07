@@ -26,14 +26,16 @@ function convertStringToTable(inputString)
         return inputString
     end
     
-    if type(inputString) ~= "string" then
+    if type(inputString) ~= "string" or inputString == "" then
         return {}
     end
     
     local result = {}
     for value in string.gmatch(inputString, "([^,]+)") do
         local trimmedValue = value:match("^%s*(.-)%s*$")
-        table.insert(result, trimmedValue)
+        if trimmedValue and trimmedValue ~= "" then
+            table.insert(result, trimmedValue)
+        end
     end
 
     return result
@@ -44,7 +46,7 @@ function convertTableToString(inputTable)
         return inputTable
     end
     
-    if type(inputTable) ~= "table" then
+    if type(inputTable) ~= "table" or #inputTable == 0 then
         return ""
     end
     
@@ -2289,35 +2291,17 @@ function Library:create_ui()
 
                         local CurrentTargetValue = nil;
                         
-                        if #Library._config._flags[settings.flag] > 0 then
-
+                        if type(Library._config._flags[settings.flag]) == "table" and #Library._config._flags[settings.flag] > 0 then
                             CurrentTargetValue = convertTableToString(Library._config._flags[settings.flag]);
-
                         end;
 
                         local selected = {}
 
                         if CurrentTargetValue and type(CurrentTargetValue) == "string" then
-                            for value in string.gmatch(CurrentTargetValue, "([^,]+)") do
-                                -- Trim spaces around the option using string.match
-                                local trimmedValue = value:match("^%s*(.-)%s*$")  -- Trim leading and trailing spaces
-                                
-                                -- Exclude any unwanted labels (e.g. "Label")
-                                if trimmedValue ~= "Label" then
-                                    table.insert(selected, trimmedValue)
-                                end
-                            end
+                            selected = convertStringToTable(CurrentTargetValue)
                         else
                             if CurrentOption.Text and type(CurrentOption.Text) == "string" then
-                                for value in string.gmatch(CurrentOption.Text, "([^,]+)") do
-                                    -- Trim spaces around the option using string.match
-                                    local trimmedValue = value:match("^%s*(.-)%s*$")  -- Trim leading and trailing spaces
-                                    
-                                    -- Exclude any unwanted labels (e.g. "Label")
-                                    if trimmedValue ~= "Label" then
-                                        table.insert(selected, trimmedValue)
-                                    end
-                                end
+                                selected = convertStringToTable(CurrentOption.Text)
                             end
                         end;
                 
@@ -2344,7 +2328,7 @@ function Library:create_ui()
                         for _, object in Options:GetChildren() do
                             if object.Name == "Option" then
                                 table.insert(OptionsChild, object.Text)
-                                if table.find(selected, object.Text) then
+                                if type(selected) == "table" and table.find(selected, object.Text) then
                                     object.TextTransparency = 0.2
                                 else
                                     object.TextTransparency = 0.6
@@ -2356,7 +2340,7 @@ function Library:create_ui()
 
                         if type(CurrentTargetValue) == "table" then
                             for _, v in CurrentTargetValue do
-                                if not table.find(OptionsChild, v) and table.find(selected, v) then
+                                if not table.find(OptionsChild, v) and type(selected) == "table" and table.find(selected, v) then
                                     for i, selectedItem in ipairs(selected) do
                                         if selectedItem == v then
                                             table.remove(selected, i)
