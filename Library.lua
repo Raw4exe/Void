@@ -122,12 +122,25 @@ function AcrylicUI:CreateUI()
     self.Blur.Parent = game.Lighting
     
     self.MainFrame = Instance.new("Frame")
-    self.MainFrame.Size = UDim2.new(0, 900, 0, 650)
-    self.MainFrame.Position = UDim2.new(0.5, -450, 0.5, -325)
+    self.MainFrame.Size = UDim2.new(0, 700, 0, 500)
+    self.MainFrame.Position = UDim2.new(0.5, -350, 0.5, -250)
     self.MainFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
     self.MainFrame.BackgroundTransparency = 0.1
     self.MainFrame.BorderSizePixel = 0
     self.MainFrame.Parent = self.ScreenGui
+    
+    local mainShadow = Instance.new("ImageLabel")
+    mainShadow.Name = "Shadow"
+    mainShadow.Size = UDim2.new(1, 40, 1, 40)
+    mainShadow.Position = UDim2.new(0, -20, 0, -20)
+    mainShadow.BackgroundTransparency = 1
+    mainShadow.Image = "rbxassetid://5554236805"
+    mainShadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+    mainShadow.ImageTransparency = 0.5
+    mainShadow.ScaleType = Enum.ScaleType.Slice
+    mainShadow.SliceCenter = Rect.new(23, 23, 277, 277)
+    mainShadow.ZIndex = 0
+    mainShadow.Parent = self.MainFrame
     
     local mainCorner = Instance.new("UICorner")
     mainCorner.CornerRadius = UDim.new(0, 12)
@@ -142,7 +155,7 @@ function AcrylicUI:CreateUI()
     MakeDraggable(self.MainFrame)
     
     self.TitleFrame = Instance.new("Frame")
-    self.TitleFrame.Size = UDim2.new(1, 0, 0, 70)
+    self.TitleFrame.Size = UDim2.new(1, 0, 0, 55)
     self.TitleFrame.Position = UDim2.new(0, 0, 0, 0)
     self.TitleFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
     self.TitleFrame.BackgroundTransparency = 0.2
@@ -154,31 +167,31 @@ function AcrylicUI:CreateUI()
     titleCorner.Parent = self.TitleFrame
     
     local titleLine = Instance.new("Frame")
-    titleLine.Size = UDim2.new(1, -40, 0, 1)
-    titleLine.Position = UDim2.new(0, 20, 1, -1)
+    titleLine.Size = UDim2.new(1, -30, 0, 1)
+    titleLine.Position = UDim2.new(0, 15, 1, -1)
     titleLine.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
     titleLine.BackgroundTransparency = 0.5
     titleLine.BorderSizePixel = 0
     titleLine.Parent = self.TitleFrame
     
     self.TitleLabel = Instance.new("TextLabel")
-    self.TitleLabel.Size = UDim2.new(0, 300, 0, 25)
-    self.TitleLabel.Position = UDim2.new(0, 25, 0, 12)
+    self.TitleLabel.Size = UDim2.new(0, 250, 0, 22)
+    self.TitleLabel.Position = UDim2.new(0, 18, 0, 8)
     self.TitleLabel.BackgroundTransparency = 1
     self.TitleLabel.Text = self.Title
     self.TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    self.TitleLabel.TextSize = 20
+    self.TitleLabel.TextSize = 17
     self.TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
     self.TitleLabel.Font = Enum.Font.GothamBold
     self.TitleLabel.Parent = self.TitleFrame
     
     self.SubtitleLabel = Instance.new("TextLabel")
-    self.SubtitleLabel.Size = UDim2.new(0, 300, 0, 18)
-    self.SubtitleLabel.Position = UDim2.new(0, 25, 0, 38)
+    self.SubtitleLabel.Size = UDim2.new(0, 250, 0, 16)
+    self.SubtitleLabel.Position = UDim2.new(0, 18, 0, 30)
     self.SubtitleLabel.BackgroundTransparency = 1
     self.SubtitleLabel.Text = self.Subtitle
     self.SubtitleLabel.TextColor3 = Color3.fromRGB(160, 160, 160)
-    self.SubtitleLabel.TextSize = 13
+    self.SubtitleLabel.TextSize = 12
     self.SubtitleLabel.TextXAlignment = Enum.TextXAlignment.Left
     self.SubtitleLabel.Font = Enum.Font.Gotham
     self.SubtitleLabel.Parent = self.TitleFrame
@@ -186,14 +199,14 @@ function AcrylicUI:CreateUI()
     self:CreateSearchBar()
     
     self.CloseButton = Instance.new("TextButton")
-    self.CloseButton.Size = UDim2.new(0, 35, 0, 35)
-    self.CloseButton.Position = UDim2.new(1, -50, 0, 17)
+    self.CloseButton.Size = UDim2.new(0, 30, 0, 30)
+    self.CloseButton.Position = UDim2.new(1, -42, 0, 12)
     self.CloseButton.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
     self.CloseButton.BackgroundTransparency = 0.1
     self.CloseButton.BorderSizePixel = 0
     self.CloseButton.Text = "×"
     self.CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    self.CloseButton.TextSize = 22
+    self.CloseButton.TextSize = 20
     self.CloseButton.Font = Enum.Font.GothamBold
     self.CloseButton.Parent = self.TitleFrame
     
@@ -220,19 +233,19 @@ function AcrylicUI:CreateUI()
     end)
     
     self.TabContainer = Instance.new("Frame")
-    self.TabContainer.Size = UDim2.new(1, -40, 0, 45)
-    self.TabContainer.Position = UDim2.new(0, 20, 0, 85)
+    self.TabContainer.Size = UDim2.new(1, -30, 0, 38)
+    self.TabContainer.Position = UDim2.new(0, 15, 0, 65)
     self.TabContainer.BackgroundTransparency = 1
     self.TabContainer.Parent = self.MainFrame
     
     local tabLayout = Instance.new("UIListLayout")
     tabLayout.FillDirection = Enum.FillDirection.Horizontal
-    tabLayout.Padding = UDim.new(0, 8)
+    tabLayout.Padding = UDim.new(0, 6)
     tabLayout.Parent = self.TabContainer
     
     self.ContentFrame = Instance.new("Frame")
-    self.ContentFrame.Size = UDim2.new(1, -40, 1, -160)
-    self.ContentFrame.Position = UDim2.new(0, 20, 0, 140)
+    self.ContentFrame.Size = UDim2.new(1, -30, 1, -125)
+    self.ContentFrame.Position = UDim2.new(0, 15, 0, 113)
     self.ContentFrame.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
     self.ContentFrame.BackgroundTransparency = 0.2
     self.ContentFrame.BorderSizePixel = 0
@@ -266,20 +279,20 @@ function AcrylicUI:CreateUI()
     self.ModuleGrid.Parent = self.ModuleScroll
     
     local gridLayout = Instance.new("UIGridLayout")
-    gridLayout.CellSize = UDim2.new(0.5, -8, 0, 140)
-    gridLayout.CellPadding = UDim2.new(0, 12, 0, 12)
+    gridLayout.CellSize = UDim2.new(0.5, -8, 0, 120)
+    gridLayout.CellPadding = UDim2.new(0, 10, 0, 10)
     gridLayout.SortOrder = Enum.SortOrder.LayoutOrder
     gridLayout.Parent = self.ModuleGrid
     
     local gridPadding = Instance.new("UIPadding")
-    gridPadding.PaddingAll = UDim.new(0, 8)
+    gridPadding.PaddingAll = UDim.new(0, 6)
     gridPadding.Parent = self.ModuleGrid
 end
 
 function AcrylicUI:CreateSearchBar()
     self.SearchFrame = Instance.new("Frame")
-    self.SearchFrame.Size = UDim2.new(0, 250, 0, 35)
-    self.SearchFrame.Position = UDim2.new(1, -300, 0, 17)
+    self.SearchFrame.Size = UDim2.new(0, 200, 0, 30)
+    self.SearchFrame.Position = UDim2.new(1, -240, 0, 12)
     self.SearchFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     self.SearchFrame.BackgroundTransparency = 0.2
     self.SearchFrame.BorderSizePixel = 0
@@ -296,21 +309,21 @@ function AcrylicUI:CreateSearchBar()
     searchStroke.Parent = self.SearchFrame
     
     self.SearchBox = Instance.new("TextBox")
-    self.SearchBox.Size = UDim2.new(1, -45, 1, 0)
-    self.SearchBox.Position = UDim2.new(0, 12, 0, 0)
+    self.SearchBox.Size = UDim2.new(1, -40, 1, 0)
+    self.SearchBox.Position = UDim2.new(0, 10, 0, 0)
     self.SearchBox.BackgroundTransparency = 1
     self.SearchBox.Text = ""
     self.SearchBox.PlaceholderText = "Search modules..."
     self.SearchBox.TextColor3 = Color3.fromRGB(240, 240, 240)
     self.SearchBox.PlaceholderColor3 = Color3.fromRGB(130, 130, 130)
-    self.SearchBox.TextSize = 13
+    self.SearchBox.TextSize = 12
     self.SearchBox.Font = Enum.Font.Gotham
     self.SearchBox.TextXAlignment = Enum.TextXAlignment.Left
     self.SearchBox.Parent = self.SearchFrame
     
     local searchIcon = Instance.new("ImageLabel")
-    searchIcon.Size = UDim2.new(0, 18, 0, 18)
-    searchIcon.Position = UDim2.new(1, -30, 0.5, -9)
+    searchIcon.Size = UDim2.new(0, 16, 0, 16)
+    searchIcon.Position = UDim2.new(1, -26, 0.5, -8)
     searchIcon.BackgroundTransparency = 1
     searchIcon.Image = "rbxassetid://3926305904"
     searchIcon.ImageColor3 = Color3.fromRGB(140, 140, 140)
@@ -345,13 +358,13 @@ function AcrylicUI:CreateTab(name, icon)
     }
     
     tab.Button = Instance.new("TextButton")
-    tab.Button.Size = UDim2.new(0, 140, 1, 0)
+    tab.Button.Size = UDim2.new(0, 120, 1, 0)
     tab.Button.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     tab.Button.BackgroundTransparency = 0.2
     tab.Button.BorderSizePixel = 0
     tab.Button.Text = icon .. " " .. name
     tab.Button.TextColor3 = Color3.fromRGB(170, 170, 170)
-    tab.Button.TextSize = 14
+    tab.Button.TextSize = 13
     tab.Button.Font = Enum.Font.GothamMedium
     tab.Button.Parent = self.TabContainer
     
@@ -461,7 +474,7 @@ function AcrylicUI:CreateModule(tab, name, description)
     frameStroke.Parent = module.Frame
     
     local header = Instance.new("Frame")
-    header.Size = UDim2.new(1, 0, 0, 45)
+    header.Size = UDim2.new(1, 0, 0, 40)
     header.BackgroundColor3 = Color3.fromRGB(22, 22, 22)
     header.BackgroundTransparency = 0.3
     header.BorderSizePixel = 0
@@ -480,39 +493,39 @@ function AcrylicUI:CreateModule(tab, name, description)
     headerLine.Parent = header
     
     local titleLabel = Instance.new("TextLabel")
-    titleLabel.Size = UDim2.new(1, -60, 0, 20)
-    titleLabel.Position = UDim2.new(0, 12, 0, 8)
+    titleLabel.Size = UDim2.new(1, -55, 0, 18)
+    titleLabel.Position = UDim2.new(0, 10, 0, 6)
     titleLabel.BackgroundTransparency = 1
     titleLabel.Text = name
     titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    titleLabel.TextSize = 15
+    titleLabel.TextSize = 13
     titleLabel.Font = Enum.Font.GothamBold
     titleLabel.TextXAlignment = Enum.TextXAlignment.Left
     titleLabel.TextYAlignment = Enum.TextYAlignment.Center
     titleLabel.Parent = header
     
     local descLabel = Instance.new("TextLabel")
-    descLabel.Size = UDim2.new(1, -60, 0, 14)
-    descLabel.Position = UDim2.new(0, 12, 0, 26)
+    descLabel.Size = UDim2.new(1, -55, 0, 12)
+    descLabel.Position = UDim2.new(0, 10, 0, 22)
     descLabel.BackgroundTransparency = 1
     descLabel.Text = description
     descLabel.TextColor3 = Color3.fromRGB(140, 140, 140)
-    descLabel.TextSize = 11
+    descLabel.TextSize = 10
     descLabel.Font = Enum.Font.Gotham
     descLabel.TextXAlignment = Enum.TextXAlignment.Left
     descLabel.TextYAlignment = Enum.TextYAlignment.Center
     descLabel.Parent = header
     
     local toggle = Instance.new("TextButton")
-    toggle.Size = UDim2.new(0, 44, 0, 22)
-    toggle.Position = UDim2.new(1, -52, 0, 11)
+    toggle.Size = UDim2.new(0, 40, 0, 20)
+    toggle.Position = UDim2.new(1, -46, 0, 10)
     toggle.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
     toggle.BorderSizePixel = 0
     toggle.Text = ""
     toggle.Parent = header
     
     local toggleCorner = Instance.new("UICorner")
-    toggleCorner.CornerRadius = UDim.new(0, 11)
+    toggleCorner.CornerRadius = UDim.new(0, 10)
     toggleCorner.Parent = toggle
     
     local toggleStroke = Instance.new("UIStroke")
@@ -522,14 +535,14 @@ function AcrylicUI:CreateModule(tab, name, description)
     toggleStroke.Parent = toggle
     
     local toggleIndicator = Instance.new("Frame")
-    toggleIndicator.Size = UDim2.new(0, 18, 0, 18)
+    toggleIndicator.Size = UDim2.new(0, 16, 0, 16)
     toggleIndicator.Position = UDim2.new(0, 2, 0, 2)
     toggleIndicator.BackgroundColor3 = Color3.fromRGB(180, 180, 180)
     toggleIndicator.BorderSizePixel = 0
     toggleIndicator.Parent = toggle
     
     local indicatorCorner = Instance.new("UICorner")
-    indicatorCorner.CornerRadius = UDim.new(0, 9)
+    indicatorCorner.CornerRadius = UDim.new(0, 8)
     indicatorCorner.Parent = toggleIndicator
     
     toggle.MouseButton1Click:Connect(function()
@@ -538,7 +551,7 @@ function AcrylicUI:CreateModule(tab, name, description)
         if module.Enabled then
             CreateTween(toggle, {BackgroundColor3 = Color3.fromRGB(80, 180, 80)}):Play()
             CreateTween(toggleIndicator, {
-                Position = UDim2.new(1, -20, 0, 2),
+                Position = UDim2.new(1, -18, 0, 2),
                 BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             }):Play()
             CreateTween(toggleStroke, {Color = Color3.fromRGB(100, 200, 100)}):Play()
@@ -557,8 +570,8 @@ function AcrylicUI:CreateModule(tab, name, description)
     end)
     
     module.ElementContainer = Instance.new("ScrollingFrame")
-    module.ElementContainer.Size = UDim2.new(1, -20, 1, -55)
-    module.ElementContainer.Position = UDim2.new(0, 10, 0, 50)
+    module.ElementContainer.Size = UDim2.new(1, -16, 1, -48)
+    module.ElementContainer.Position = UDim2.new(0, 8, 0, 44)
     module.ElementContainer.BackgroundTransparency = 1
     module.ElementContainer.BorderSizePixel = 0
     module.ElementContainer.ScrollBarThickness = 3
@@ -569,7 +582,7 @@ function AcrylicUI:CreateModule(tab, name, description)
     module.ElementContainer.Parent = module.Frame
     
     local elementLayout = Instance.new("UIListLayout")
-    elementLayout.Padding = UDim.new(0, 6)
+    elementLayout.Padding = UDim.new(0, 5)
     elementLayout.SortOrder = Enum.SortOrder.LayoutOrder
     elementLayout.Parent = module.ElementContainer
     
